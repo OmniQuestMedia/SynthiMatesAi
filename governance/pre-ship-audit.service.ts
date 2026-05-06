@@ -18,9 +18,9 @@ function readSafe(path: string): string {
 /** OQMI_INFRA_v1.0 §3 — Canada-only data residency */
 function checkCanadaResidency(): { pass: boolean; evidence: string } {
   const compose = readSafe('docker-compose.yml');
-  // Approved regions: ca-central-1, canadacentral, canada-east, canada-central
+  // Approved regions: AWS ca-central-1, Azure canadacentral / canada-central, OVH/ThinkOn/eStruxture Canada
   const hasCanadaRegion =
-    /ca-central-1|canadacentral|canada-east|canada-central|OVH Canada|ThinkOn|eStruxture/i.test(
+    /ca-central-1|canadacentral|canada-central|canada-east|OVH Canada|ThinkOn|eStruxture/i.test(
       compose,
     );
   // Fail if a non-Canadian AWS region is pinned as the primary region

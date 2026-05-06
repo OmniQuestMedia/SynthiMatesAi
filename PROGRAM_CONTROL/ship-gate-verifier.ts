@@ -502,7 +502,7 @@ const checks: Array<() => CheckResult> = [
     const hasAdvisory =
       policy.includes('advisory infrastructure only') || policy.includes('AI advisory-only');
     const hasNeverMutate =
-      policy.includes('never mutates') || policy.includes('never\n- Compute earnings');
+      /never\s+mutates|Compute earnings|Mutate ledger|Authorize irreversible/i.test(policy);
     const ok = hasAdvisory;
     return {
       id: 'INFRA-3',

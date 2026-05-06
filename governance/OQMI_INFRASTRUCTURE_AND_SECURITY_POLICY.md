@@ -4,7 +4,7 @@
 **Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
 **Status:** Binding on all OQMInc™ / OQTech™ repos, environments, agents, and infrastructure.
 **Precedence:** Extends and prevails over any prior infra docs in conflict.
-**See also:** [governance/OQMI_GOVERNANCE.md](../PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md)
+**See also:** [PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md](../PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md)
 
 ---
 
