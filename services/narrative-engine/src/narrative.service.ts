@@ -9,7 +9,7 @@
 //   5. Emit NATS events on story milestones
 
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../core-api/src/prisma.module';
+import { PrismaService } from '../../core-api/src/prisma.service';
 import { NatsService } from '../../core-api/src/nats/nats.service';
 import {
   BranchDecision,

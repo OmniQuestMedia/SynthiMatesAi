@@ -13,6 +13,8 @@ import type {
   CyranoPersonaCard,
   CyranoPersonaManagementPageInputs,
 } from '../../ui/types/cyrano-persona-contracts';
+  PersonaManagementPageInputs,
+} from '../../ui/types/cyrano-persona-management-contracts';
 
 function makePersona(overrides: Partial<CyranoPersonaCard> = {}): CyranoPersonaCard {
   return {

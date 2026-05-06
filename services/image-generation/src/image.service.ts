@@ -9,7 +9,7 @@
 //   5. Respect content rating gates — ADULT content only for verified creators
 
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../core-api/src/prisma.module';
+import { PrismaService } from '../../core-api/src/prisma.service';
 import { NatsService } from '../../core-api/src/nats/nats.service';
 import {
   GenerateImageRequest,
@@ -19,6 +19,9 @@ import {
 } from './image.types';
 
 const NATS_IMAGE_GENERATED = 'cyrano.image.generated';
+// NATS_IMAGE_FAILED is published from the failure path that lands in the
+// Phase 2 image-generation hardening directive (CYR-IMG-002-HARDENING).
+// Keeping the constant inline here once that try/catch is wired.
 
 const BANANA_API_KEY = process.env.BANANA_API_KEY ?? '';
 const BANANA_MODEL_KEY_FLUX_PRO = process.env.BANANA_MODEL_KEY_FLUX_PRO ?? '';
