@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   fast-gate:
     runs-on: ubuntu-latest
@@ -13,5 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: yarn
       - run: yarn install --frozen-lockfile
       - run: yarn typecheck && yarn lint && yarn format && yarn test && yarn ship-gate

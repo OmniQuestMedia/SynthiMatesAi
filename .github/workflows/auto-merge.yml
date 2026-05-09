@@ -6,6 +6,7 @@ name: Auto Merge
 
 on:
   pull_request:
+    # ready_for_review ensures auto-merge is set as soon as draft agent PRs become reviewable.
     types: [opened, synchronize, reopened, ready_for_review]
     branches: [main]
 
@@ -38,7 +39,7 @@ jobs:
   enable-auto-merge-standard:
     name: Enable Auto Merge (Standard)
     runs-on: ubuntu-latest
-    if: ${{ !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'grok/') && !startsWith(github.head_ref, 'agent/') }}
+    if: !startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'grok/') && !startsWith(github.head_ref, 'agent/')
 
     steps:
       - name: Enable auto-merge for PR
