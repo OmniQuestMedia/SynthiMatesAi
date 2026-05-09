@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/cyrano-audit-hygiene-ovYDN`
-**Commit:** `e57678ce6d32ba0bdf302886c555852cb387370f`
-**Generated:** 2026-05-06T11:00:06Z
+**Branch:** `copilot/p07-execute-and-confirm`
+**Commit:** `097bf4359318efd2353a582317f16b352fa4439d`
+**Generated:** 2026-05-09T04:34:13Z
 
 ## All Files
 
@@ -155,6 +155,7 @@ Auto-generated on every push. Do not edit manually.
 - `PROGRAM_CONTROL/REPORT_BACK/MOD-001-INCIDENT-SERVICE.md`
 - `PROGRAM_CONTROL/REPORT_BACK/NATS-001-FABRIC-SCAFFOLD.md`
 - `PROGRAM_CONTROL/REPORT_BACK/OBS-001-REPORT-BACK.md`
+- `PROGRAM_CONTROL/REPORT_BACK/P0.7-REPORT-BACK.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-001-CANONICAL-LEDGER-REPORT-BACK.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-10-ALIGNMENT-SWEEP.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-2-REDBOOK-RECOVERY-DASHBOARD.md`
@@ -398,6 +399,7 @@ Auto-generated on every push. Do not edit manually.
 - `gateguard/gateguard/welfare_engine.py`
 - `gateguard/gateguard_audit.db`
 - `gateguard/requirements.txt`
+- `governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`
 - `governance/Sovereign_Kernel.md.pdf`
 - `governance/pre-ship-audit.service.ts`
 - `infra/postgres/init-ledger.sql`

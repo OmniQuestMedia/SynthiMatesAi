@@ -434,17 +434,93 @@ const checks: Array<() => CheckResult> = [
       'docs/PRE_LAUNCH_CHECKLIST.md',
       'docs/ARCHITECTURE_OVERVIEW.md',
       'OQMI_SYSTEM_STATE.md',
+      'governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md',
     ];
     const missing = required.filter((p) => !exists(p));
     return {
       id: 'DOC-1',
       category: 'Documentation',
-      description: 'Required docs (README + checklist + architecture + state) present',
+      description:
+        'Required docs (README + checklist + architecture + state + infra-policy) present',
       status: missing.length === 0 ? 'PASS' : 'FAIL',
       evidence:
         missing.length === 0
-          ? ['All four required docs present']
+          ? ['All five required docs present']
           : [`Missing: ${missing.join(', ')}`],
+    };
+  },
+
+  // ── 12. OQMI_INFRA_v1.0 — CANADA RESIDENCY GATE ──────────────────────────
+  () => {
+    const compose = readSafe('docker-compose.yml') ?? '';
+    const hasProhibited = /\bus-east-[12]\b|\bus-west-[12]\b|\beu-west\b|\bap-southeast\b/.test(
+      compose,
+    );
+    return {
+      id: 'INFRA-1',
+      category: 'Infrastructure policy (OQMI_INFRA_v1.0)',
+      description: 'Canada-only data residency — no prohibited non-Canadian regions in compose',
+      status: hasProhibited ? 'FAIL' : 'PASS',
+      evidence: hasProhibited
+        ? ['Prohibited non-Canadian region string detected in docker-compose.yml']
+        : [
+            'No prohibited US/EU/APAC region pins found — verify production IaC confirms ca-central-1 or equivalent',
+          ],
+      remediation: hasProhibited
+        ? 'Remove or replace non-Canadian region references per OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §3'
+        : undefined,
+    };
+  },
+
+  // ── 13. OQMI_INFRA_v1.0 — IMMUTABLE BACKUP GATE ──────────────────────────
+  () => {
+    const policy = readSafe('governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md') ?? '';
+    const has321 = policy.includes('3-2-1');
+    const hasWorm = policy.includes('WORM');
+    const hasImmutable = policy.includes('immutable');
+    const ok = has321 && hasWorm && hasImmutable;
+    return {
+      id: 'INFRA-2',
+      category: 'Infrastructure policy (OQMI_INFRA_v1.0)',
+      description:
+        'Immutable 3-2-1 backup policy present in governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md',
+      status: ok ? 'PASS' : 'FAIL',
+      evidence: [
+        has321 ? '3-2-1 rule documented' : '3-2-1 rule MISSING',
+        hasWorm ? 'WORM requirement documented' : 'WORM requirement MISSING',
+        hasImmutable ? 'immutability requirement documented' : 'immutability requirement MISSING',
+      ],
+      remediation: ok
+        ? undefined
+        : 'Ensure governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §5 contains 3-2-1 + WORM + immutable',
+    };
+  },
+
+  // ── 14. OQMI_INFRA_v1.0 — AI ADVISORY-BOUNDARY GATE ─────────────────────
+  () => {
+    const policy = readSafe('governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md') ?? '';
+    const hasAdvisory =
+      policy.includes('advisory infrastructure only') || policy.includes('AI advisory-only');
+    const hasNeverMutate =
+      /never\s+mutates|Compute earnings|Mutate ledger|Authorize irreversible/i.test(policy);
+    const ok = hasAdvisory;
+    return {
+      id: 'INFRA-3',
+      category: 'Infrastructure policy (OQMI_INFRA_v1.0)',
+      description:
+        'AI advisory-only boundary codified in governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §2',
+      status: ok ? 'PASS' : 'FAIL',
+      evidence: [
+        ok
+          ? 'AI advisory-only clause present'
+          : 'AI advisory boundary clause MISSING from policy document',
+        hasNeverMutate
+          ? 'AI mutation prohibition present'
+          : 'AI mutation prohibition not explicitly stated',
+      ],
+      remediation: ok
+        ? undefined
+        : 'Add AI advisory-only boundary clause to governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §2',
     };
   },
 ];

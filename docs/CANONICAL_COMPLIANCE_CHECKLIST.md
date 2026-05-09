@@ -9,6 +9,7 @@
 - REDBOOK §5 — Recovery & Refund Doctrine
 - Business Plan B.5 — GateGuard Sentinel Pre-Processor
 - `docs/AUDIT_CERTIFICATION_V1.md`
+- [`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](../governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md) (rule_applied_id: OQMI_INFRA_v1.0)
 
 > This checklist pins the L0 invariants that must be TRUE before
 > ChatNow.Zone crosses the hard-launch gate on 2026-10-01.

@@ -116,6 +116,7 @@ H-LAUNCH-READY sign-off directive):
 | Immutable Audit Architecture               | PAYLOAD-6    | DONE — hash-chain + WORM export + Canonical Compliance Checklist                                                                                                                  |
 | Frontend Polish + Diamond Concierge UI     | PAYLOAD-7    | DONE — `/admin/diamond`, `/admin/recovery`, `/creator/control`, `/tokens`, `/diamond/purchase`, `/wallet` page builders + presenters + render plans + theme + SEO + accessibility |
 | End-to-end validation + Ship-Gate verifier | PAYLOAD-8    | DONE — six E2E flows + `PROGRAM_CONTROL/ship-gate-verifier.ts` + `docs/ARCHITECTURE_OVERVIEW.md` + `docs/PRE_LAUNCH_CHECKLIST.md`                                                 |
+
 ## 4. Cyrano L0 Ship-Gate Status (2026-05-06)
 
 Ship-gate components for the Cyrano™ Standalone alpha. Beta-quality items
@@ -305,6 +306,7 @@ No new references introduced. `grep -rni "Navigator\|Jaime Watt"` outside
 | Pre-launch checklist  | `docs/PRE_LAUNCH_CHECKLIST.md`                | CEO sign-off, compliance, infra, observability, go/no-go                                                                                      |
 | Architecture overview | `docs/ARCHITECTURE_OVERVIEW.md`               | Full system map, cross-Payload invariants, cross-service wiring                                                                               |
 | Root README update    | `README.md`                                   | Final "How to Run" + architecture summary                                                                                                     |
+
 ---
 
 ## 9. Contact / Authority
@@ -468,6 +470,7 @@ matches as recorded in §5.6 (2026-04-24 audit). Creating an empty
 | `PROGRAM_CONTROL/DIRECTIVES/DONE/`        |    39 | unchanged            |
 | `PROGRAM_CONTROL/DIRECTIVES/IN_PROGRESS/` |     0 | unchanged            |
 | `PROGRAM_CONTROL/DIRECTIVES/QUEUE/`       |     8 | +1                   |
+
 authoring happens in Claude Chat; execution happens in Claude Code via the
 `PROGRAM_CONTROL/DIRECTIVES/` pipeline. No agent may clear a GOV gate
 without CEO-signed clearance in `PROGRAM_CONTROL/CLEARANCES/`.

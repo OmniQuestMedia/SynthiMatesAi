@@ -136,6 +136,7 @@ Every commit is bound to:
 3. **REDBOOK §3–§5** — pricing, recovery, payout governance.
 4. **Canonical Compliance Checklist** — `PROGRAM_CONTROL/CANONICAL_COMPLIANCE_CHECKLIST.md`.
 5. **Hard banned-entity §12** — never reference the redacted name in any artifact.
+6. **Sovereign Infrastructure & Security Policy** — [`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](../governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md) (rule_applied_id: OQMI_INFRA_v1.0). Canada-only residency, network isolation, immutable 3-2-1 backups, AI advisory-only boundary, malware/ransomware defense.
 
 ## 9. Open work (not in PAYLOADs 1–8)
 
