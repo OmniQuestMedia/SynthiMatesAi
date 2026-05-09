@@ -496,7 +496,7 @@ ROW 20 | term: Subscription tier (Cyrano standalone) vs MembershipTier (CNZ core
 **Version:** 2026-04-28
 **Status:** Draft → Ready for review
 **Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
-**Repo:** OmniQuestMediaInc/Cyrano
+**Repo:** OmniQuestMediaInc/CyranoZone
 **Cross-stack vocabulary:** see `docs/UX_CROSS_STACK_ALIGNMENT.md`
 
 ---

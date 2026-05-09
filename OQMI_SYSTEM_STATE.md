@@ -38,7 +38,7 @@ hardening in progress (Phases 2–4)**
 | CEO / CD / LD        | Kevin B. Hartley                                                          |
 | Platform (primary)   | Cyrano™ Standalone — photoreal AI Character Companions                    |
 | Secondary platform   | ChatNow.Zone (merge target post-Cyrano stabilization)                     |
-| Repo                 | `OmniQuestMediaInc/Cyrano`                                                |
+| Repo                 | `OmniQuestMediaInc/CyranoZone`                                            |
 | Hard launch deadline | 2026-10-01 (CNZ); Cyrano alpha → beta during Q3 2026                      |
 | Governance ban (§12) | Banned entity (name [REDACTED]) — never referenced in any OQMInc material |
 
