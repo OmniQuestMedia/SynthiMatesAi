@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/p07-execute-and-confirm`
-**Commit:** `097bf4359318efd2353a582317f16b352fa4439d`
-**Generated:** 2026-05-09T04:34:13Z
+**Branch:** `copilot/optimize-repository-for-agent-payloads`
+**Commit:** `f3d759c2f9b205dcc1fe35be32d38dd68eeff1c7`
+**Generated:** 2026-05-09T09:28:37Z
 
 ## All Files
 
@@ -12,8 +12,10 @@ Auto-generated on every push. Do not edit manually.
 - `.editorconfig`
 - `.env.example`
 - `.eslintrc.js`
+- `.github/AGENTS.md`
 - `.github/CODEOWNERS`
 - `.github/ISSUE_TEMPLATE/directive.yml`
+- `.github/branch-protection-agent-fast-path.md`
 - `.github/copilot-instructions.md`
 - `.github/linters/.markdown-lint.yml`
 - `.github/linters/.yaml-lint.yml`
@@ -22,6 +24,7 @@ Auto-generated on every push. Do not edit manually.
 - `.github/workflows/auto-merge.yml`
 - `.github/workflows/ci.yml`
 - `.github/workflows/codeql.yml`
+- `.github/workflows/copilot-internal.yml`
 - `.github/workflows/copilot-setup-steps.yml`
 - `.github/workflows/deploy.yml`
 - `.github/workflows/directive-dispatch.yml`
@@ -36,6 +39,7 @@ Auto-generated on every push. Do not edit manually.
 - `.markdownlintignore`
 - `.prettierignore`
 - `.prettierrc`
+- `HANDOFF.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
