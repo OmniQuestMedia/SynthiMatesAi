@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/update-grok-primary-agent`
-**Commit:** `478d8d053e0e710c21a5361d740f57d6b1fdc5e4`
-**Generated:** 2026-05-11T19:49:40Z
+**Branch:** `copilot/phase-0-5-ecosystem-lint-parity`
+**Commit:** `1ed52ebb163c852f99cb7508d2f5980b6423bde3`
+**Generated:** 2026-05-11T20:40:34Z
 
 ## All Files
 
@@ -36,6 +36,7 @@ Auto-generated on every push. Do not edit manually.
 - `.github/workflows/repo-manifest.yml`
 - `.github/workflows/super-linter.yml`
 - `.gitignore`
+- `.husky/pre-commit`
 - `.markdownlintignore`
 - `.prettierignore`
 - `.prettierrc`
