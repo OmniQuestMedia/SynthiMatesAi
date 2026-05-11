@@ -65,7 +65,7 @@ Scope is bounded to:
 Each task carries an `Agent:` hint:
 
 - `copilot` — preferred for repo chores, file moves, config edits, multi-file mechanical work
-- `claude-code` — preferred for service authoring, schema design, complex refactors, anything FIZ-scoped
+- `grok` — primary build agent (2026-05-11); preferred for service authoring, schema design, complex refactors, anything FIZ-scoped. Replaces `claude-code` (retired).
 - `either` — task is small and routing-agnostic; first-come-first-served
 
 The hint is a **routing suggestion, not an exclusivity lock.** An agent that cannot satisfy a task’s `Agent:` hint may still execute it if no other agent has claimed it within 24h, but must note the override in the report-back.
@@ -122,7 +122,7 @@ CNZ-WORK-001-<ID>: <name>
 Wave: A–H
 Priority: P0–P3
 Scope: S | M | L | XL
-Agent: copilot | claude-code | either
+Agent: copilot | grok | either
 Depends-on: [list of other CNZ-WORK-001 task IDs, or "none"]
 CEO_GATE: YES | NO
 FIZ: YES | NO
@@ -294,7 +294,7 @@ CNZ-WORK-001-A012: Reconcile commit prefix enums
 Wave: A
 Priority: P1
 Scope: S
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: YES
 FIZ: NO
@@ -536,7 +536,7 @@ CNZ-WORK-001-D001: R-101 — Three-Bucket Wallet verify + extend
 Wave: D
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO (FIZ flag handles merge gating)
 FIZ: YES
@@ -550,7 +550,7 @@ CNZ-WORK-001-D002: R-002/R-102 — Risk Engine verify + extend to full Risk Asse
 Wave: D
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO
 FIZ: NO (compliance-adjacent but not ledger)
@@ -564,7 +564,7 @@ CNZ-WORK-001-D003: R-103 — NATS Fabric verify
 Wave: D
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO
 FIZ: NO
@@ -578,7 +578,7 @@ CNZ-WORK-001-D004: R-104 — OBS Broadcast Kernel verify + extend
 Wave: D
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: A001, D006 (FairPay native vs OBS detection integrity)
 CEO_GATE: NO
 FIZ: NO
@@ -592,7 +592,7 @@ CNZ-WORK-001-D005: R-105 — HeartZone IoT Loop verify + extend
 Wave: D
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: A001, B001 (R-CLARIFY-010)
 CEO_GATE: NO
 FIZ: NO
@@ -606,7 +606,7 @@ CNZ-WORK-001-D006: R-006 — FairPay/FairPlay™ rate logic
 Wave: D
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: A001, B001 (R-CLARIFY-004)
 CEO_GATE: NO
 FIZ: YES
@@ -620,7 +620,7 @@ CNZ-WORK-001-D007: R-106 — Bijou.Zone Theatre verify + extend
 Wave: D
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: A001, B001 (R-CLARIFY-011)
 CEO_GATE: NO
 FIZ: NO
@@ -634,7 +634,7 @@ CNZ-WORK-001-D008: R-007/R-107 — Compliance Stack extend to full jurisdictiona
 Wave: D
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO
 FIZ: NO (but compliance-constants additions are §2.2 Human-Review)
@@ -666,7 +666,7 @@ CNZ-WORK-001-E001: R-001 — RedBook (likely EXTEND of safety/)
 Wave: E
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO
 FIZ: NO
@@ -680,7 +680,7 @@ CNZ-WORK-001-E002: R-014 — NOWPayouts™ integration layer
 Wave: E
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: D006, C006
 CEO_GATE: NO
 FIZ: YES
@@ -694,7 +694,7 @@ CNZ-WORK-001-E003: R-010 — GateGuard Sentinel™ full system
 Wave: E
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: D008, E001 (RedBook integration), A001
 CEO_GATE: NO
 FIZ: NO
@@ -726,7 +726,7 @@ CNZ-WORK-001-F001: R-003 — CreatorControl.Zone™
 Wave: F
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-001)
 CEO_GATE: NO
 FIZ: NO
@@ -740,7 +740,7 @@ CNZ-WORK-001-F002: R-004 — MyCrew.Zone™
 Wave: F
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-002)
 CEO_GATE: NO
 FIZ: NO
@@ -754,7 +754,7 @@ CNZ-WORK-001-F003: R-005 — Flicker n'Flame Scoring (FFS)
 Wave: F
 Priority: P1
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-003)
 CEO_GATE: NO
 FIZ: NO
@@ -768,7 +768,7 @@ CNZ-WORK-001-F004: R-008 — DFSP™
 Wave: F
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-005)
 CEO_GATE: NO
 FIZ: NO
@@ -782,7 +782,7 @@ CNZ-WORK-001-F005: R-009 — Human Contact Zone
 Wave: F
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-006), A012
 CEO_GATE: NO
 FIZ: NO
@@ -796,7 +796,7 @@ CNZ-WORK-001-F006: R-012 — Diamond Concierge
 Wave: F
 Priority: P1
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: C003 (Diamond tier in canonical enum, post-R-P0-002)
 CEO_GATE: NO
 FIZ: NO
@@ -810,7 +810,7 @@ CNZ-WORK-001-F007: R-013 — Welfare Guardian Score
 Wave: F
 Priority: P1
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: B001 (R-CLARIFY-008), D002
 CEO_GATE: NO
 FIZ: NO
@@ -906,7 +906,7 @@ CNZ-WORK-001-H001: CI guard against hardcoded financial constants
 Wave: H
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: D001
 CEO_GATE: NO
 FIZ: NO
@@ -920,7 +920,7 @@ CNZ-WORK-001-H002: CI guard against missing tenant_id scope
 Wave: H
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: A001
 CEO_GATE: NO
 FIZ: NO
@@ -934,7 +934,7 @@ CNZ-WORK-001-H003: LedgerService invariant tests
 Wave: H
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: D001
 CEO_GATE: NO
 FIZ: YES
@@ -948,7 +948,7 @@ CNZ-WORK-001-H004: Audit chain integration tests
 Wave: H
 Priority: P0
 Scope: M
-Agent: claude-code
+Agent: grok
 Depends-on: D008
 CEO_GATE: NO
 FIZ: NO
@@ -962,7 +962,7 @@ CNZ-WORK-001-H005: Step-up authentication wiring
 Wave: H
 Priority: P0
 Scope: L
-Agent: claude-code
+Agent: grok
 Depends-on: D001, D008
 CEO_GATE: NO
 FIZ: NO
@@ -1113,7 +1113,7 @@ Every task generates a REPORT_BACK at `PROGRAM_CONTROL/REPORT_BACK/CNZ-WORK-001-
 # CNZ-WORK-001-<task-id> — <name>
 
 **Status on completion:** DONE | BLOCKED | PARTIAL
-**Agent:** <copilot | claude-code | claude-in-chat>
+**Agent:** <copilot | grok | claude-in-chat>
 **Date:** YYYY-MM-DD
 **PR:** #NNN (or "n/a")
 **Merge commit SHA:** <sha> (or "n/a")
@@ -1151,7 +1151,7 @@ When a task completes and merges, write `PROGRAM_CONTROL/DIRECTIVES/DONE/CNZ-WOR
 **Task name:** <name>
 **Wave:** <A–H>
 **Completed:** YYYY-MM-DD
-**Agent:** <copilot | claude-code | claude-in-chat>
+**Agent:** <copilot | grok | claude-in-chat>
 **PR:** #NNN
 **Merge commit SHA:** <sha>
 **REPORT_BACK:** <link to report file>

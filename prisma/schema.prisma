@@ -2549,3 +2549,86 @@ model SparkTwinDailyUsage {
   @@index([user_id, usage_date])
   @@map("spark_twin_daily_usages")
 }
+
+// ── Cyrano Layer 2 — Narrative Memory + Story Beats + Branch Decisions ────────
+// CYR-NARR-002: Layer 2 semantic memory with embeddings, importance scoring,
+// and append-only story beat / branching history.
+// These are DISTINCT from the Layer 1 MemoryBank and NarrativeBranch models above.
+
+enum StoryBeatType {
+  OPEN
+  RISING
+  TURN
+  RESOLUTION
+}
+
+model MemoryEntry {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id          String    @db.Uuid
+  persona_id       String    @db.Uuid
+  /// Natural-language memory content
+  content          String    @db.Text
+  /// Optional vector/JSON embedding for semantic recall (pgvector deferred to Phase 2)
+  embedding        Json?
+  /// Recall priority: 0.0 (lowest) – 1.0 (highest)
+  importance_score Float     @default(0.5)
+  created_at       DateTime  @default(now()) @db.Timestamptz
+  last_accessed_at DateTime? @db.Timestamptz
+  access_count     Int       @default(0)
+  // Canonical audit columns — append-only; last_accessed_at + access_count are the
+  // ONLY mutable fields (updated via MemoryBankService.incrementAccess()).
+  correlation_id   String    @db.VarChar(200)
+  reason_code      String    @default("MEMORY_RECORD") @db.VarChar(40)
+  rule_applied_id  String    @default("CYR-NARR-002") @db.VarChar(100)
+
+  story_beats      StoryBeat[]
+
+  @@index([user_id, persona_id, importance_score(sort: Desc)])
+  @@index([user_id, persona_id, last_accessed_at])
+  @@map("memory_entries")
+}
+
+model StoryBeat {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String        @db.Uuid
+  persona_id      String        @db.Uuid
+  beat_type       StoryBeatType
+  /// Summary of the beat — what happened at this narrative inflection point
+  summary         String        @db.Text
+  /// Optional FK to the MemoryEntry that prompted this beat
+  memory_entry_id String?       @db.Uuid
+  created_at      DateTime      @default(now()) @db.Timestamptz
+  // Canonical audit columns — append-only; no UPDATE/DELETE.
+  correlation_id  String        @db.VarChar(200)
+  reason_code     String        @default("STORY_BEAT") @db.VarChar(40)
+  rule_applied_id String        @default("CYR-NARR-002") @db.VarChar(100)
+
+  memory_entry    MemoryEntry?  @relation(fields: [memory_entry_id], references: [id])
+  decisions       BranchDecision[]
+
+  @@index([user_id, persona_id, beat_type])
+  @@index([user_id, persona_id, created_at(sort: Desc)])
+  @@map("story_beats")
+}
+
+model BranchDecision {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String     @db.Uuid
+  persona_id     String     @db.Uuid
+  beat_id        String     @db.Uuid
+  decision_text  String     @db.Text
+  /// JSON blob: keys are consequence categories, values are outcome descriptions.
+  /// Immutable once written — branching history must not be rolled back.
+  consequences   Json
+  created_at     DateTime   @default(now()) @db.Timestamptz
+  // Canonical audit columns — append-only; no UPDATE/DELETE. Ever.
+  correlation_id String     @db.VarChar(200)
+  reason_code    String     @default("BRANCH_DECISION") @db.VarChar(40)
+  rule_applied_id String    @default("CYR-NARR-002") @db.VarChar(100)
+
+  beat           StoryBeat  @relation(fields: [beat_id], references: [id])
+
+  @@index([user_id, persona_id, created_at(sort: Desc)])
+  @@index([beat_id])
+  @@map("branch_decisions")
+}

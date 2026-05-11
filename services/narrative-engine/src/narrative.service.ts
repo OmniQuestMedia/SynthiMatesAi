@@ -7,6 +7,8 @@
 //   3. Present cinematic branching points to users and resolve their choices
 //   4. Assemble persona-context injections for the Cyrano LLM layer
 //   5. Emit NATS events on story milestones
+// CYR-NARR-002: Layer 2 services (MemoryBankService, ContextBuilderService, BranchingService)
+//              injected and exposed via getMemoryBank(), getContextBuilder(), getBranching().
 
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../core-api/src/prisma.service';
@@ -20,6 +22,9 @@ import {
   NarrativeBranch,
   NarrativeContext,
 } from './narrative.types';
+import { MemoryBankService } from './memory-bank.service';
+import { ContextBuilderService } from './context-builder.service';
+import { BranchingService } from './branching.service';
 
 const NATS_STORY_BEAT = 'cyrano.narrative.story-beat';
 const NATS_BRANCH_RESOLVED = 'cyrano.narrative.branch.resolved';
@@ -46,7 +51,25 @@ export class NarrativeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly nats: NatsService,
+    private readonly memoryBankService: MemoryBankService,
+    private readonly contextBuilderService: ContextBuilderService,
+    private readonly branchingService: BranchingService,
   ) {}
+
+  /** Layer 2: Access MemoryBankService directly (for consumer modules). */
+  get memoryBank(): MemoryBankService {
+    return this.memoryBankService;
+  }
+
+  /** Layer 2: Access ContextBuilderService directly (for consumer modules). */
+  get contextBuilder(): ContextBuilderService {
+    return this.contextBuilderService;
+  }
+
+  /** Layer 2: Access BranchingService directly (for consumer modules). */
+  get branching(): BranchingService {
+    return this.branchingService;
+  }
 
   /**
    * Store a new memory for a user+twin pair.
