@@ -5,6 +5,9 @@ Auto-generated on every push. Do not edit manually.
 **Branch:** `dependabot/npm_and_yarn/apps/cyrano-standalone/npm_and_yarn-152f59e559`
 **Commit:** `5247affeb377a7a4a0d31afb380f5d14b379cbe9`
 **Generated:** 2026-05-11T19:33:30Z
+**Branch:** `copilot/update-grok-primary-agent`
+**Commit:** `478d8d053e0e710c21a5361d740f57d6b1fdc5e4`
+**Generated:** 2026-05-11T19:49:40Z
 
 ## All Files
 
@@ -169,6 +172,7 @@ Auto-generated on every push. Do not edit manually.
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-10-ALIGNMENT-SWEEP.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-2-REDBOOK-RECOVERY-DASHBOARD.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PAYLOAD-3-GATEGUARD-SENTINEL-PREPROCESSOR.md`
+- `PROGRAM_CONTROL/REPORT_BACK/PHASE-0.2-REPORT-BACK.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PHASE-3A-BASELINE-SCOPING-2026-04-26.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PHASE-3B-2-PRISMA-DEDUP-INVESTIGATION-2026-04-26.md`
 - `PROGRAM_CONTROL/REPORT_BACK/PHASE-3B-4-AMBIGUITY-RESEARCH-2026-04-26.md`

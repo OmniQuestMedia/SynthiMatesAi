@@ -3,7 +3,7 @@
 # [Short title]
 
 **Directive ID:** [ID]
-**Agent:** COPILOT | CLAUDE_CODE
+**Agent:** COPILOT | GROK
 **Parallel-safe:** YES | NO
 **Touches:** [comma-separated file paths]
 **Mode:** DROID

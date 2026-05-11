@@ -1,7 +1,7 @@
 # Pre-Launch Checklist — Canonical Corpus L0 Ship-Gate
 
 **Authority:** OmniQuest Media Inc. — `OQMI_GOVERNANCE.md` (Canonical Corpus v10)
-**Branch of record:** `claude/frontend-polish-concierge-ui-mlqrR` (Payload 7 + 8)
+**Branch of record:** `grok/phase-0.2-grok-primary-ship-gate` (Payload 7 + 8)
 **Hard launch deadline:** 2026-10-01
 
 This checklist is the **L0 ship-gate**. Every line must be verifiable —

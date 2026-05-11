@@ -6,7 +6,7 @@
 **Repo path:** `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
 **Supersedes:** Any prior tier definitions in `docs/REQUIREMENTS_MASTER.md`, `docs/DOMAIN_GLOSSARY.md`, handoff docs, governance configuration, or service code. On conflict, **this document wins**; diverging code is the bug.
 
-> This document is the source of truth for membership tier semantics, lifecycle, expiry, age-verification cadence, token interaction, card-on-file requirements, and the separation between tiers and products. Schema, service code, governance configuration, feature gates, and agent directives must derive from this policy. All future threads and coding agents (Claude Chat, Copilot, Claude Code) must treat this file as authoritative.
+> This document is the source of truth for membership tier semantics, lifecycle, expiry, age-verification cadence, token interaction, card-on-file requirements, and the separation between tiers and products. Schema, service code, governance configuration, feature gates, and agent directives must derive from this policy. All future threads and coding agents (Grok, Copilot) must treat this file as authoritative.
 >
 > **TBD markers** indicate open policy questions that block named downstream scopes. Do not implement anything marked TBD without CEO resolution.
 
@@ -284,7 +284,7 @@ The following items are **not** settled and must be resolved before their named 
 
 - This document is authored and owned by Kevin B. Hartley, CEO — OmniQuest Media Inc.
 - Changes require CEO approval and a commit to `docs/MEMBERSHIP_LIFECYCLE_POLICY.md` on the main branch
-- Any directive (Claude Chat / Copilot / Claude Code) that touches tier, membership, age-verification, card-on-file, or token-expiry semantics **must cite the specific section of this document it implements or derives from**
+- Any directive (Grok / Copilot) that touches tier, membership, age-verification, card-on-file, or token-expiry semantics **must cite the specific section of this document it implements or derives from**
 - When a directive resolves a TBD from §9, the policy doc is updated in the same PR that delivers the implementation — doc and code change together, not separately
 - Downstream canonical documents (`REQUIREMENTS_MASTER.md`, `DOMAIN_GLOSSARY.md`, governance configuration) must be brought into alignment with this document on next touch
 
@@ -294,7 +294,7 @@ The following items are **not** settled and must be resolved before their named 
 
 This section is operational rather than policy-substantive, but it is binding:
 
-- Thread handoffs authored by Claude Chat for CEO review **must be committed to the repo** at `PROGRAM_CONTROL/HANDOFFS/THREAD-NN-HANDOFF.md`, not stored in Google Drive
+- Thread handoffs for CEO review **must be committed to the repo** at `PROGRAM_CONTROL/HANDOFFS/THREAD-NN-HANDOFF.md`, not stored in Google Drive
 - Policy documents authored for CEO review **must be delivered as single copyable code blocks** (this document is the reference format) so the CEO can paste-and-commit without splitting content across messages
-- Any coding-agent directive (Copilot task, Claude Code droid directive) authored by Claude Chat **must also be delivered as a single copyable code block** with no prose interleaved inside the block
-- Claude Chat must not extrapolate policy details beyond what the CEO has explicitly stated. When uncertain, Claude Chat asks rather than guesses, and flags uncertainty explicitly rather than silently filling gaps
+- Any coding-agent directive (Copilot task, Grok droid directive) **must also be delivered as a single copyable code block** with no prose interleaved inside the block
+- Agents must not extrapolate policy details beyond what the CEO has explicitly stated. When uncertain, ask rather than guess, and flag uncertainty explicitly rather than silently filling gaps
