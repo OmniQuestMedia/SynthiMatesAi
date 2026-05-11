@@ -17,11 +17,11 @@ import {
   PHOTOREALISM_NEGATIVE_PROMPT,
   PHOTOREALISM_POSITIVE_SUFFIX,
 } from './image.types';
+import { HttpClient } from '../../core-api/src/common/http-client';
+import { getCircuitBreaker } from '../../core-api/src/common/circuit-breaker';
 
 const NATS_IMAGE_GENERATED = 'cyrano.image.generated';
-// NATS_IMAGE_FAILED is published from the failure path that lands in the
-// Phase 2 image-generation hardening directive (CYR-IMG-002-HARDENING).
-// Keeping the constant inline here once that try/catch is wired.
+const NATS_IMAGE_FAILED = 'cyrano.image.failed';
 
 const BANANA_API_KEY = process.env.BANANA_API_KEY ?? '';
 const BANANA_MODEL_KEY_FLUX_PRO = process.env.BANANA_MODEL_KEY_FLUX_PRO ?? '';
@@ -46,6 +46,10 @@ const ASPECT_DIMENSIONS: Record<string, { width: number; height: number }> = {
   '4:3': { width: 1152, height: 864 },
   '3:4': { width: 864, height: 1152 },
 };
+
+// Shared HttpClient + CircuitBreaker for Banana.dev calls (singleton per service)
+const bananaHttpClient = new HttpClient({ provider: 'banana', timeoutMs: 60_000 });
+const bananaCircuitBreaker = getCircuitBreaker('banana');
 
 @Injectable()
 export class ImageService {
@@ -115,13 +119,24 @@ export class ImageService {
       height: req.height ?? ASPECT_DIMENSIONS[req.aspect_ratio]?.height ?? 1024,
     };
 
-    const storageUrl = await this.callBananaDev(req.model, {
-      prompt: promptUsed,
-      negative_prompt: negativePrompt,
-      num_inference_steps: req.num_inference_steps ?? 28,
-      guidance_scale: req.guidance_scale ?? 7.5,
-      ...dims,
-    });
+    let storageUrl: string;
+    try {
+      storageUrl = await this.callBananaDev(req.model, {
+        prompt: promptUsed,
+        negative_prompt: negativePrompt,
+        num_inference_steps: req.num_inference_steps ?? 28,
+        guidance_scale: req.guidance_scale ?? 7.5,
+        ...dims,
+      }, req.correlation_id);
+    } catch (err) {
+      await this.nats.publish(NATS_IMAGE_FAILED, {
+        twin_id: req.twin_id,
+        creator_id: req.creator_id,
+        correlation_id: req.correlation_id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
 
     // Persist to cache
     const record = await this.prisma.imageCache.create({
@@ -159,7 +174,11 @@ export class ImageService {
 
   // ─── Private helpers ──────────────────────────────────────────────────────
 
-  private async callBananaDev(model: string, inputs: Record<string, unknown>): Promise<string> {
+  private async callBananaDev(
+    model: string,
+    inputs: Record<string, unknown>,
+    correlationId = 'unknown',
+  ): Promise<string> {
     if (!BANANA_API_KEY) {
       throw new Error('BANANA_API_KEY not configured — image generation unavailable');
     }
@@ -167,25 +186,21 @@ export class ImageService {
     const modelKey =
       model === 'flux-pro' ? BANANA_MODEL_KEY_FLUX_PRO : BANANA_MODEL_KEY_FLUX_SCHNELL;
 
-    const response = await fetch(`${BANANA_BASE_URL}${BANANA_START_PATH}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${BANANA_API_KEY}`,
-      },
-      body: JSON.stringify({ model_key: modelKey, pipeline_input: inputs }),
-    });
+    const { data } = await bananaCircuitBreaker.execute(() =>
+      bananaHttpClient.request<BananaDevResponse>(
+        `${BANANA_BASE_URL}${BANANA_START_PATH}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${BANANA_API_KEY}`,
+          },
+          body: JSON.stringify({ model_key: modelKey, pipeline_input: inputs }),
+        },
+        correlationId,
+      ),
+    );
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Banana.dev API error ${response.status}: ${text}`);
-    }
-
-    const raw = (await response.json()) as unknown;
-    if (typeof raw !== 'object' || raw === null || !('modelOutputs' in raw)) {
-      throw new Error('Banana.dev returned unexpected response shape');
-    }
-    const data = raw as BananaDevResponse;
     const output = data.modelOutputs?.[0];
     if (!output) throw new Error('Banana.dev returned no model output');
 

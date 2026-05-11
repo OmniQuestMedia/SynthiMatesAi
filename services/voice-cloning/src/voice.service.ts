@@ -19,6 +19,8 @@ import {
   VoiceCloneStatus,
   VoiceModel,
 } from './voice.types';
+import { HttpClient } from '../../core-api/src/common/http-client';
+import { getCircuitBreaker } from '../../core-api/src/common/circuit-breaker';
 
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY ?? '';
 const ELEVENLABS_BASE = 'https://api.elevenlabs.io/v1';
@@ -28,6 +30,10 @@ const NATS_VOICE_CLONE_FAILED = 'cyrano.voice.clone.failed';
 const NATS_VOICE_TTS_GENERATED = 'cyrano.voice.tts.generated';
 
 const MIN_SAMPLES = 3;
+
+// Shared HttpClient + CircuitBreaker for ElevenLabs (singleton per service)
+const elevenLabsHttpClient = new HttpClient({ provider: 'elevenlabs' });
+const elevenLabsCircuitBreaker = getCircuitBreaker('elevenlabs');
 
 @Injectable()
 export class VoiceService {
@@ -122,17 +128,18 @@ export class VoiceService {
         formData.append('files', audioBlob, `sample-${s.sample_id}.mp3`);
       }
 
-      const response = await fetch(`${ELEVENLABS_BASE}/voices/add`, {
-        method: 'POST',
-        headers: { 'xi-api-key': ELEVENLABS_API_KEY },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`ElevenLabs API ${response.status}: ${await response.text()}`);
-      }
-
-      const data = (await response.json()) as { voice_id: string };
+      // Use circuit breaker for the ElevenLabs call
+      const { data } = await elevenLabsCircuitBreaker.execute(() =>
+        elevenLabsHttpClient.request<{ voice_id: string }>(
+          `${ELEVENLABS_BASE}/voices/add`,
+          {
+            method: 'POST',
+            headers: { 'xi-api-key': ELEVENLABS_API_KEY },
+            body: formData,
+          },
+          voice_clone_id,
+        ),
+      );
 
       const updated = await this.prisma.voiceClone.update({
         where: { voice_clone_id },
@@ -179,32 +186,36 @@ export class VoiceService {
 
     const model: VoiceModel = req.model ?? 'eleven_multilingual_v2';
 
-    const response = await fetch(`${ELEVENLABS_BASE}/text-to-speech/${clone.elevenlabs_voice_id}`, {
-      method: 'POST',
-      headers: {
-        'xi-api-key': ELEVENLABS_API_KEY,
-        'Content-Type': 'application/json',
-        Accept: 'audio/mpeg',
-      },
-      body: JSON.stringify({
-        text: req.text,
-        model_id: model,
-        voice_settings: {
-          stability: req.stability ?? 0.5,
-          similarity_boost: req.similarity_boost ?? 0.75,
-          style: req.style ?? 0.0,
-          use_speaker_boost: req.use_speaker_boost ?? true,
+    // TTS returns audio/mpeg binary — use circuit breaker around raw fetch
+    const audioBuffer = await elevenLabsCircuitBreaker.execute(async () => {
+      const response = await fetch(
+        `${ELEVENLABS_BASE}/text-to-speech/${clone.elevenlabs_voice_id}`,
+        {
+          method: 'POST',
+          headers: {
+            'xi-api-key': ELEVENLABS_API_KEY,
+            'Content-Type': 'application/json',
+            Accept: 'audio/mpeg',
+          },
+          body: JSON.stringify({
+            text: req.text,
+            model_id: model,
+            voice_settings: {
+              stability: req.stability ?? 0.5,
+              similarity_boost: req.similarity_boost ?? 0.75,
+              style: req.style ?? 0.0,
+              use_speaker_boost: req.use_speaker_boost ?? true,
+            },
+          }),
         },
-      }),
+      );
+      if (!response.ok) {
+        throw new Error(`ElevenLabs TTS ${response.status}: ${await response.text()}`);
+      }
+      return Buffer.from(await response.arrayBuffer());
     });
-
-    if (!response.ok) {
-      throw new Error(`ElevenLabs TTS ${response.status}: ${await response.text()}`);
-    }
-
     // In production this buffer would be uploaded to S3 and a presigned URL returned.
     // For now we return a data-URI placeholder to unblock frontend integration.
-    const audioBuffer = Buffer.from(await response.arrayBuffer());
     const audioUrl = `data:audio/mpeg;base64,${audioBuffer.toString('base64')}`;
 
     await this.nats.publish(NATS_VOICE_TTS_GENERATED, {
