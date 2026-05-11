@@ -143,6 +143,7 @@ Things that were in this repo, have been removed, and should not be reintroduced
 | 2026-04-26   | `services/heartsync/` — as primary biometric service              | Superseded by `services/sensync/` (SenSync™). heartsync/ retained as historical reference; no new code should be added. NATS topics (heartsync.\*) tombstoned. feature/ffs-sensync-cyrano-upgrade-v2.                                                                                              |
 | 2026-04-26   | `services/room-heat/` — Room-Heat Engine as primary FFS service   | Superseded by `services/ffs/` (Flicker n'Flame Scoring). room-heat/ retained as historical reference; no new code should be added. NATS topics (room.heat.\*) tombstoned. feature/ffs-sensync-cyrano-upgrade-v2.                                                                                   |
 | 2026-04-26   | NATS topics `heartsync.*`, `room.heat.*`, ShowZone topics         | Replaced by `sensync.*`, `ffs.score.*`. Tombstones preserved in topics.registry.ts. feature/ffs-sensync-cyrano-upgrade-v2.                                                                                                                                                                         |
+| 2026-05-11   | **Claude Code** as authorized build agent                         | Retired by CEO directive 2026-05-11. `CNZ-CLAUDE-CODE-KICKOFF.md` and `CNZ-CLAUDE-CODE-STANDING-PROMPT.md` moved to `PROGRAM_CONTROL/DIRECTIVES/DONE/` as RETIRED. All `Agent: claude-code` task hints in CNZ-WORK-001.md updated to `Agent: grok`. Directive-dispatch workflow updated to re-route CLAUDE_CODE labels to Grok. `AGENTS.md` updated with Grok as primary agent. |
 
 ---
 
@@ -157,6 +158,7 @@ Anything an incoming agent needs to know that doesn't fit elsewhere: terminology
 - Commit prefix enum: the canonical list lives in `docs/DOMAIN_GLOSSARY.md` under "COMMIT PREFIX ENUM — CANONICAL" (landed 2026-04-23 by CNZ-WORK-001-A012). The old OQMI v2.0 enum and the RRR-GOV-002 §3.5 enum are retired — consult only the glossary.
 - `OQMI_GOVERNANCE.md` was found truncated at §8 on 2026-04-23 (§§9–§12 missing though referenced elsewhere). Flagged in A012 REPORT_BACK for a future governance-scoped restore.
 - `.github/copilot-instructions.md` carries large stretches of "OQMI CODING DOCTRINE v2.0" text duplicating content now in OQMI_GOVERNANCE.md and superseded prefix conventions. Header pointer fixed 2026-04-23 (A005/A006); broader doctrine refresh of that file is a follow-up.
+- **Claude Code is RETIRED** (2026-05-11). Grok is the primary build agent. All future FIZ-scoped and service-authoring work routes to Grok. Copilot remains secondary for repo chores.
 
 ---
 

@@ -49,16 +49,27 @@ jobs:
           && echo "CHECK: Assigned to app/copilot" \
           || echo "WARNING: Could not assign to app/copilot — may require org-level Copilot enabled"
 
-      - name: Route to Claude Code
-        if: steps.parse.outputs.agent == 'CLAUDE_CODE'
+      - name: Route to Grok
+        if: steps.parse.outputs.agent == 'GROK'
         run: |
-          echo "CHECK: Adding claude-code-task label and posting comment for issue ${{ github.event.issue.number }}"
+          echo "CHECK: Adding grok-task label and posting comment for issue ${{ github.event.issue.number }}"
           gh issue edit ${{ github.event.issue.number }} \
             --repo ${{ github.repository }} \
-            --add-label "claude-code-task"
+            --add-label "grok-task"
           gh issue comment ${{ github.event.issue.number }} \
             --repo ${{ github.repository }} \
-            --body "This directive is scoped for Claude Code (DROID MODE). Paste the directive content to Claude Code to execute."
+            --body "This directive is scoped for Grok (primary build agent — DROID MODE). Paste the directive content to Grok to execute."
+
+      - name: Route to Claude Code (RETIRED — routes to Grok)
+        if: steps.parse.outputs.agent == 'CLAUDE_CODE'
+        run: |
+          echo "CHECK: Agent CLAUDE_CODE is retired. Re-routing issue ${{ github.event.issue.number }} to Grok."
+          gh issue edit ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --add-label "grok-task"
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "⚠️ CLAUDE_CODE is retired (2026-05-11). This directive has been re-routed to **Grok** (primary build agent). Paste the directive content to Grok to execute."
 
       - name: Add dispatched label
         run: |
