@@ -276,6 +276,6 @@ Supersedes per-call Yoti/Veriff/Onfido model.**
 
 ---
 
-Maintained by: Claude Chat (architecture) + Copilot/Claude Code (execution)
+Maintained by: Grok (architecture) + Copilot/Grok (execution)
 Update this file as part of every directive report-back commit.
 CEO authority: Kevin B. Hartley — OmniQuest Media Inc.

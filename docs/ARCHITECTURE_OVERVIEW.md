@@ -3,7 +3,7 @@
 **Authority:** OmniQuest Media Inc. — Canonical Corpus v10
 **Status at 2026-04-25:** Functionally complete for internal alpha
 (PAYLOAD 7 frontend polish + PAYLOAD 8 ship-gate verification landed).
-**Branch of record:** `claude/frontend-polish-concierge-ui-mlqrR`.
+**Branch of record:** `grok/phase-0.2-grok-primary-ship-gate`.
 
 This document is the single, top-level map of the ChatNow.Zone build.
 For per-service detail, follow the links into `services/*/` and

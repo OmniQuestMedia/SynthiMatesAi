@@ -163,7 +163,7 @@ const checks: Array<() => CheckResult> = [
     return {
       id: 'GATE-2',
       category: 'Welfare + safety',
-      description: 'Welfare Guardian thresholds 40 / 70 / 90 honored',
+      description: 'WelfareWatch™ Score thresholds 40 / 70 / 90 honored',
       status: ok ? 'PASS' : 'FAIL',
       evidence: [ok ? 'DECISION_THRESHOLDS present' : 'thresholds missing or drifted'],
     };
@@ -521,6 +521,45 @@ const checks: Array<() => CheckResult> = [
       remediation: ok
         ? undefined
         : 'Add AI advisory-only boundary clause to governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §2',
+    };
+  },
+
+  // ── 15. NAMING CANON COMPLIANCE ───────────────────────────────────────────
+  () => {
+    // Partial alignment gate: flags legacy names still present in production
+    // TypeScript (services/ + ui/). Rename pass is incremental; this check
+    // records which legacy tokens survive per Phase 0.2 baseline.
+    const tsFiles = walkTs('services').concat(walkTs('ui'));
+    const legacyTokens: Record<string, string> = {
+      'ffs/': 'crowdsync',
+      'Welfare Guardian': 'WelfareWatch™ Score',
+    };
+    const survivors: string[] = [];
+    for (const f of tsFiles) {
+      const content = readSafe(f) ?? '';
+      for (const [legacy, canonical] of Object.entries(legacyTokens)) {
+        if (content.includes(legacy)) {
+          survivors.push(`${f} contains legacy "${legacy}" (canonical: "${canonical}")`);
+        }
+      }
+    }
+    return {
+      id: 'NAMING-1',
+      category: 'Naming canon compliance (Phase 0.2)',
+      description:
+        'No legacy naming tokens (ffs/ → crowdsync, Welfare Guardian → WelfareWatch™ Score) in services/ or ui/',
+      status: survivors.length === 0 ? 'PASS' : 'SKIP',
+      evidence:
+        survivors.length === 0
+          ? ['No legacy naming tokens found in production TypeScript']
+          : [
+              `Phase 0.2 baseline — ${survivors.length} legacy token(s) remain (cross-repo aliases pending full rename pass):`,
+              ...survivors,
+            ],
+      remediation:
+        survivors.length === 0
+          ? undefined
+          : 'Execute full naming-canon rename pass per docs/DOMAIN_GLOSSARY.md before launch',
     };
   },
 ];
