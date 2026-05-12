@@ -6,11 +6,12 @@
 // Usage:
 //   ts-node PROGRAM_CONTROL/ship-gate-verifier.ts [--json]
 //
-// The verifier deliberately uses only filesystem reads — no network, no DB,
-// no secret access. Outputs are reproducible across machines.
+// The verifier runs deterministic filesystem checks plus selected local
+// command checks for linting policy enforcement.
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, relative, resolve } from 'path';
+import { execSync, spawnSync } from 'child_process';
 
 interface CheckResult {
   id: string;
@@ -60,6 +61,62 @@ function walkTs(dir: string, out: string[] = []): string[] {
     }
   }
   return out;
+}
+
+function runCommand(command: string): { ok: boolean; lines: string[] } {
+  try {
+    const output = execSync(command, {
+      cwd: REPO_ROOT,
+      stdio: 'pipe',
+      encoding: 'utf8',
+      env: process.env,
+    });
+    const lines = output
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(-8);
+    return { ok: true, lines: lines.length > 0 ? lines : ['command completed without output'] };
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    return {
+      ok: false,
+      lines: msg
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .slice(-8),
+    };
+  }
+}
+
+function runCommandArgs(command: string, args: string[]): { ok: boolean; lines: string[] } {
+  const result = spawnSync(command, args, {
+    cwd: REPO_ROOT,
+    env: process.env,
+    encoding: 'utf8',
+  });
+
+  const merged = `${result.stdout ?? ''}\n${result.stderr ?? ''}`
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(-8);
+
+  if (result.status === 0) {
+    return {
+      ok: true,
+      lines: merged.length > 0 ? merged : ['command completed without output'],
+    };
+  }
+
+  return {
+    ok: false,
+    lines:
+      merged.length > 0
+        ? merged
+        : [`Command failed: ${command} ${args.join(' ')}`, `exit status: ${result.status}`],
+  };
 }
 
 const checks: Array<() => CheckResult> = [
@@ -523,8 +580,124 @@ const checks: Array<() => CheckResult> = [
         : 'Add AI advisory-only boundary clause to governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md §2',
     };
   },
+  // ── 15. LINT-CLEAN INVARIANT (Phase 0.5 Ecosystem Lint Parity) ───────────
+  () => {
+    const pkg = readSafe('package.json') ?? '';
+    let pkgJson: Record<string, unknown> = {};
+    try {
+      pkgJson = JSON.parse(pkg);
+    } catch {
+      pkgJson = {};
+    }
+    const scripts = (pkgJson['scripts'] as Record<string, string> | undefined) ?? {};
+    const devDeps = (pkgJson['devDependencies'] as Record<string, string> | undefined) ?? {};
+    const lintStagedCfg = pkgJson['lint-staged'];
 
-  // ── 15. NAMING CANON COMPLIANCE ───────────────────────────────────────────
+    const hasEslintrc =
+      exists('.eslintrc.js') || exists('.eslintrc.cjs') || exists('eslint.config.js');
+    const hasLintScript = 'lint' in scripts;
+    const hasLintCiScript = 'lint:ci' in scripts;
+    const hasHusky = 'husky' in devDeps;
+    const hasLintStaged = 'lint-staged' in devDeps;
+    const hasLintStagedCfg =
+      lintStagedCfg != null ||
+      exists('.lintstagedrc') ||
+      exists('.lintstagedrc.js') ||
+      exists('.lintstagedrc.json');
+    const hasHuskyHook = exists('.husky/pre-commit');
+
+    const failures: string[] = [];
+    if (!hasEslintrc) failures.push('.eslintrc.js (or equivalent) missing');
+    if (!hasLintScript) failures.push('"lint" script missing from package.json');
+    if (!hasLintCiScript) failures.push('"lint:ci" script missing from package.json');
+    if (!hasHusky) failures.push('husky not in devDependencies');
+    if (!hasLintStaged) failures.push('lint-staged not in devDependencies');
+    if (!hasLintStagedCfg) failures.push('lint-staged config missing');
+    if (!hasHuskyHook) failures.push('.husky/pre-commit hook missing');
+
+    return {
+      id: 'LINT-1',
+      category: 'Lint-clean (Phase 0.5)',
+      description:
+        'Lint parity: ESLint config + lint/lint:ci scripts + Husky + lint-staged all present',
+      status: failures.length === 0 ? 'PASS' : 'FAIL',
+      evidence:
+        failures.length === 0
+          ? [
+              '.eslintrc.js present',
+              '"lint" + "lint:ci" scripts present',
+              'husky + lint-staged in devDependencies',
+              'lint-staged config present',
+              '.husky/pre-commit hook present',
+            ]
+          : failures,
+      remediation:
+        failures.length === 0
+          ? undefined
+          : 'Run: yarn add -D husky lint-staged && husky init — then add lint:ci script and lint-staged config to package.json',
+
+  // ── 15. LINTING STANDARDIZATION ────────────────────────────────────────────
+  () => {
+    const lintCi = runCommand('yarn lint:ci');
+    return {
+      id: 'LINT-1',
+      category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
+      description: 'Repository is lint-clean via yarn lint:ci (eslint + prettier + tsc)',
+      status: lintCi.ok ? 'PASS' : 'FAIL',
+      evidence: lintCi.lines,
+      remediation: lintCi.ok
+        ? undefined
+        : 'Resolve lint/typecheck issues until `yarn lint:ci` exits 0 (fail-closed)',
+    };
+  },
+  () => {
+    const shouldRun = process.env.SHIP_GATE_RUN_SUPER_LINTER === '1';
+    if (!shouldRun) {
+      return {
+        id: 'LINT-2',
+        category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
+        description: 'Super-Linter advisory check is available',
+        status: 'SKIP',
+        evidence: ['Advisory check skipped (set SHIP_GATE_RUN_SUPER_LINTER=1 to run).'],
+      };
+    }
+
+    const docker = runCommand('docker --version');
+    if (!docker.ok) {
+      return {
+        id: 'LINT-2',
+        category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
+        description: 'Super-Linter advisory check is available',
+        status: 'SKIP',
+        evidence: ['Docker not available; advisory super-linter check skipped.', ...docker.lines],
+      };
+    }
+
+    const superLinter = runCommandArgs('docker', [
+      'run',
+      '--rm',
+      '-e',
+      'VALIDATE_ALL_CODEBASE=false',
+      '-e',
+      'DEFAULT_WORKSPACE=/tmp/lint',
+      '-e',
+      'LINTER_RULES_PATH=.github/linters',
+      '-v',
+      `${REPO_ROOT}:/tmp/lint`,
+      'ghcr.io/super-linter/super-linter:latest',
+    ]);
+    return {
+      id: 'LINT-2',
+      category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
+      description: 'Super-Linter advisory check is available',
+      status: superLinter.ok ? 'PASS' : 'SKIP',
+      evidence: superLinter.ok
+        ? ['Super-Linter advisory run completed cleanly.', ...superLinter.lines]
+        : ['Super-Linter advisory run failed; non-blocking by policy.', ...superLinter.lines],
+    };
+  },
+
+  // ── 16. NAMING CANON COMPLIANCE ───────────────────────────────────────────
   () => {
     // Partial alignment gate: flags legacy names still present in production
     // TypeScript (services/ + ui/). Rename pass is incremental; this check
@@ -560,6 +733,46 @@ const checks: Array<() => CheckResult> = [
         survivors.length === 0
           ? undefined
           : 'Execute full naming-canon rename pass per docs/DOMAIN_GLOSSARY.md before launch',
+    };
+  },
+  () => {
+    const pkg = readSafe('package.json') ?? '';
+    const ci = readSafe('.github/workflows/ci.yml') ?? '';
+    const copilot = readSafe('.github/workflows/copilot-internal.yml') ?? '';
+    const superLinter = readSafe('.github/workflows/super-linter.yml') ?? '';
+
+    const hasLintScripts =
+      pkg.includes('"lint:ci-python"') &&
+      pkg.includes('"lint:ci-js"') &&
+      pkg.includes('"lint:ci"');
+    const ciHasGate = ci.includes('yarn lint:ci') && ci.includes('yarn ship-gate');
+    const copilotHasGate = copilot.includes('yarn lint:ci') && copilot.includes('yarn ship-gate');
+    const superLinterMixed =
+      superLinter.includes('VALIDATE_PYTHON: true') &&
+      superLinter.includes('VALIDATE_JAVASCRIPT_ES: true') &&
+      superLinter.includes('VALIDATE_TYPESCRIPT_ES: true');
+    const ok = hasLintScripts && ciHasGate && copilotHasGate && superLinterMixed;
+
+    return {
+      id: 'cross-repo-lint-parity',
+      category: 'Cross-repo lint parity',
+      description: 'Mixed lint parity baseline (scripts + CI ship-gate + super-linter validators) is enforced',
+      status: ok ? 'PASS' : 'FAIL',
+      evidence: [
+        hasLintScripts
+          ? 'package.json includes lint:ci-python + lint:ci-js + lint:ci'
+          : 'package.json missing one or more lint:ci* scripts',
+        ciHasGate ? 'ci.yml runs lint:ci and ship-gate' : 'ci.yml missing lint:ci and/or ship-gate step',
+        copilotHasGate
+          ? 'copilot-internal.yml runs lint:ci and ship-gate'
+          : 'copilot-internal.yml missing lint:ci and/or ship-gate step',
+        superLinterMixed
+          ? 'super-linter.yml enables Python + JavaScript + TypeScript validators'
+          : 'super-linter.yml missing mixed-language validator enablement',
+      ],
+      remediation: ok
+        ? undefined
+        : 'Align package scripts and CI workflows with Phase 0.6 mixed lint parity baseline',
     };
   },
 ];
