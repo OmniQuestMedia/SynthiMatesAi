@@ -1,7 +1,8 @@
-# Contributing — Cyrano™ Standalone (CyranoZone)
+# Contributing — CyranoZone Cleanup Mode
 
 **Company:** OmniQuest Media Inc. (OQMInc™)
 **Governance authority:** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
+**Infrastructure authority:** `governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`
 **Naming authority:** `docs/DOMAIN_GLOSSARY.md`
 **Package manager:** Yarn (canonical — do not use npm or pnpm)
 **Platform time standard:** America/Toronto
@@ -131,12 +132,14 @@ prefixes when financial-integrity paths are touched.
 
 ### 5.1 Default (auto-merge)
 
-PRs auto-merge on green CI when:
+PRs auto-merge on the cleanup fast path when CI is green or gray and the ship-gate remains satisfied:
 
 - All CI checks pass
 - No merge conflicts
 - No unresolved errors
 - PR does not touch a Human-Review Category (see §5.2 below)
+
+For this cleanup cycle, super-linter, CI, and ship-gate are the branch-protection baseline for non-financial work.
 
 **Merge method is squash** — one feature branch = one commit on `main`.
 
@@ -149,6 +152,8 @@ The following require CEO PR merge:
    `payout`, `escrow`, `commission`, `wallet`, `ledger_entry`, or
    any money-like column)
 3. New compliance constants
+
+Financial / ledger / compliance paths stay on human-review merge. Non-financial cleanup work should use the fast path.
 
 ### 5.3 Error resolution
 
