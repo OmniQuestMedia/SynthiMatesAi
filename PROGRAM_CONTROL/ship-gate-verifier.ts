@@ -642,7 +642,7 @@ const checks: Array<() => CheckResult> = [
   () => {
     const lintCi = runCommand('yarn lint:ci');
     return {
-      id: 'LINT-1',
+      id: 'LINT-2',
       category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
       description: 'Repository is lint-clean via yarn lint:ci (eslint + prettier + tsc)',
       status: lintCi.ok ? 'PASS' : 'FAIL',
@@ -656,7 +656,7 @@ const checks: Array<() => CheckResult> = [
     const shouldRun = process.env.SHIP_GATE_RUN_SUPER_LINTER === '1';
     if (!shouldRun) {
       return {
-        id: 'LINT-2',
+        id: 'LINT-3',
         category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
         description: 'Super-Linter advisory check is available',
         status: 'SKIP',
@@ -667,7 +667,7 @@ const checks: Array<() => CheckResult> = [
     const docker = runCommand('docker --version');
     if (!docker.ok) {
       return {
-        id: 'LINT-2',
+        id: 'LINT-3',
         category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
         description: 'Super-Linter advisory check is available',
         status: 'SKIP',
@@ -689,7 +689,7 @@ const checks: Array<() => CheckResult> = [
       'ghcr.io/super-linter/super-linter:latest',
     ]);
     return {
-      id: 'LINT-2',
+      id: 'LINT-3',
       category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
       description: 'Super-Linter advisory check is available',
       status: superLinter.ok ? 'PASS' : 'SKIP',

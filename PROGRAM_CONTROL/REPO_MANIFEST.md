@@ -364,6 +364,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/RRR_CEO_DECISIONS_FINAL_2026-04-17.md`
 - `docs/UX_CROSS_STACK_ALIGNMENT.md`
 - `docs/UX_INTEGRATION_BRIEF.md`
+- `docs/WEBHOOK_CONTRACTS.md`
 - `docs/compliance/evidence_templates/NCII_TAKEDOWN_LOG.md`
 - `docs/doctrine/COPILOT_GUARDRAILS.md`
 - `docs/ux/00-shared-components.md`
@@ -670,6 +671,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/image-generation/src/image.module.ts`
 - `services/image-generation/src/image.service.ts`
 - `services/image-generation/src/image.types.ts`
+- `services/integration-hub/src/ecomms-zone.client.ts`
 - `services/integration-hub/src/hub.module.ts`
 - `services/integration-hub/src/hub.service.ts`
 - `services/ledger/index.ts`

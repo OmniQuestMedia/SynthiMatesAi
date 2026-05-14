@@ -24,3 +24,4 @@ services/core-api/src/growth/guarded-notification.service.ts
 services/core-api/src/growth/growth.module.ts
 docs/REQUIREMENTS_MASTER.md
 docs/DOMAIN_GLOSSARY.md
+docs/WEBHOOK_CONTRACTS.md

@@ -138,6 +138,7 @@ PRs auto-merge on the cleanup fast path when CI is green or gray and the ship-ga
 - No merge conflicts
 - No unresolved errors
 - PR does not touch a Human-Review Category (see §5.2 below)
+- PR does not touch financial/ledger paths (cleanup mode safeguard)
 
 For this cleanup cycle, super-linter, CI, and ship-gate are the branch-protection baseline for non-financial work.
 
