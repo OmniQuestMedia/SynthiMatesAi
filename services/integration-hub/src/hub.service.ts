@@ -18,9 +18,10 @@
 //   7. REDBOOK rate cards and RECOVERY_ENGINE constants are read-only
 //      references from `governance.config.ts` — never inlined.
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { NatsService } from '../../core-api/src/nats/nats.service';
 import { NATS_TOPICS } from '../../nats/topics.registry';
+import { EcommsZoneClient } from './ecomms-zone.client';
 import {
   LEDGER_SPEND_ORDER,
   RECOVERY_ENGINE,
@@ -119,6 +120,7 @@ export class IntegrationHubService {
     private readonly nats: NatsService,
     private readonly creatorControl: CreatorControlService,
     private readonly cyrano: CyranoService,
+    @Optional() private readonly ecommsZoneClient?: EcommsZoneClient,
   ) {}
 
   /**
@@ -143,7 +145,7 @@ export class IntegrationHubService {
     const scaledRate = +(input.creator_payout_rate_per_token_usd * (1 + scalingPct)).toFixed(4);
 
     if (MONETIZATION_TRIGGER_TIERS.has(tier)) {
-      this.nats.publish(NATS_TOPICS.HUB_HIGH_HEAT_MONETIZATION, {
+      const monetizationPayload = {
         session_id: input.frame.session_id,
         creator_id: input.frame.creator_id,
         guest_id: input.frame.guest_id,
@@ -153,7 +155,9 @@ export class IntegrationHubService {
         suggestion_id: suggestion?.suggestion_id ?? null,
         captured_at_utc: capturedAt,
         rule_applied_id: HUB_RULE_ID,
-      });
+      };
+      this.nats.publish(NATS_TOPICS.HUB_HIGH_HEAT_MONETIZATION, monetizationPayload);
+      void this.ecommsZoneClient?.sendHighHeatMonetization(monetizationPayload);
     }
 
     if (scalingPct > 0) {

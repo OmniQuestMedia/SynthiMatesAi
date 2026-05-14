@@ -635,12 +635,14 @@ const checks: Array<() => CheckResult> = [
         failures.length === 0
           ? undefined
           : 'Run: yarn add -D husky lint-staged && husky init — then add lint:ci script and lint-staged config to package.json',
+    };
+  },
 
   // ── 15. LINTING STANDARDIZATION ────────────────────────────────────────────
   () => {
     const lintCi = runCommand('yarn lint:ci');
     return {
-      id: 'LINT-1',
+      id: 'LINT-2',
       category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
       description: 'Repository is lint-clean via yarn lint:ci (eslint + prettier + tsc)',
       status: lintCi.ok ? 'PASS' : 'FAIL',
@@ -654,7 +656,7 @@ const checks: Array<() => CheckResult> = [
     const shouldRun = process.env.SHIP_GATE_RUN_SUPER_LINTER === '1';
     if (!shouldRun) {
       return {
-        id: 'LINT-2',
+        id: 'LINT-3',
         category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
         description: 'Super-Linter advisory check is available',
         status: 'SKIP',
@@ -665,7 +667,7 @@ const checks: Array<() => CheckResult> = [
     const docker = runCommand('docker --version');
     if (!docker.ok) {
       return {
-        id: 'LINT-2',
+        id: 'LINT-3',
         category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
         description: 'Super-Linter advisory check is available',
         status: 'SKIP',
@@ -687,7 +689,7 @@ const checks: Array<() => CheckResult> = [
       'ghcr.io/super-linter/super-linter:latest',
     ]);
     return {
-      id: 'LINT-2',
+      id: 'LINT-3',
       category: 'Linting standardization (OQMI_LINT_STANDARD_v1.0)',
       description: 'Super-Linter advisory check is available',
       status: superLinter.ok ? 'PASS' : 'SKIP',
@@ -742,9 +744,7 @@ const checks: Array<() => CheckResult> = [
     const superLinter = readSafe('.github/workflows/super-linter.yml') ?? '';
 
     const hasLintScripts =
-      pkg.includes('"lint:ci-python"') &&
-      pkg.includes('"lint:ci-js"') &&
-      pkg.includes('"lint:ci"');
+      pkg.includes('"lint:ci-python"') && pkg.includes('"lint:ci-js"') && pkg.includes('"lint:ci"');
     const ciHasGate = ci.includes('yarn lint:ci') && ci.includes('yarn ship-gate');
     const copilotHasGate = copilot.includes('yarn lint:ci') && copilot.includes('yarn ship-gate');
     const superLinterMixed =
@@ -756,13 +756,16 @@ const checks: Array<() => CheckResult> = [
     return {
       id: 'cross-repo-lint-parity',
       category: 'Cross-repo lint parity',
-      description: 'Mixed lint parity baseline (scripts + CI ship-gate + super-linter validators) is enforced',
+      description:
+        'Mixed lint parity baseline (scripts + CI ship-gate + super-linter validators) is enforced',
       status: ok ? 'PASS' : 'FAIL',
       evidence: [
         hasLintScripts
           ? 'package.json includes lint:ci-python + lint:ci-js + lint:ci'
           : 'package.json missing one or more lint:ci* scripts',
-        ciHasGate ? 'ci.yml runs lint:ci and ship-gate' : 'ci.yml missing lint:ci and/or ship-gate step',
+        ciHasGate
+          ? 'ci.yml runs lint:ci and ship-gate'
+          : 'ci.yml missing lint:ci and/or ship-gate step',
         copilotHasGate
           ? 'copilot-internal.yml runs lint:ci and ship-gate'
           : 'copilot-internal.yml missing lint:ci and/or ship-gate step',

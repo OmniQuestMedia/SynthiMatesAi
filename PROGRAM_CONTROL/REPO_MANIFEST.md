@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/update-architecture-and-workflows`
-**Commit:** `2ac918b7c1822ac2e90315ef99925aaa6c5df2c9`
-**Generated:** 2026-05-12T17:51:28Z
+**Branch:** `copilot/cleanup-governance-sync`
+**Commit:** `2eb8c149a2890a3e3c74d2918dc8a9ba12cc0507`
+**Generated:** 2026-05-14T09:34:10Z
 
 ## All Files
 
@@ -258,6 +258,8 @@ Auto-generated on every push. Do not edit manually.
 - `PROGRAM_CONTROL/REPORT_BACK/_ARCHIVE_2026-Q1/_MANIFEST.md`
 - `PROGRAM_CONTROL/REPORT_BACK/fix-yarn-lockfile-ci.md`
 - `PROGRAM_CONTROL/REPO_MANIFEST.md`
+- `PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md`
+- `PROGRAM_CONTROL/WORK-ORDER-v0.9.x.md`
 - `PROGRAM_CONTROL/ship-gate-verifier.js`
 - `PROGRAM_CONTROL/ship-gate-verifier.ts`
 - `README.md`
@@ -363,6 +365,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/RRR_CEO_DECISIONS_FINAL_2026-04-17.md`
 - `docs/UX_CROSS_STACK_ALIGNMENT.md`
 - `docs/UX_INTEGRATION_BRIEF.md`
+- `docs/WEBHOOK_CONTRACTS.md`
 - `docs/compliance/evidence_templates/NCII_TAKEDOWN_LOG.md`
 - `docs/doctrine/COPILOT_GUARDRAILS.md`
 - `docs/ux/00-shared-components.md`
@@ -669,6 +672,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/image-generation/src/image.module.ts`
 - `services/image-generation/src/image.service.ts`
 - `services/image-generation/src/image.types.ts`
+- `services/integration-hub/src/ecomms-zone.client.ts`
 - `services/integration-hub/src/hub.module.ts`
 - `services/integration-hub/src/hub.service.ts`
 - `services/ledger/index.ts`

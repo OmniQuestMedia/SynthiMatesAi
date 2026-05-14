@@ -2,6 +2,8 @@
 
 **Company:** OmniQuest Media Inc. (OQMInc™)
 **Governance authority:** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
+**Infra/Security authority:** `governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`
+**Cleanup mode index:** `PROGRAM_CONTROL/WORK-ORDER-v0.9.x.md`
 **Naming authority:** `docs/DOMAIN_GLOSSARY.md`
 **Package manager:** Yarn (canonical — do not use npm or pnpm)
 **Platform time standard:** America/Toronto
@@ -137,6 +139,7 @@ PRs auto-merge on green CI when:
 - No merge conflicts
 - No unresolved errors
 - PR does not touch a Human-Review Category (see §5.2 below)
+- PR does not touch financial/ledger paths (cleanup mode safeguard)
 
 **Merge method is squash** — one feature branch = one commit on `main`.
 

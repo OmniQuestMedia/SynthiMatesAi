@@ -48,9 +48,6 @@ jobs:
           YAMLVALIDATE_ALL_CODEBASE: false
           IGNORE_GITIGNORED_FILES: true
 
-          # Restrict linting to canonical governance/docs plus active mixed-language codepaths
-          # Matches: .github/**, docs/**, gateguard/**, services/**, ui/**, and root-level markdown/yaml/json
-          FILTER_REGEX_INCLUDE: ^(\.github/|docs/|gateguard/|services/|ui/|[^/]+\.(md|yml|yaml|json)$)
           # Restrict linting to non-code governance/docs + root-level config/source files.
           FILTER_REGEX_INCLUDE: ^(\.github/|docs/|PROGRAM_CONTROL/|[^/]+\.(md|yml|yaml|json|ts|js)$)
 

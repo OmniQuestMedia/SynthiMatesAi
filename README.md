@@ -222,6 +222,13 @@ This repo operates under the OQMI Coding Doctrine v2.0. All agents must read:
 - **[`PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`](PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md)** — governance invariants, PR lifecycle, escalation discipline.
 - **[`docs/DOMAIN_GLOSSARY.md`](docs/DOMAIN_GLOSSARY.md)** — naming authority and commit prefix enum.
 - **[`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md)** — sovereign infrastructure & security policy (rule_applied_id: OQMI_INFRA_v1.0). Binding on all repos, environments, agents, and infrastructure.
+- **[`PROGRAM_CONTROL/WORK-ORDER-v0.9.x.md`](PROGRAM_CONTROL/WORK-ORDER-v0.9.x.md)** — active cleanup-mode work-order index.
+
+### Cleanup mode fast-path
+
+- Cleanup-only lane is active (`GOVERNANCE-EQ-v1`).
+- Non-financial PRs use auto-merge after CI + ship-gate + super-linter signals are green/gray.
+- Financial/ledger-path changes remain human-review only.
 
 ### Financial Integrity Zone (FIZ)
 
@@ -258,3 +265,5 @@ user system as the main ChatNow.Zone platform. When ready to merge:
 ---
 
 _Cyrano™ — OmniQuest Media Inc. · All rights reserved._
+
+_[rule_applied_id: GOVERNANCE-EQ-v1]_
