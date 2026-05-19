@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/review-role-task-CMDGD`
-**Commit:** `c87b3989dc6bbe45757e718256c0c154eb7889a4`
-**Generated:** 2026-05-19T09:31:11Z
+**Branch:** `agent/cowork-orch-2026-05-19-directives`
+**Commit:** `62a00597c8a09c481437f3430ba39080eac7c3d7`
+**Generated:** 2026-05-19T18:01:22Z
 
 ## All Files
 
@@ -97,6 +97,7 @@ Auto-generated on every push. Do not edit manually.
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/CYR-PORTAL-005-CONSISTENCY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/CYR-SAFETY-006-MODERATION.md`
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/CYR-VOICE-004-CALL-SYSTEM.md`
+- `PROGRAM_CONTROL/DIRECTIVES/QUEUE/GOV-SYN-REACTIVATE-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_SYSTEM_STATE.md`
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OSS-Lift-From-Index.md`
