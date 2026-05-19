@@ -1,4 +1,4 @@
-# CyranoZone — Cleanup Mode
+# SythiMatesAi — Cleanup Mode
 
 > **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
 > Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.

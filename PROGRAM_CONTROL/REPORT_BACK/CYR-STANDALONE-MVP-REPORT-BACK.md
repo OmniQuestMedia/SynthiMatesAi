@@ -3,7 +3,7 @@
 **Task:** Cyrano Standalone MVP — duplicate & strip ChatNow.Zone for Cyrano product
 **Directive source:** Problem statement supplied 2026-04-27
 **Agent:** Copilot (GitHub Copilot workspace agent)
-**Repo:** `OmniQuestMediaInc/CyranoZone`
+**Repo:** `OmniQuestMediaInc/SythiMatesAi`
 **Branch:** `copilot/feat-cyrano-standalone-mvp`
 **HEAD:** `89ec099`
 

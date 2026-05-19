@@ -4,7 +4,7 @@
 **Status:** Active  
 **Rule Applied (document cleanup):** GOVERNANCE-EQ-v1
 
-## eCommsZone outbound contract (CyranoZone → eCommsZone)
+## eCommsZone outbound contract (SythiMatesAi → eCommsZone)
 
 **Transport:** HTTPS webhook + NATS mirror event  
 **Webhook URL env:** `ECOMMSZONE_WEBHOOK_URL`  

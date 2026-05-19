@@ -1,7 +1,7 @@
 # PHASE-0.2 — Grok Primary Agent + Full Ship-Gate + Workflow Hardening
 
 **Task:** PHASE-0.2  
-**Repo:** OmniQuestMediaInc/CyranoZone  
+**Repo:** OmniQuestMediaInc/SythiMatesAi  
 **Branch:** `grok/phase-0.2-grok-primary-ship-gate`  
 **Base HEAD (pre-change):** `6d1d5595aab1e231a208ceb9deea7792c7a4826a`  
 **Rule applied:** OQMI_INFRA_v1.0 + OQTECH_BRIEF_v1.0  

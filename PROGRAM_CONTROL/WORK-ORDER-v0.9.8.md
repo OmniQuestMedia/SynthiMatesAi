@@ -1,4 +1,4 @@
-# WORK-ORDER-v0.9.8 — CyranoZone Cleanup Mode
+# WORK-ORDER-v0.9.8 — SythiMatesAi Cleanup Mode
 
 **Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.  
 **Version:** v0.9.8 (2026-05-13)  
@@ -20,7 +20,7 @@
 ### Workspace probe
 
 ```text
-PWD=/home/runner/work/CyranoZone/CyranoZone
+PWD=/home/runner/work/SythiMatesAi/SythiMatesAi
 ## copilot/cleanup-governance-sync-again...origin/copilot/cleanup-governance-sync-again
 ```
 
@@ -28,7 +28,7 @@ PWD=/home/runner/work/CyranoZone/CyranoZone
 
 ```text
 $ yarn lint:ci
-/home/runner/work/CyranoZone/CyranoZone/PROGRAM_CONTROL/ship-gate-verifier.ts
+/home/runner/work/SythiMatesAi/SythiMatesAi/PROGRAM_CONTROL/ship-gate-verifier.ts
   640:2  error  Parsing error: Property assignment expected
 ```
 

@@ -1,5 +1,5 @@
 # WO: WO-CI-001
-# Continuous Integration — CyranoZone cleanup fast-path baseline
+# Continuous Integration — SythiMatesAi cleanup fast-path baseline
 # Triggers on every push to main and every PR targeting main so that the
 # branch always records the CI + ship-gate baseline required for cleanup-mode auto-merge.
 name: CI
