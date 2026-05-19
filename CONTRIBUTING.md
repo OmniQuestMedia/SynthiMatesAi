@@ -1,4 +1,4 @@
-# Contributing — CyranoZone Cleanup Mode
+# Contributing — SythiMatesAi Cleanup Mode
 
 **Company:** OmniQuest Media Inc. (OQMInc™)
 **Governance authority:** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
@@ -27,8 +27,8 @@ before opening a PR.
 
 ```bash
 # Clone the repo (Yarn is required)
-git clone https://github.com/OmniQuestMediaInc/CyranoZone.git
-cd CyranoZone
+git clone https://github.com/OmniQuestMediaInc/SythiMatesAi.git
+cd SythiMatesAi
 
 # Install dependencies
 yarn install

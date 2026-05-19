@@ -4,7 +4,7 @@
 
 ```
 Task / WorkOrder ID : GOVERNANCE-EQ-001
-Repo               : OmniQuestMediaInc/CyranoZone
+Repo               : OmniQuestMediaInc/SythiMatesAi
 Branch             : copilot/governance-equalization-refresh
 HEAD               : 43f2c7c847c0bc3f9aa34bc4ee33e7ba150a0814 (pre-commit)
 Date               : 2026-05-12
@@ -65,7 +65,7 @@ ARCHITECTURE ELEMENT INVENTORY
 | Element                          | Status          | Path / Notes                                                                 |
 |----------------------------------|-----------------|------------------------------------------------------------------------------|
 | Governance doctrine (OQMI)       | FINISHED        | PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md                          |
-| System state tracker             | FINISHED        | OQMI_SYSTEM_STATE.md (root) — CyranoZone-specific snapshot                   |
+| System state tracker             | FINISHED        | OQMI_SYSTEM_STATE.md (root) — SythiMatesAi-specific snapshot                   |
 | Domain glossary / naming auth.   | FINISHED        | docs/DOMAIN_GLOSSARY.md                                                      |
 | Architecture overview            | FINISHED        | docs/ARCHITECTURE_OVERVIEW.md                                                |
 | CONTRIBUTING.md                  | FINISHED (NEW)  | Created this cycle                                                           |

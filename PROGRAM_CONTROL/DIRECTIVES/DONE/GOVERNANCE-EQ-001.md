@@ -13,7 +13,7 @@
 ## Mission
 
 Perform a comprehensive governance equalization, architecture inventory,
-and deep maintenance refresh so the CyranoZone repo is clean, standardized,
+and deep maintenance refresh so the SythiMatesAi repo is clean, standardized,
 lightweight, and ready for true microservices integration.
 
 ## Strict Priorities (execute in order)
