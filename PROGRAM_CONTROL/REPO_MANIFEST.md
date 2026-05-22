@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `agent/cowork-orch-2026-05-19-droid-rollout`
-**Commit:** `509452fe8f55450a66fbc69b54b548a78de4e13d`
-**Generated:** 2026-05-19T18:32:14Z
+**Branch:** `main`
+**Commit:** `bbe131c2af2a57a735b8829ddc0204b601087a11`
+**Generated:** 2026-05-22T16:30:04Z
 
 ## All Files
 
@@ -354,6 +354,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/themes/.gitkeep`
 - `apps/shared-ui/themes/index.ts`
 - `apps/shared-ui/utils/index.ts`
+- `archive/README.md`
 - `docker-compose.yml`
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
