@@ -4,6 +4,7 @@
 //               StudioAffiliation (live-streaming / theatre surfaces removed).
 // PAYLOAD 3: wire GateGuardModule + GateGuardMiddleware in front of
 //            /purchase, /spend, /payout route trees.
+// PHASE1-ITEM5A: Added AccountModule for token purchase endpoint
 import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { CreatorModule } from './creator/creator.module';
@@ -37,6 +38,7 @@ import { AdminModule } from './admin/admin.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { BenefitsMiddleware } from './middleware/benefits.middleware';
 import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate-limit.middleware';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -51,6 +53,7 @@ import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate
     }),
     GateGuardModule, // Register before finance-adjacent modules — middleware
     //  wires against /purchase, /spend, /payout below.
+    AccountModule, // PHASE1-ITEM5A: Account management endpoints
     CreatorModule,
     SafetyModule,
     GrowthModule,
@@ -81,7 +84,8 @@ export class AppModule implements NestModule {
 
     // PAYLOAD 3: GateGuard runs AFTER SovereignCaCMiddleware (jurisdiction
     // context is attached first) but BEFORE any ledger mutation handler.
-    consumer.apply(GateGuardMiddleware).forRoutes('/purchase', '/spend', '/payout');
+    // PHASE1-ITEM5A: Added /account route to GateGuard protection
+    consumer.apply(GateGuardMiddleware).forRoutes('/purchase', '/spend', '/payout', '/account');
 
     // PAYLOAD 6: Three-bucket spend-order guard runs after GateGuard on
     // /spend routes. Final defence against a handler that tries to debit
