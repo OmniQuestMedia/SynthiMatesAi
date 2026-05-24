@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-github-actions-job-97`
-**Commit:** `8814bbdb5be60d4f6c965d8ed07ab1610f14cceb`
-**Generated:** 2026-05-24T22:11:18Z
+**Branch:** `claude/fix-yarn-install-ci-failure`
+**Commit:** `907be7b04a7963dd0561efa9a1a19020d1b56d22`
+**Generated:** 2026-05-24T22:12:51Z
 
 ## All Files
 
