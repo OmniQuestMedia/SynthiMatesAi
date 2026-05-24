@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/verify-add-celebrity-embedding`
-**Commit:** `c0ef9702b60fa4b68a99ea7754b760d807685dbf`
-**Generated:** 2026-05-24T19:59:41Z
+**Branch:** `copilot/update-environment-variables`
+**Commit:** `82a44bf0805279fdfd71fd9dcad7b0a8bdbfec02`
+**Generated:** 2026-05-24T20:11:13Z
 
 ## All Files
 
@@ -461,8 +461,10 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
+- `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
