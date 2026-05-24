@@ -27,101 +27,113 @@ export class SyntheticPipelineService {
     imageBuffers: Buffer[],
     fantasyLevel = 0.25,
   ): Promise<SyntheticModelResult> {
-    if (imageBuffers.length < 5) {
-      throw new BadRequestException('Minimum 5 reference images required for Safe Synthetic mode.');
-    }
+    const startedAtMs = Date.now();
+    let analyticsOutcome: 'success' | 'failure' = 'failure';
 
-    this.logger.log(
-      `SyntheticPipeline: processing ${imageBuffers.length} images, fantasyLevel=${fantasyLevel}`,
-    );
-
-    // Step 1: Embed each image + compute celebrity similarity weights
-    const embeddings: number[][] = [];
-    const weights: number[] = [];
-
-    for (const buffer of imageBuffers) {
-      const emb = await this.runArcFace(buffer);
-      embeddings.push(emb);
-      const celebSim = await this.getMaxCelebritySimilarity(emb);
-      const weight = celebSim < 0.5 ? 1.0 : Math.max(0.2, 1.0 - celebSim * 0.8);
-      weights.push(weight);
-      this.logger.log(
-        `SyntheticPipeline: weight=${weight.toFixed(3)}, celebSim=${celebSim.toFixed(3)}`,
-      );
-    }
-
-    // Step 2: Normalize weights
-    const weightSum = weights.reduce((a, b) => a + b, 0);
-    const normWeights = weights.map((w) => w / weightSum);
-    this.logger.log(
-      `SyntheticPipeline: weighting complete (inputs=${imageBuffers.length}, min=${Math.min(...normWeights).toFixed(3)}, max=${Math.max(...normWeights).toFixed(3)})`,
-    );
-
-    // Step 3: Apply fantasy deviation per embedding
-    const deviated = embeddings.map((emb, i) => {
-      const noise = emb.map(() => (Math.random() - 0.5) * fantasyLevel * 0.7);
-      return emb.map((v, j) => (v + noise[j]) * normWeights[i]);
-    });
-
-    // Step 4: Compute blended embedding (weighted mean)
-    let blended = deviated[0].map(
-      (_, idx) => deviated.reduce((sum, e) => sum + e[idx], 0) / deviated.length,
-    );
-
-    // Step 5: Refinement loop — push away from known celebrities (max 6 attempts)
-    let refinementAttempts = 0;
-    let lastRefinementSimilarity = 0;
-    for (let attempt = 0; attempt < 6; attempt++) {
-      const simKnown = await this.getMaxCelebritySimilarity(blended);
-      refinementAttempts = attempt + 1;
-      lastRefinementSimilarity = simKnown;
-      this.logger.log(
-        `SyntheticPipeline: refinement attempt=${attempt + 1}, celebSim=${simKnown.toFixed(3)}`,
-      );
-      if (simKnown <= 0.3) break;
-      blended = blended.map((v) => v + (Math.random() - 0.5) * (attempt + 1) * 0.12);
-    }
-    this.logger.log(
-      `SyntheticPipeline: refinement complete (attempts=${refinementAttempts}, finalCelebSim=${lastRefinementSimilarity.toFixed(3)})`,
-    );
-
-    // Step 6: Dissimilarity gate — ensure output is not a near-clone of any input
-    let dissimilarityAdjustments = 0;
-    for (const orig of embeddings) {
-      const cosSim = this.cosineSimilarity(blended, orig);
-      if (cosSim > 0.15) {
-        dissimilarityAdjustments += 1;
-        this.logger.log(
-          `SyntheticPipeline: dissimilarity gate triggered (cosSim=${cosSim.toFixed(3)}), nudging`,
+    try {
+      if (imageBuffers.length < 5) {
+        throw new BadRequestException(
+          'Minimum 5 reference images required for Safe Synthetic mode.',
         );
-        blended = blended.map((v) => v + (Math.random() - 0.5) * 0.18);
       }
+
+      this.logger.log(
+        `SyntheticPipeline: processing ${imageBuffers.length} images, fantasyLevel=${fantasyLevel}`,
+      );
+
+      // Step 1: Embed each image + compute celebrity similarity weights
+      const embeddings: number[][] = [];
+      const weights: number[] = [];
+
+      for (const buffer of imageBuffers) {
+        const emb = await this.runArcFace(buffer);
+        embeddings.push(emb);
+        const celebSim = await this.getMaxCelebritySimilarity(emb);
+        const weight = celebSim < 0.5 ? 1.0 : Math.max(0.2, 1.0 - celebSim * 0.8);
+        weights.push(weight);
+        this.logger.log(
+          `SyntheticPipeline: weight=${weight.toFixed(3)}, celebSim=${celebSim.toFixed(3)}`,
+        );
+      }
+
+      // Step 2: Normalize weights
+      const weightSum = weights.reduce((a, b) => a + b, 0);
+      const normWeights = weights.map((w) => w / weightSum);
+      this.logger.log(
+        `SyntheticPipeline: weighting complete (inputs=${imageBuffers.length}, min=${Math.min(...normWeights).toFixed(3)}, max=${Math.max(...normWeights).toFixed(3)})`,
+      );
+
+      // Step 3: Apply fantasy deviation per embedding
+      const deviated = embeddings.map((emb, i) => {
+        const noise = emb.map(() => (Math.random() - 0.5) * fantasyLevel * 0.7);
+        return emb.map((v, j) => (v + noise[j]) * normWeights[i]);
+      });
+
+      // Step 4: Compute blended embedding (weighted mean)
+      let blended = deviated[0].map(
+        (_, idx) => deviated.reduce((sum, e) => sum + e[idx], 0) / deviated.length,
+      );
+
+      // Step 5: Refinement loop — push away from known celebrities (max 6 attempts)
+      let refinementAttempts = 0;
+      let lastRefinementSimilarity = 0;
+      for (let attempt = 0; attempt < 6; attempt++) {
+        const simKnown = await this.getMaxCelebritySimilarity(blended);
+        refinementAttempts = attempt + 1;
+        lastRefinementSimilarity = simKnown;
+        this.logger.log(
+          `SyntheticPipeline: refinement attempt=${attempt + 1}, celebSim=${simKnown.toFixed(3)}`,
+        );
+        if (simKnown <= 0.3) break;
+        blended = blended.map((v) => v + (Math.random() - 0.5) * (attempt + 1) * 0.12);
+      }
+      this.logger.log(
+        `SyntheticPipeline: refinement complete (attempts=${refinementAttempts}, finalCelebSim=${lastRefinementSimilarity.toFixed(3)})`,
+      );
+
+      // Step 6: Dissimilarity gate — ensure output is not a near-clone of any input
+      let dissimilarityAdjustments = 0;
+      for (const orig of embeddings) {
+        const cosSim = this.cosineSimilarity(blended, orig);
+        if (cosSim > 0.15) {
+          dissimilarityAdjustments += 1;
+          this.logger.log(
+            `SyntheticPipeline: dissimilarity gate triggered (cosSim=${cosSim.toFixed(3)}), nudging`,
+          );
+          blended = blended.map((v) => v + (Math.random() - 0.5) * 0.18);
+        }
+      }
+      this.logger.log(
+        `SyntheticPipeline: dissimilarity gate result (adjustments=${dissimilarityAdjustments}, threshold=0.15)`,
+      );
+
+      // Step 7: Generate final image
+      const prompt =
+        'original synthetic fantasy character, highly detailed portrait, unique face, transformative art';
+      this.logger.log('SyntheticPipeline: triggering image generation');
+      const generatedImageUrl = await this.generateFluxImage(prompt, blended);
+      const imageUrl = await this.addC2paMetadata(generatedImageUrl);
+
+      analyticsOutcome = 'success';
+      return {
+        imageUrl,
+        metadata: {
+          fantasyLevel,
+          inputCount: imageBuffers.length,
+          safeguards: [
+            'multi-image-blend',
+            'celebrity-downweight',
+            'refinement-loop',
+            'dissimilarity-gate',
+            'c2pa-watermark',
+          ],
+        },
+      };
+    } finally {
+      this.logger.log(
+        `SyntheticPipeline analytics: inputCount=${imageBuffers.length} fantasyLevel=${fantasyLevel} outcome=${analyticsOutcome} processingMs=${Date.now() - startedAtMs}`,
+      );
     }
-    this.logger.log(
-      `SyntheticPipeline: dissimilarity gate result (adjustments=${dissimilarityAdjustments}, threshold=0.15)`,
-    );
-
-    // Step 7: Generate final image
-    const prompt =
-      'original synthetic fantasy character, highly detailed portrait, unique face, transformative art';
-    this.logger.log('SyntheticPipeline: triggering image generation');
-    const generatedImageUrl = await this.generateFluxImage(prompt, blended);
-    const imageUrl = await this.addC2paMetadata(generatedImageUrl);
-
-    return {
-      imageUrl,
-      metadata: {
-        fantasyLevel,
-        inputCount: imageBuffers.length,
-        safeguards: [
-          'multi-image-blend',
-          'celebrity-downweight',
-          'refinement-loop',
-          'dissimilarity-gate',
-          'c2pa-watermark',
-        ],
-      },
-    };
   }
 
   // ─── Private helpers ───────────────────────────────────────────────────────

@@ -78,7 +78,8 @@ docker-compose up
 Cyrano™ is a standalone AI companion product built on top of the OmniQuestMediaInc
 governance, ledger, and user system. It allows creators to:
 
-1. **Train an AI Twin** — Upload photos → fine-tune a Flux LoRA model → generate photorealistic
+1. **Train an AI Twin (Safe Synthetic Mode first)** — Upload photos → use Safe Synthetic Mode for
+   transformative generation safeguards → fine-tune a Flux LoRA model → generate photorealistic
    character images with natural skin, pores, lighting depth, and cinematic quality.
 2. **Persistent Character Chat** — Conversations backed by a long-term Memory Bank
    (facts, preferences, story beats, secrets) so every interaction deepens the relationship.
@@ -206,6 +207,8 @@ docker-compose up
 ## Safe Synthetic Twin Creator
 
 The Safe Synthetic Twin Creator is the production-safe photo workflow for building transformative AI twins.
+See the full security and compliance checklist in
+[`docs/SYNTHETIC_TWIN_SECURITY.md`](docs/SYNTHETIC_TWIN_SECURITY.md).
 
 ### How it works
 
@@ -234,6 +237,14 @@ The Safe Synthetic Twin Creator is the production-safe photo workflow for buildi
 - `NEWS_API_KEY` is required when curator ingestion is enabled against live news sources.
 - Admins can always run an immediate catch-up sync through the manual trigger endpoint above.
 
+### Safe Synthetic operations checklist
+
+- **Curator admin UI/API path documented**: `/admin/ai-twin/curator/trigger`
+- **Rate limiting documented and enforced**: `@Throttle` guards in
+  `/home/runner/work/SynthiMatesAi/SynthiMatesAi/services/ai-twin/src/ai-twin.controller.ts`
+- **C2PA provenance metadata documented and applied**:
+  `/home/runner/work/SynthiMatesAi/SynthiMatesAi/services/ai-twin/src/synthetic-pipeline.service.ts`
+
 ### Legal / ethical warning
 
 Use Safe Synthetic Twin Creator only for lawful, consent-based, transformative content generation.
@@ -253,6 +264,41 @@ See [`.env.example`](.env.example) for a full list. Key variables:
 | `BANANA_MODEL_KEY_FLUX_PRO` | Banana.dev model key for Flux Pro          |
 | `AI_TWIN_LORA_RANK`         | LoRA rank for training (default: 16)       |
 | `NARRATIVE_MEMORY_TTL_DAYS` | Memory retention in days (default: 365)    |
+
+---
+
+## Deployment — Safe Synthetic Twin Feature
+
+### Deployment flow
+
+1. Deploy API services with Prisma schema applied and pgvector-ready Postgres.
+2. Ensure synthetic generation endpoint routing is configured before enabling user traffic.
+3. Deploy or update Cyrano standalone so Safe Synthetic wizard mode is exposed to creators.
+4. Validate `/api/ai-twin/test-synthetic` for a non-PII smoke pass after deploy.
+
+### Required environment variables
+
+| Variable                        | Description                                                             |
+| ------------------------------- | ----------------------------------------------------------------------- |
+| `DATABASE_URL`                  | Postgres connection string (pgvector-capable instance recommended)      |
+| `SYNTHETIC_GENERATION_ENDPOINT` | ArcFace/generation/C2PA endpoint for Safe Synthetic pipeline            |
+| `NEWS_API_KEY`                  | News source key for curator ingestion when scheduled refresh is enabled |
+| `REDIS_URL`                     | Redis connection used for queueing/caching/rate-limit infrastructure    |
+| `BANANA_API_KEY`                | Banana.dev API key for training/generation workloads                    |
+| `BANANA_MODEL_KEY_FLUX_PRO`     | Banana.dev model identifier for Flux Pro workloads                      |
+
+### Enabling curator cron jobs
+
+- Use your scheduler (GitHub Actions cron, Kubernetes CronJob, or platform scheduler) to call:
+  `POST /admin/ai-twin/curator/trigger`
+- Keep `NEWS_API_KEY` configured in the runtime where scheduled curator sync is enabled.
+- Retain manual override through the same admin endpoint for emergency re-syncs.
+
+### Scaling notes (Banana.dev + Redis + pgvector)
+
+- **Banana.dev**: isolate queue spikes by limiting concurrent synthetic jobs per instance.
+- **Redis**: size memory for burst queueing/rate-limit keys; alert on eviction.
+- **pgvector/Postgres**: keep vector index maintenance scheduled; monitor similarity query latency.
 
 ---
 

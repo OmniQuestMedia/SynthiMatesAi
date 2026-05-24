@@ -9,9 +9,9 @@ import { CYRANO_LAYER2_COOKIE, parseSessionCookie } from '../lib/cyrano-session'
 
 export const dynamic = 'force-dynamic';
 
-export default function Page() {
+export default async function Page() {
   const apiBase = process.env.CYRANO_CORE_API_URL ?? 'http://localhost:3000';
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const session = parseSessionCookie(cookieStore.get(CYRANO_LAYER2_COOKIE)?.value);
 
   return (

@@ -115,9 +115,23 @@ jobs:
     timeout-minutes: 20
     needs: [restricted-paths]
 
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_USER: chatnow_app
+          POSTGRES_DB: chatnow
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
-      # prisma validate needs a value but never connects during typecheck/test.
-      DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+      DATABASE_URL: postgresql://chatnow_app:testpass@localhost:5432/chatnow
 
     steps:
       - name: Checkout
@@ -138,13 +152,37 @@ jobs:
       - name: Prisma validate
         run: yarn prisma validate
 
+      - name: Enable pgvector extension
+        env:
+          PGPASSWORD: testpass
+        run: psql -v ON_ERROR_STOP=1 -h localhost -U chatnow_app -d chatnow -c "CREATE EXTENSION IF NOT EXISTS vector;"
+
+      - name: Prisma db push check
+        run: yarn prisma:push
+
       - name: Lint parity gate (Python + JS/TS)
         run: yarn lint:ci
 
-      - name: Typecheck
+      - name: Typecheck (workspace)
         run: yarn typecheck
-      - name: Lint CI (eslint + prettier + tsc)
-        run: yarn lint:ci
+
+      - name: Typecheck (core-api)
+        run: yarn typecheck:api
+
+      - name: Typecheck (cyrano-standalone)
+        run: yarn --cwd apps/cyrano-standalone typecheck
+
+      - name: Build core-api
+        run: yarn tsc --project services/core-api/tsconfig.json
+
+      - name: Install cyrano-standalone dependencies
+        run: yarn --cwd apps/cyrano-standalone install --non-interactive
+
+      - name: Build cyrano-standalone
+        run: yarn --cwd apps/cyrano-standalone build
+
+      - name: Synthetic endpoint smoke test (controller-level)
+        run: yarn jest services/core-api/src/cyrano/ai-twin-synthetic.controller.spec.ts --runInBand
 
       - name: Test (jest)
         run: yarn test
