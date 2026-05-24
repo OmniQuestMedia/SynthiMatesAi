@@ -3670,11 +3670,6 @@ multer@2.1.1:
     concat-stream "^2.0.0"
     type-is "^1.6.18"
 
-nano-spawn@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/nano-spawn/-/nano-spawn-1.0.3.tgz#ef8d89a275eebc8657e67b95fc312a6527a05b8d"
-  integrity sha512-jtpsQDetTnvS2Ts1fiRdci5rx0VYws5jGyC+4IYOTnIQ/wwdf6JdomlHBwqC3bJYOvaKu0C2GSZ1A60anrYpaA==
-
 napi-postinstall@^0.3.0:
   version "0.3.4"
   resolved "https://registry.npmjs.org/napi-postinstall/-/napi-postinstall-0.3.4.tgz"
@@ -4040,9 +4035,9 @@ pure-rand@^7.0.0:
   integrity sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==
 
 qs@^6.11.0, qs@^6.14.0, qs@^6.14.1:
-  version "6.15.0"
-  resolved "https://registry.npmjs.org/qs/-/qs-6.15.0.tgz"
-  integrity sha512-mAZTtNCeetKMH+pSjrb76NAM8V9a05I9aBZOHztWy/UqcJdQYNsf59vrRKWnojAT9Y+GbIvoTBC++CPHqpDBhQ==
+  version "6.15.2"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.15.2.tgz#fd55426d710403ddccc45e0f9eab16db7727ece9"
+  integrity sha512-Rzq0KEyX/w/tEybncDgdkZrJgVUsUMk3xjh3t5bv3S1HTAtg+uOYt72+ZfwiQwKdysThkTBdL/rTi6HDmX9Ddw==
   dependencies:
     side-channel "^1.1.0"
 
