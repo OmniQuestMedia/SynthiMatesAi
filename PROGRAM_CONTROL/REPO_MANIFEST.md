@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/add-celebrity-embedding-model-again`
-**Commit:** `8fe99b52359e57774f3dcf0d6c3d24798f223dd2`
-**Generated:** 2026-05-24T19:10:26Z
+**Branch:** `copilot/verify-add-celebrity-embedding`
+**Commit:** `f7464d672c93341d7027b3d63c815926d17281fc`
+**Generated:** 2026-05-24T19:33:11Z
 
 ## All Files
 
@@ -294,6 +294,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/cyrano-standalone/app/page.tsx`
 - `apps/cyrano-standalone/app/voice-call/page.tsx`
 - `apps/cyrano-standalone/components/AITwinCreator/AITwinCreator.tsx`
+- `apps/cyrano-standalone/components/AITwinCreator/SafeSyntheticWizard.tsx`
 - `apps/cyrano-standalone/components/CharacterChat/CharacterChat.tsx`
 - `apps/cyrano-standalone/components/VoiceCall/VoiceCall.tsx`
 - `apps/cyrano-standalone/lib/cyrano-auth-client.ts`
@@ -460,6 +461,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
@@ -477,6 +479,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/auth/step-up.service.ts`
 - `services/core-api/src/common/circuit-breaker.ts`
 - `services/core-api/src/common/http-client.ts`
+- `services/core-api/src/common/middleware/synthetic-rate-limit.middleware.ts`
 - `services/core-api/src/compliance/audit-chain.service.ts`
 - `services/core-api/src/compliance/compliance.module.ts`
 - `services/core-api/src/compliance/geo-fencing.service.ts`
@@ -493,6 +496,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/creator/statements.service.ts`
 - `services/core-api/src/creator/surfaces/dashboard.controller.ts`
 - `services/core-api/src/creator/surfaces/statements.service.ts`
+- `services/core-api/src/cyrano/ai-twin-synthetic.controller.ts`
 - `services/core-api/src/cyrano/cyrano-auth.controller.ts`
 - `services/core-api/src/cyrano/cyrano-auth.guard.ts`
 - `services/core-api/src/cyrano/cyrano-auth.module.ts`
