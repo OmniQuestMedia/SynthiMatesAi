@@ -170,14 +170,14 @@ jobs:
       - name: Typecheck (core-api)
         run: yarn typecheck:api
 
-      - name: Typecheck (cyrano-standalone)
-        run: yarn --cwd apps/cyrano-standalone typecheck
-
       - name: Build core-api
         run: yarn tsc --project services/core-api/tsconfig.json
 
       - name: Install cyrano-standalone dependencies
         run: yarn --cwd apps/cyrano-standalone install --non-interactive
+
+      - name: Typecheck (cyrano-standalone)
+        run: yarn --cwd apps/cyrano-standalone typecheck
 
       - name: Build cyrano-standalone
         run: yarn --cwd apps/cyrano-standalone build

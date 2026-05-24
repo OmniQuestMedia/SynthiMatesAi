@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-issue-90`
-**Commit:** `8c1a2f6c6a4759131d049954779f1dbfb5c72c2a`
-**Generated:** 2026-05-24T21:31:54Z
+**Branch:** `claude/fix-github-actions-job-97`
+**Commit:** `8814bbdb5be60d4f6c965d8ed07ab1610f14cceb`
+**Generated:** 2026-05-24T22:11:18Z
 
 ## All Files
 
@@ -308,6 +308,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/cyrano-standalone/next.config.js`
 - `apps/cyrano-standalone/package.json`
 - `apps/cyrano-standalone/tsconfig.json`
+- `apps/cyrano-standalone/yarn.lock`
 - `apps/portals/LandingHero.tsx`
 - `apps/portals/barely-legal/.gitkeep`
 - `apps/portals/barely-legal/app/page.tsx`
@@ -482,6 +483,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/account/account.module.ts`
 - `services/core-api/src/account/membership-purchase.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
+- `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
@@ -509,6 +511,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/compliance/worm-export.service.ts`
 - `services/core-api/src/config/governance.config.ts`
 - `services/core-api/src/core-api.module.ts`
+- `services/core-api/src/creator/creator-features.controller.ts`
 - `services/core-api/src/creator/creator-payout.controller.ts`
 - `services/core-api/src/creator/creator-payout.service.ts`
 - `services/core-api/src/creator/creator.module.ts`
@@ -525,6 +528,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/cyrano/cyrano-auth.module.ts`
 - `services/core-api/src/cyrano/cyrano-auth.service.ts`
 - `services/core-api/src/cyrano/cyrano-auth.types.ts`
+- `services/core-api/src/cyrano/cyrano-memory.controller.ts`
+- `services/core-api/src/cyrano/cyrano-session-image.controller.ts`
 - `services/core-api/src/db.ts`
 - `services/core-api/src/dfsp/account-recovery-hold.service.ts`
 - `services/core-api/src/dfsp/checkout-confirmation.service.ts`
@@ -661,6 +666,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/cyrano/src/cyrano.module.ts`
 - `services/cyrano/src/cyrano.service.ts`
 - `services/cyrano/src/cyrano.types.ts`
+- `services/cyrano/src/memory-retrieval.service.ts`
 - `services/cyrano/src/persona.manager.ts`
 - `services/cyrano/src/session-memory.store.ts`
 - `services/diamond-concierge/src/diamond-concierge.module.ts`
@@ -760,6 +766,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/e2e/diamond-recovery-flows.spec.ts`
 - `tests/e2e/full-token-purchase-flow.spec.ts`
 - `tests/e2e/high-heat-cyrano-payout-flow.spec.ts`
+- `tests/e2e/phase3-flow.spec.ts`
 - `tests/e2e/rbac-step-up-enforcement.spec.ts`
 - `tests/e2e/subscription-flow.spec.ts`
 - `tests/e2e/ui-presenters.spec.ts`
@@ -821,6 +828,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/seed_data/transactions_TEST DATA.csv`
 - `tests/seed_data/wallets_TEST DATA.csv`
 - `tsconfig.json`
+- `ui/app/admin/creator-payouts/page.ts`
 - `ui/app/admin/diamond/page.ts`
 - `ui/app/admin/recovery/page.ts`
 - `ui/app/ai-twin/page.ts`
@@ -829,6 +837,7 @@ Auto-generated on every push. Do not edit manually.
 - `ui/app/creator/gamification/page.ts`
 - `ui/app/creator/personas/page.spec.ts`
 - `ui/app/creator/personas/page.ts`
+- `ui/app/creator/settings/page.ts`
 - `ui/app/creator/studio/page.ts`
 - `ui/app/cyrano/session/page.ts`
 - `ui/app/diamond/concierge/page.ts`
