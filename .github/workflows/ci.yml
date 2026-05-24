@@ -142,6 +142,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'yarn'
+          cache-dependency-path: 'yarn.lock'
 
       - name: Install dependencies (frozen lockfile)
         run: yarn install --frozen-lockfile
@@ -208,6 +209,7 @@ jobs:
         with:
           node-version: '22'
           cache: 'yarn'
+          cache-dependency-path: 'yarn.lock'
 
       - name: Install dependencies (frozen lockfile)
         run: yarn install --frozen-lockfile
