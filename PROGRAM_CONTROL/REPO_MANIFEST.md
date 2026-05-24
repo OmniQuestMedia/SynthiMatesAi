@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/implement-safe-synthetic-twin-pipeline`
-**Commit:** `79cd092bdcc148e61ed8d9a50554b506b7c2cedb`
-**Generated:** 2026-05-24T20:10:01Z
+**Branch:** `copilot/safe-synthetic-twin-pipeline-phase-3`
+**Commit:** `8d82e586d7b657d78dae45a2e99644fbc0bdf224`
+**Generated:** 2026-05-24T20:10:54Z
 
 ## All Files
 
@@ -462,6 +462,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
