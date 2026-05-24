@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-yarn-install-ci-failure`
-**Commit:** `907be7b04a7963dd0561efa9a1a19020d1b56d22`
-**Generated:** 2026-05-24T22:12:51Z
+**Branch:** `claude/add-voice-chat-integration`
+**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
+**Generated:** 2026-05-24T22:55:16Z
 
 ## All Files
 
@@ -628,6 +628,9 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/subscription/subscription.service.ts`
 - `services/core-api/src/subscription/subscription.types.ts`
 - `services/core-api/src/test/helpers/setTestEnv.ts`
+- `services/core-api/src/voice-chat/voice-chat.controller.ts`
+- `services/core-api/src/voice-chat/voice-chat.module.ts`
+- `services/core-api/src/voice-chat/voice-chat.service.ts`
 - `services/core-api/src/zone-access/zone-access.guard.ts`
 - `services/core-api/src/zone-access/zone-access.module.ts`
 - `services/core-api/src/zone-access/zone-access.service.ts`
