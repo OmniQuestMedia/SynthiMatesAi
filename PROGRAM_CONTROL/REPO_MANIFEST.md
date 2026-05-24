@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-shared-account-core`
-**Commit:** `9772c36a16c54077e700f78f41e73bb9743f6cbe`
-**Generated:** 2026-05-24T21:15:54Z
+**Branch:** `claude/create-copilot-instructions-file`
+**Commit:** `792edd2bbb0a9f1afa17c161f573ff3c00a6cceb`
+**Generated:** 2026-05-24T21:25:20Z
 
 ## All Files
 
@@ -14,6 +14,7 @@ Auto-generated on every push. Do not edit manually.
 - `.eslintrc.js`
 - `.github/AGENTS.md`
 - `.github/CODEOWNERS`
+- `.github/COPILOT_INSTRUCTIONS.md`
 - `.github/ISSUE_TEMPLATE/directive.yml`
 - `.github/branch-protection-agent-fast-path.md`
 - `.github/copilot-instructions.md`
