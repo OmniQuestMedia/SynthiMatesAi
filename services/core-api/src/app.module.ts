@@ -4,7 +4,7 @@
 //               StudioAffiliation (live-streaming / theatre surfaces removed).
 // PAYLOAD 3: wire GateGuardModule + GateGuardMiddleware in front of
 //            /purchase, /spend, /payout route trees.
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { CreatorModule } from './creator/creator.module';
 import { SafetyModule } from './safety/safety.module';
@@ -36,6 +36,7 @@ import { SparkTwinModule } from './spark-twin/spark-twin.module';
 import { AdminModule } from './admin/admin.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { BenefitsMiddleware } from './middleware/benefits.middleware';
+import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate-limit.middleware';
 
 @Module({
   imports: [
@@ -90,5 +91,9 @@ export class AppModule implements NestModule {
     // CYR-SUB-002: Benefits middleware runs on Cyrano feature routes.
     // Enforces monthly image / message / video limits per subscription tier.
     consumer.apply(BenefitsMiddleware).forRoutes('/image', '/chat', '/video');
+
+    consumer
+      .apply(SyntheticRateLimitMiddleware)
+      .forRoutes({ path: 'cyrano/ai-twin/synthetic', method: RequestMethod.POST });
   }
 }

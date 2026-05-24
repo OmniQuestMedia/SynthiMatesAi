@@ -2632,3 +2632,24 @@ model BranchDecision {
   @@index([beat_id])
   @@map("branch_decisions")
 }
+
+// ─── Safe Synthetic Twin — Celebrity Embedding Store ─────────────────────────
+// Used to detect and down-weight similarity to known public figures.
+// Vector dimension must match ArcFace output (512-d).
+// Requires pgvector extension on the database.
+//
+// Migration note: After running `prisma db push`, manually create the ivfflat index:
+// CREATE INDEX celeb_embedding_ivfflat_idx ON celebrity_embeddings
+//   USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+
+model CelebrityEmbedding {
+  id          String   @id @default(cuid())
+  name        String
+  embedding   Unsupported("vector(512)")
+  lastUpdated DateTime @default(now())
+  source      String
+
+  @@index([name])
+  @@map("celebrity_embeddings")
+}
+
