@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-shared-account-architecture`
-**Commit:** `125a131f27c0fe8ef8c3fb0bce34ea8815866fa5`
-**Generated:** 2026-05-24T20:46:05Z
+**Branch:** `copilot/implement-phase-5-item-1`
+**Commit:** `0c2cfae75a0a505ae1d23f74b55c9982cad7d999`
+**Generated:** 2026-05-24T20:59:09Z
 
 ## All Files
 
@@ -42,6 +42,7 @@ Auto-generated on every push. Do not edit manually.
 - `.prettierignore`
 - `.prettierrc`
 - `CONTRIBUTING.md`
+- `DECISIONS.md`
 - `HANDOFF.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
@@ -369,6 +370,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/REQUIREMENTS_MASTER.md`
 - `docs/ROADMAP_MANIFEST.md`
 - `docs/RRR_CEO_DECISIONS_FINAL_2026-04-17.md`
+- `docs/SYNTHETIC_TWIN_SECURITY.md`
 - `docs/UX_CROSS_STACK_ALIGNMENT.md`
 - `docs/UX_INTEGRATION_BRIEF.md`
 - `docs/WEBHOOK_CONTRACTS.md`
@@ -514,6 +516,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/creator/statements.service.ts`
 - `services/core-api/src/creator/surfaces/dashboard.controller.ts`
 - `services/core-api/src/creator/surfaces/statements.service.ts`
+- `services/core-api/src/cyrano/ai-twin-synthetic.controller.spec.ts`
 - `services/core-api/src/cyrano/ai-twin-synthetic.controller.ts`
 - `services/core-api/src/cyrano/cyrano-auth.controller.ts`
 - `services/core-api/src/cyrano/cyrano-auth.guard.ts`
