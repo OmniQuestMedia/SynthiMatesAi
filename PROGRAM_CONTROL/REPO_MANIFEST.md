@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `copilot/safe-synthetic-twin-pipeline-phase-3`
-**Commit:** `8d82e586d7b657d78dae45a2e99644fbc0bdf224`
-**Generated:** 2026-05-24T20:10:54Z
+**Commit:** `37408db15700247ed4d5b9fef85838e42add2a5d`
+**Generated:** 2026-05-24T20:12:26Z
 
 ## All Files
 
@@ -287,6 +287,7 @@ Auto-generated on every push. Do not edit manually.
 - `WORK-ORDER.md`
 - `apps/cyrano-standalone/README.md`
 - `apps/cyrano-standalone/app/access-denied/page.tsx`
+- `apps/cyrano-standalone/app/admin/curator/page.tsx`
 - `apps/cyrano-standalone/app/ai-twin/page.tsx`
 - `apps/cyrano-standalone/app/api/auth/session/route.ts`
 - `apps/cyrano-standalone/app/chat/page.tsx`
@@ -462,6 +463,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/curator.service.spec.ts`
+- `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
