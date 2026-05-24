@@ -1358,8 +1358,7 @@ model Creator {
 
   studio_affiliations StudioAffiliation[]
   studio_onboarding   CreatorOnboarding?
-  // PHASE1-ITEM2: back-relation for User.creator_profile (1-to-1, FK lives on User)
-  user                User?
+  user_account        User?
 
   @@index([affiliation_number])
   @@map("creators")
