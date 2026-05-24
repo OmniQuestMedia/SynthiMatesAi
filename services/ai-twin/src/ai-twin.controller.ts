@@ -7,6 +7,7 @@ import { Throttle } from '@nestjs/throttler';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { AiTwinService } from './ai-twin.service';
 import { CreateTwinRequest, TrainingJobResult } from './ai-twin.types';
+import { CuratorService } from './curator.service';
 
 class RecordPhotoDto {
   @IsString()
@@ -27,7 +28,10 @@ class StartTrainingDto {
 @Controller('cyrano/ai-twin')
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 export class AiTwinController {
-  constructor(private readonly aiTwinService: AiTwinService) {}
+  constructor(
+    private readonly aiTwinService: AiTwinService,
+    private readonly curatorService: CuratorService,
+  ) {}
 
   /** Create a new twin record (pre-training). */
   @Post()
@@ -55,6 +59,19 @@ export class AiTwinController {
   async trainingCallback(@Body() result: TrainingJobResult) {
     await this.aiTwinService.handleTrainingResult(result);
     return { ok: true };
+  }
+
+  /** List the curator embedding gallery for admin UI. */
+  @Get('curator/embeddings')
+  async listCuratorEmbeddings() {
+    return this.curatorService.listEmbeddings();
+  }
+
+  /** Manually trigger a curator gallery refresh. */
+  @Post('curator/refresh')
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  async refreshCuratorGallery() {
+    return this.curatorService.refreshGallery();
   }
 
   /** List all twins for a creator. */
