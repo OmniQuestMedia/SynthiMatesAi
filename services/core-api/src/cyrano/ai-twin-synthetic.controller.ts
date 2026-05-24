@@ -1,6 +1,7 @@
 // services/core-api/src/cyrano/ai-twin-synthetic.controller.ts
 // POST /cyrano/ai-twin/synthetic — Safe Synthetic Twin creation endpoint.
 // Accepts multipart/form-data: field "images" (≥5 files) + optional "fantasyLevel".
+// PHASE 2 ITEM 4: Integrated with DreamCoins wallet - deducts cost from user balance.
 
 import {
   Controller,
@@ -9,13 +10,16 @@ import {
   UseInterceptors,
   Body,
   BadRequestException,
+  ForbiddenException,
   Logger,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { SyntheticPipelineService } from '../../../ai-twin/src/synthetic-pipeline.service';
+import { PrismaService } from '../prisma.service';
 
 class CreateSyntheticDto {
   fantasyLevel?: string | string[];
+  userId: string; // PHASE 2 ITEM 4: Required for wallet deduction
 }
 
 type UploadedImageFile = {
@@ -23,11 +27,17 @@ type UploadedImageFile = {
   mimetype: string;
 };
 
+// PHASE 2 ITEM 4: Safe Synthetic Twin pricing (in DreamCoins/CZT)
+const SYNTHETIC_GENERATION_COST = 50; // 50 DreamCoins per generation
+
 @Controller('cyrano/ai-twin')
 export class AiTwinSyntheticController {
   private readonly logger = new Logger(AiTwinSyntheticController.name);
 
-  constructor(private readonly syntheticPipeline: SyntheticPipelineService) {}
+  constructor(
+    private readonly syntheticPipeline: SyntheticPipelineService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Post('synthetic')
   @UseInterceptors(
@@ -52,6 +62,11 @@ export class AiTwinSyntheticController {
       throw new BadRequestException('At least 5 images are required for Safe Synthetic mode.');
     }
 
+    // PHASE 2 ITEM 4: Validate userId is provided
+    if (!body.userId) {
+      throw new BadRequestException('userId is required for Safe Synthetic generation');
+    }
+
     const rawFantasyLevel = Array.isArray(body.fantasyLevel)
       ? body.fantasyLevel[0]
       : body.fantasyLevel;
@@ -61,7 +76,98 @@ export class AiTwinSyntheticController {
       ? Math.min(1.0, Math.max(0.0, parsedFantasyLevel))
       : 0.25;
 
-    this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}`);
+    this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}, userId=${body.userId}`);
+
+    // PHASE 2 ITEM 4: Check user wallet balance and deduct cost
+    const wallet = await this.prisma.canonicalWallet.findUnique({
+      where: { user_id: body.userId },
+    });
+
+    if (!wallet) {
+      throw new ForbiddenException(
+        'No wallet found. Please purchase DreamCoins to use Safe Synthetic Twin generation.',
+      );
+    }
+
+    // Calculate total available tokens across all buckets
+    const totalTokens = wallet.purchased_tokens + wallet.membership_tokens + wallet.bonus_tokens;
+
+    if (totalTokens < SYNTHETIC_GENERATION_COST) {
+      throw new ForbiddenException(
+        `Insufficient DreamCoins. Required: ${SYNTHETIC_GENERATION_COST}, Available: ${totalTokens}. Please purchase more DreamCoins.`,
+      );
+    }
+
+    // Deduct from buckets in priority order: purchased > membership > bonus
+    let remaining = SYNTHETIC_GENERATION_COST;
+    const deductions: Array<{ bucket: string; amount: number }> = [];
+
+    if (wallet.purchased_tokens >= remaining) {
+      deductions.push({ bucket: 'purchased', amount: remaining });
+      remaining = 0;
+    } else if (wallet.purchased_tokens > 0) {
+      deductions.push({ bucket: 'purchased', amount: wallet.purchased_tokens });
+      remaining -= wallet.purchased_tokens;
+    }
+
+    if (remaining > 0 && wallet.membership_tokens >= remaining) {
+      deductions.push({ bucket: 'membership', amount: remaining });
+      remaining = 0;
+    } else if (remaining > 0 && wallet.membership_tokens > 0) {
+      deductions.push({ bucket: 'membership', amount: wallet.membership_tokens });
+      remaining -= wallet.membership_tokens;
+    }
+
+    if (remaining > 0) {
+      deductions.push({ bucket: 'bonus', amount: remaining });
+    }
+
+    // Apply deductions to wallet
+    const updateData: Record<string, number> = {};
+    for (const deduction of deductions) {
+      if (deduction.bucket === 'purchased') {
+        updateData.purchased_tokens = wallet.purchased_tokens - deduction.amount;
+      } else if (deduction.bucket === 'membership') {
+        updateData.membership_tokens = wallet.membership_tokens - deduction.amount;
+      } else if (deduction.bucket === 'bonus') {
+        updateData.bonus_tokens = wallet.bonus_tokens - deduction.amount;
+      }
+    }
+
+    await this.prisma.canonicalWallet.update({
+      where: { id: wallet.id },
+      data: updateData,
+    });
+
+    // Create ledger entries for each deduction
+    const correlationId = `synthetic-${Date.now()}-${body.userId.slice(0, 8)}`;
+    for (const deduction of deductions) {
+      await this.prisma.canonicalLedgerEntry.create({
+        data: {
+          wallet_id: wallet.id,
+          correlation_id: correlationId,
+          reason_code: 'SYNTHETIC_GENERATION',
+          amount: -deduction.amount, // negative = debit
+          bucket: deduction.bucket,
+          token_type: 'CZT',
+          hash_prev: null, // Simplified - proper hash-chain would be computed
+          hash_current: `hash-${correlationId}-${deduction.bucket}`,
+          metadata: {
+            userId: body.userId,
+            fantasy_level: fantasyLevel,
+            input_count: files.length,
+            cost_total: SYNTHETIC_GENERATION_COST,
+          },
+        },
+      });
+    }
+
+    this.logger.log(`Deducted ${SYNTHETIC_GENERATION_COST} DreamCoins for synthetic generation`, {
+      userId: body.userId,
+      deductions,
+      new_balance: totalTokens - SYNTHETIC_GENERATION_COST,
+      correlation_id: correlationId,
+    });
 
     let analyticsOutcome: 'success' | 'failure' = 'failure';
     try {
@@ -73,10 +179,19 @@ export class AiTwinSyntheticController {
       });
       const result = await this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel);
       analyticsOutcome = 'success';
-      return result;
+
+      // PHASE 2 ITEM 4: Include cost and balance info in response
+      return {
+        ...result,
+        cost: {
+          dreamCoins: SYNTHETIC_GENERATION_COST,
+          deductions,
+          remainingBalance: totalTokens - SYNTHETIC_GENERATION_COST,
+        },
+      };
     } finally {
       this.logger.log(
-        `SyntheticController analytics: inputCount=${files.length} fantasyLevel=${fantasyLevel} outcome=${analyticsOutcome} processingMs=${Date.now() - startedAtMs}`,
+        `SyntheticController analytics: inputCount=${files.length} fantasyLevel=${fantasyLevel} outcome=${analyticsOutcome} cost=${SYNTHETIC_GENERATION_COST} processingMs=${Date.now() - startedAtMs}`,
       );
     }
   }
