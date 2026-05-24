@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `8ee8b868121782d0da3edcc7dd184121fb2e8241`
-**Generated:** 2026-05-24T20:19:19Z
+**Branch:** `claude/implement-shared-account-architecture`
+**Commit:** `125a131f27c0fe8ef8c3fb0bce34ea8815866fa5`
+**Generated:** 2026-05-24T20:46:05Z
 
 ## All Files
 
@@ -459,6 +459,12 @@ Auto-generated on every push. Do not edit manually.
 - `scripts/seed-scheduling.ts`
 - `scripts/verify-gov-gate.sh`
 - `scripts/verify-vault-delivery.ts`
+- `services/account-core/index.ts`
+- `services/account-core/src/account.service.ts`
+- `services/account-core/src/diamond-integration.ts`
+- `services/account-core/src/index.ts`
+- `services/account-core/src/token-branding.ts`
+- `services/account-core/src/types.ts`
 - `services/ai-twin/src/ai-twin.controller.spec.ts`
 - `services/ai-twin/src/ai-twin.controller.ts`
 - `services/ai-twin/src/ai-twin.module.ts`
@@ -468,6 +474,9 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
+- `services/core-api/src/account/account-purchase.service.ts`
+- `services/core-api/src/account/account.controller.ts`
+- `services/core-api/src/account/account.module.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
@@ -496,6 +505,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/compliance/worm-export.service.ts`
 - `services/core-api/src/config/governance.config.ts`
 - `services/core-api/src/core-api.module.ts`
+- `services/core-api/src/creator/creator-payout.controller.ts`
+- `services/core-api/src/creator/creator-payout.service.ts`
 - `services/core-api/src/creator/creator.module.ts`
 - `services/core-api/src/creator/dashboard.controller.ts`
 - `services/core-api/src/creator/roster.gateway.ts`
