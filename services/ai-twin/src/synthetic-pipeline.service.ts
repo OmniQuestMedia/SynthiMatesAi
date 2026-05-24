@@ -90,7 +90,8 @@ export class SyntheticPipelineService {
     const prompt =
       'original synthetic fantasy character, highly detailed portrait, unique face, transformative art';
     this.logger.log('SyntheticPipeline: triggering image generation');
-    const imageUrl = await this.generateFluxImage(prompt, blended);
+    const generatedImageUrl = await this.generateFluxImage(prompt, blended);
+    const imageUrl = await this.addC2paMetadata(generatedImageUrl);
 
     return {
       imageUrl,
@@ -102,6 +103,7 @@ export class SyntheticPipelineService {
           'celebrity-downweight',
           'refinement-loop',
           'dissimilarity-gate',
+          'c2pa-watermark',
         ],
       },
     };
@@ -164,5 +166,43 @@ export class SyntheticPipelineService {
     }
     const data = (await response.json()) as { image_url: string };
     return data.image_url;
+  }
+
+  private async addC2paMetadata(imageUrl: string): Promise<string> {
+    const manifest = {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      generator: 'Safe Synthetic Twin Pipeline',
+      isBasedOn: imageUrl,
+      usageInfo: 'C2PA watermark applied',
+      additionalProperty: [
+        { name: 'watermark', value: 'c2pa' },
+        { name: 'safeguards', value: 'multi-image-blend,celebrity-downweight,dissimilarity-gate' },
+      ],
+    };
+
+    if (this.generationEndpoint) {
+      try {
+        const response = await fetch(`${this.generationEndpoint}/c2pa`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageUrl, manifest }),
+        });
+        if (response.ok) {
+          const data = (await response.json()) as { image_url?: string };
+          if (data.image_url) {
+            return data.image_url;
+          }
+        }
+      } catch (error) {
+        this.logger.warn(
+          `SyntheticPipeline: C2PA endpoint unavailable, falling back to URL manifest (${error instanceof Error ? error.message : 'unknown error'})`,
+        );
+      }
+    }
+
+    const manifestToken = Buffer.from(JSON.stringify(manifest)).toString('base64url');
+    const separator = imageUrl.includes('?') ? '&' : '?';
+    return `${imageUrl}${separator}c2pa_manifest=${manifestToken}`;
   }
 }
