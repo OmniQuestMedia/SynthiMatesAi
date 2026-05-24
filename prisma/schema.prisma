@@ -2638,9 +2638,8 @@ model BranchDecision {
 // Vector dimension must match ArcFace output (512-d).
 // Requires pgvector extension on the database.
 //
-// Migration note: After running `prisma db push`, manually create the ivfflat index:
-// CREATE INDEX celeb_embedding_ivfflat_idx ON celebrity_embeddings
-//   USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+// Backed by migration `20260524202000_safe_synthetic_celebrity_embeddings`,
+// which creates the pgvector extension/table and the ivfflat cosine index.
 
 model CelebrityEmbedding {
   id          String   @id @default(cuid())
@@ -2652,4 +2651,3 @@ model CelebrityEmbedding {
   @@index([name])
   @@map("celebrity_embeddings")
 }
-
