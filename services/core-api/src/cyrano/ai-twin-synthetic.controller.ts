@@ -15,7 +15,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { SyntheticPipelineService } from '../../../ai-twin/src/synthetic-pipeline.service';
 
 class CreateSyntheticDto {
-  fantasyLevel?: string;
+  fantasyLevel?: string | string[];
 }
 
 type UploadedImageFile = {
@@ -46,17 +46,27 @@ export class AiTwinSyntheticController {
     @UploadedFiles() files: UploadedImageFile[],
     @Body() body: CreateSyntheticDto,
   ) {
-    if (!files || files.length < 5) {
+    if (!Array.isArray(files) || files.length < 5) {
       throw new BadRequestException('At least 5 images are required for Safe Synthetic mode.');
     }
 
-    const fantasyLevel = body.fantasyLevel
-      ? Math.min(1.0, Math.max(0.0, parseFloat(body.fantasyLevel)))
+    const rawFantasyLevel = Array.isArray(body.fantasyLevel)
+      ? body.fantasyLevel[0]
+      : body.fantasyLevel;
+    const parsedFantasyLevel =
+      typeof rawFantasyLevel === 'string' ? Number.parseFloat(rawFantasyLevel) : Number.NaN;
+    const fantasyLevel = Number.isFinite(parsedFantasyLevel)
+      ? Math.min(1.0, Math.max(0.0, parsedFantasyLevel))
       : 0.25;
 
     this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}`);
 
-    const buffers = files.map((f) => f.buffer);
+    const buffers = files.map((f) => {
+      if (!Buffer.isBuffer(f.buffer)) {
+        throw new BadRequestException('Only valid image files are accepted.');
+      }
+      return f.buffer;
+    });
     return this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel);
   }
 }
