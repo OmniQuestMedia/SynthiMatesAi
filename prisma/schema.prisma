@@ -1346,6 +1346,8 @@ model Creator {
   stream_key_hash String?  @unique @db.VarChar(64)
   // OBS-001: CREATOR_AUTO flag gates persona auto-responses. Default false.
   creator_auto    Boolean  @default(false)
+  // PHASE 3 ITEM 4: Feature flag for AI Synthetic Twin generation
+  ai_synthetic_enabled Boolean @default(true)
   // RBAC-STUDIO-001: denormalised affiliation number for fast profile reads
   // and login/verification flows. Source-of-truth lives on the Studio row;
   // this column mirrors it after the StudioAffiliation is created. Permanent
@@ -1359,6 +1361,7 @@ model Creator {
   studio_affiliations StudioAffiliation[]
   studio_onboarding   CreatorOnboarding?
   user_account        User?
+  payout_requests     PayoutRequest[]
 
   @@index([affiliation_number])
   @@map("creators")
@@ -2483,6 +2486,8 @@ model MemoryBank {
   content          String   @db.Text
   /// 0.0–1.0; higher = recalled first in context window
   importance_score Float    @default(0.5)
+  /// PHASE 3 ITEM 2: User can pin important memories for RAG retrieval
+  is_pinned        Boolean  @default(false)
   expires_at       DateTime? @db.Timestamptz
   correlation_id   String   @unique @db.VarChar(200)
   reason_code      String   @default("MEMORY_STORE") @db.VarChar(40)
@@ -2492,6 +2497,7 @@ model MemoryBank {
 
   @@index([twin_id, user_id, importance_score(sort: Desc)])
   @@index([twin_id, user_id, expires_at])
+  @@index([twin_id, user_id, is_pinned])
   @@map("memory_banks")
 }
 
@@ -2657,4 +2663,28 @@ model CelebrityEmbedding {
 
   @@index([name])
   @@map("celebrity_embeddings")
+}
+
+// ─── PHASE 3 ITEM 3: Creator Payout Management ────────────────────────────────
+
+/// Creator payout requests submitted by creators and processed by admins
+model PayoutRequest {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id        String   @db.Uuid
+  amount_czt        Int      // Amount in DreamCoins (CZT) to be paid out
+  amount_usd        Decimal  @db.Decimal(10, 2) // USD equivalent at request time
+  status            String   @default("PENDING") @db.VarChar(20) // PENDING | APPROVED | REJECTED | PAID
+  requested_at      DateTime @default(now()) @db.Timestamptz
+  processed_at      DateTime? @db.Timestamptz
+  processed_by      String?  @db.Uuid // Admin user ID who processed
+  rejection_reason  String?  @db.Text
+  correlation_id    String   @unique @db.VarChar(200)
+  reason_code       String   @default("CREATOR_PAYOUT_REQUEST") @db.VarChar(100)
+  metadata          Json?    // GateGuard checks, approval notes, etc.
+
+  creator           Creator  @relation(fields: [creator_id], references: [id])
+
+  @@index([creator_id, status])
+  @@index([status, requested_at])
+  @@map("payout_requests")
 }

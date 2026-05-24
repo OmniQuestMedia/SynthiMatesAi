@@ -299,7 +299,40 @@ function renderChatMessages(messages: ChatMessage[]): RenderElement {
             ].filter(Boolean) as RenderElement[],
           ),
           el('p', { classes: ['cnz-chat__content'] }, [m.content]),
-        ],
+          // PHASE 3 ITEM 1: Render generated image inline if present
+          m.image_url
+            ? el(
+                'div',
+                {
+                  test_id: `cyrano-session-msg-image-${m.message_id}`,
+                  classes: ['cnz-chat__message-image'],
+                },
+                [
+                  el(
+                    'img',
+                    {
+                      props: {
+                        src: m.image_url,
+                        alt: 'Generated image',
+                      },
+                      aria: { 'aria-label': 'AI generated image' },
+                    },
+                    [],
+                  ),
+                  m.image_cost
+                    ? el(
+                        'span',
+                        {
+                          classes: ['cnz-chat__image-cost'],
+                          aria: { 'aria-label': `Cost: ${m.image_cost} DreamCoins` },
+                        },
+                        [`⚡ ${m.image_cost} DreamCoins`],
+                      )
+                    : null,
+                ].filter(Boolean) as RenderElement[],
+              )
+            : null,
+        ].filter(Boolean) as RenderElement[],
       ),
     ),
   );
@@ -386,6 +419,26 @@ function renderChatInput(status: SessionStatus, sessionId: string): RenderElemen
           },
         },
         [],
+      ),
+      // PHASE 3 ITEM 1: Generate Image button
+      el(
+        'button',
+        {
+          test_id: 'cyrano-session-generate-image-btn',
+          classes: ['cnz-button', inputDisabled ? 'cnz-button--disabled' : 'cnz-button--secondary'],
+          on: { click: 'generateImage' },
+          props: {
+            type: 'button',
+            disabled: inputDisabled,
+            session_id: sessionId,
+          },
+          aria: {
+            'aria-label': inputDisabled
+              ? 'Generate Image (session expired)'
+              : 'Generate Image (50 DreamCoins)',
+          },
+        },
+        ['🎨 Generate Image'],
       ),
       el(
         'button',
