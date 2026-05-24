@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-architecture-integration`
-**Commit:** `b5b91f59bc2f3274d7d668a92e05fc04ed562ff2`
-**Generated:** 2026-05-24T22:04:08Z
+**Commit:** `127f8e12c9269dc03b753149c9d3d70f6dc74760`
+**Generated:** 2026-05-24T22:08:26Z
 
 ## All Files
 
