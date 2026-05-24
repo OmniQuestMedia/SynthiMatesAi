@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-architecture-integration`
-**Commit:** `127f8e12c9269dc03b753149c9d3d70f6dc74760`
-**Generated:** 2026-05-24T22:08:26Z
+**Branch:** `claude/merge-account-core-architecture-again`
+**Commit:** `32c4cf45a7b7b60d0aca4c00d31165d14eccc3c7`
+**Generated:** 2026-05-24T22:10:33Z
 
 ## All Files
 
