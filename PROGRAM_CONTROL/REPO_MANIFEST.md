@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/update-environment-variables`
-**Commit:** `e796d323989ef236311946dea42eaa0b61725e44`
-**Generated:** 2026-05-24T20:11:47Z
+**Branch:** `copilot/safe-synthetic-twin-pipeline-phase-3`
+**Commit:** `03d2eaacd2cd65f3b7f89115ad6e5a6d9c8217f2`
+**Generated:** 2026-05-24T20:16:43Z
 
 ## All Files
 
@@ -287,6 +287,7 @@ Auto-generated on every push. Do not edit manually.
 - `WORK-ORDER.md`
 - `apps/cyrano-standalone/README.md`
 - `apps/cyrano-standalone/app/access-denied/page.tsx`
+- `apps/cyrano-standalone/app/admin/curator/page.tsx`
 - `apps/cyrano-standalone/app/ai-twin/page.tsx`
 - `apps/cyrano-standalone/app/api/auth/session/route.ts`
 - `apps/cyrano-standalone/app/chat/page.tsx`
@@ -458,11 +459,14 @@ Auto-generated on every push. Do not edit manually.
 - `scripts/seed-scheduling.ts`
 - `scripts/verify-gov-gate.sh`
 - `scripts/verify-vault-delivery.ts`
+- `services/ai-twin/src/ai-twin.controller.spec.ts`
 - `services/ai-twin/src/ai-twin.controller.ts`
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/curator.service.spec.ts`
 - `services/ai-twin/src/curator.service.ts`
+- `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`

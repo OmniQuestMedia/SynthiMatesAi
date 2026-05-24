@@ -31,7 +31,7 @@ export function SafeSyntheticWizard() {
 
   const handleGenerate = useCallback(async () => {
     if (!consentGiven) {
-      setError('Please confirm consent before generating.');
+      setError('Please acknowledge the Safe Synthetic disclaimer before generating.');
       return;
     }
     if (files.length < 5) {
@@ -119,7 +119,9 @@ export function SafeSyntheticWizard() {
               checked={consentGiven}
               onChange={(e) => setConsentGiven(e.target.checked)}
             />
-            I confirm consent for all uploaded images.
+            By uploading these images I confirm they are my own or consented, and I understand the
+            system applies transformative safeguards (multi-image blending, celebrity
+            down-weighting, dissimilarity gate, C2PA watermark).
           </label>
 
           <div style={{ display: 'flex', gap: 8 }}>
@@ -128,7 +130,7 @@ export function SafeSyntheticWizard() {
                 Continue
               </button>
             )}
-            <button type="button" onClick={handleGenerate}>
+            <button type="button" onClick={handleGenerate} disabled={!consentGiven}>
               Generate Safe Synthetic Twin
             </button>
           </div>
