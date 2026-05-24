@@ -53,6 +53,9 @@ export class SyntheticPipelineService {
     // Step 2: Normalize weights
     const weightSum = weights.reduce((a, b) => a + b, 0);
     const normWeights = weights.map((w) => w / weightSum);
+    this.logger.log(
+      `SyntheticPipeline: weighting complete (inputs=${imageBuffers.length}, min=${Math.min(...normWeights).toFixed(3)}, max=${Math.max(...normWeights).toFixed(3)})`,
+    );
 
     // Step 3: Apply fantasy deviation per embedding
     const deviated = embeddings.map((emb, i) => {
@@ -66,25 +69,37 @@ export class SyntheticPipelineService {
     );
 
     // Step 5: Refinement loop — push away from known celebrities (max 6 attempts)
+    let refinementAttempts = 0;
+    let lastRefinementSimilarity = 0;
     for (let attempt = 0; attempt < 6; attempt++) {
       const simKnown = await this.getMaxCelebritySimilarity(blended);
+      refinementAttempts = attempt + 1;
+      lastRefinementSimilarity = simKnown;
       this.logger.log(
         `SyntheticPipeline: refinement attempt=${attempt + 1}, celebSim=${simKnown.toFixed(3)}`,
       );
       if (simKnown <= 0.3) break;
       blended = blended.map((v) => v + (Math.random() - 0.5) * (attempt + 1) * 0.12);
     }
+    this.logger.log(
+      `SyntheticPipeline: refinement complete (attempts=${refinementAttempts}, finalCelebSim=${lastRefinementSimilarity.toFixed(3)})`,
+    );
 
     // Step 6: Dissimilarity gate — ensure output is not a near-clone of any input
+    let dissimilarityAdjustments = 0;
     for (const orig of embeddings) {
       const cosSim = this.cosineSimilarity(blended, orig);
       if (cosSim > 0.15) {
+        dissimilarityAdjustments += 1;
         this.logger.log(
           `SyntheticPipeline: dissimilarity gate triggered (cosSim=${cosSim.toFixed(3)}), nudging`,
         );
         blended = blended.map((v) => v + (Math.random() - 0.5) * 0.18);
       }
     }
+    this.logger.log(
+      `SyntheticPipeline: dissimilarity gate result (adjustments=${dissimilarityAdjustments}, threshold=0.15)`,
+    );
 
     // Step 7: Generate final image
     const prompt =

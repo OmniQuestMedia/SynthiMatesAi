@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/implement-safe-synthetic-twin-pipeline`
-**Commit:** `79cd092bdcc148e61ed8d9a50554b506b7c2cedb`
-**Generated:** 2026-05-24T20:10:01Z
+**Branch:** `copilot/update-environment-variables`
+**Commit:** `e796d323989ef236311946dea42eaa0b61725e44`
+**Generated:** 2026-05-24T20:11:47Z
 
 ## All Files
 
@@ -462,8 +462,10 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
+- `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
