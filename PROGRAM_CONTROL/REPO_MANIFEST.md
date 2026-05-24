@@ -14,6 +14,7 @@ Auto-generated on every push. Do not edit manually.
 - `.eslintrc.js`
 - `.github/AGENTS.md`
 - `.github/CODEOWNERS`
+- `.github/COPILOT_INSTRUCTIONS.md`
 - `.github/ISSUE_TEMPLATE/directive.yml`
 - `.github/branch-protection-agent-fast-path.md`
 - `.github/copilot-instructions.md`
