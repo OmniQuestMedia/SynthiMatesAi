@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-shared-account-core`
-**Commit:** `1f059175144d001d4d93b91a7fb569cfcb9fe5c4`
-**Generated:** 2026-05-24T21:14:59Z
+**Commit:** `9772c36a16c54077e700f78f41e73bb9743f6cbe`
+**Generated:** 2026-05-24T21:15:54Z
 
 ## All Files
 
@@ -479,6 +479,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/account/account-purchase.service.ts`
 - `services/core-api/src/account/account.controller.ts`
 - `services/core-api/src/account/account.module.ts`
+- `services/core-api/src/account/membership-purchase.service.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
