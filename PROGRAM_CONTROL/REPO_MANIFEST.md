@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-issue-90`
-**Commit:** `8c1a2f6c6a4759131d049954779f1dbfb5c72c2a`
-**Generated:** 2026-05-24T21:31:54Z
+**Branch:** `claude/merge-account-core-architecture`
+**Commit:** `37094e6419057ee5837a736344435ecf68c1841d`
+**Generated:** 2026-05-24T22:03:36Z
 
 ## All Files
 
