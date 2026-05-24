@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/merge-account-core-architecture-again`
-**Commit:** `db98dbaf9eb178d0d21c1f9a330f083d7bb0e9f8`
-**Generated:** 2026-05-24T22:08:55Z
+**Commit:** `32c4cf45a7b7b60d0aca4c00d31165d14eccc3c7`
+**Generated:** 2026-05-24T22:10:33Z
 
 ## All Files
 
