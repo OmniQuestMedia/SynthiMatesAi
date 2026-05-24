@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/create-copilot-instructions-file`
-**Commit:** `792edd2bbb0a9f1afa17c161f573ff3c00a6cceb`
-**Generated:** 2026-05-24T21:25:20Z
+**Branch:** `claude/fix-issue-90`
+**Commit:** `8c1a2f6c6a4759131d049954779f1dbfb5c72c2a`
+**Generated:** 2026-05-24T21:31:54Z
 
 ## All Files
 
