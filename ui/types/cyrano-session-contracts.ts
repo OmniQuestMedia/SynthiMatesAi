@@ -26,6 +26,8 @@ export interface ChatMessage {
   content: string;
   timestamp_utc: string;
   is_haptic?: boolean; // True if this message triggered FFS heat / haptic event
+  image_url?: string; // PHASE 3 ITEM 1: URL of generated image (if message contains one)
+  image_cost?: number; // PHASE 3 ITEM 1: DreamCoins cost for this image generation
 }
 
 export interface BranchOption {
