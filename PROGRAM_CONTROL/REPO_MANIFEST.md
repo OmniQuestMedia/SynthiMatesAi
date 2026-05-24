@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-shared-account-core`
-**Commit:** `9772c36a16c54077e700f78f41e73bb9743f6cbe`
-**Generated:** 2026-05-24T21:15:54Z
+**Branch:** `claude/fix-issue-90`
+**Commit:** `67fe388e49ec432fc8aec167a1b410ac4db12442`
+**Generated:** 2026-05-24T21:26:37Z
 
 ## All Files
 
