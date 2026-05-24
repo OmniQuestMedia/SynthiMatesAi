@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `bbe131c2af2a57a735b8829ddc0204b601087a11`
-**Generated:** 2026-05-22T16:30:04Z
+**Branch:** `dependabot/npm_and_yarn/npm_and_yarn-05b1f1d78b`
+**Commit:** `41ee6ad1e517705a6c7b085ba13c8b0db25abfa1`
+**Generated:** 2026-05-24T18:24:00Z
 
 ## All Files
 
