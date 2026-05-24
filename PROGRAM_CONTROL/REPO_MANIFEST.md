@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/verify-add-celebrity-embedding`
-**Commit:** `c0ef9702b60fa4b68a99ea7754b760d807685dbf`
-**Generated:** 2026-05-24T19:59:41Z
+**Branch:** `main`
+**Commit:** `31922cb1f1f11de8098fa45b3e2b436f55c0869a`
+**Generated:** 2026-05-24T20:09:23Z
 
 ## All Files
 
@@ -449,6 +449,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260428000000_legal_holds_correlation_id/migration.sql`
 - `prisma/migrations/20260511000000_studio_affiliation_indexes/migration.sql`
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
+- `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
