@@ -46,6 +46,8 @@ export class AiTwinSyntheticController {
     @UploadedFiles() files: UploadedImageFile[],
     @Body() body: CreateSyntheticDto,
   ) {
+    const startedAtMs = Date.now();
+
     if (!Array.isArray(files) || files.length < 5) {
       throw new BadRequestException('At least 5 images are required for Safe Synthetic mode.');
     }
@@ -61,12 +63,21 @@ export class AiTwinSyntheticController {
 
     this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}`);
 
-    const buffers = files.map((f) => {
-      if (!Buffer.isBuffer(f.buffer)) {
-        throw new BadRequestException('Only valid image files are accepted.');
-      }
-      return f.buffer;
-    });
-    return this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel);
+    let analyticsOutcome: 'success' | 'failure' = 'failure';
+    try {
+      const buffers = files.map((f) => {
+        if (!Buffer.isBuffer(f.buffer)) {
+          throw new BadRequestException('Only valid image files are accepted.');
+        }
+        return f.buffer;
+      });
+      const result = await this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel);
+      analyticsOutcome = 'success';
+      return result;
+    } finally {
+      this.logger.log(
+        `SyntheticController analytics: inputCount=${files.length} fantasyLevel=${fantasyLevel} outcome=${analyticsOutcome} processingMs=${Date.now() - startedAtMs}`,
+      );
+    }
   }
 }

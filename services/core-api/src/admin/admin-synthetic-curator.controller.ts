@@ -79,10 +79,7 @@ export class AdminSyntheticCuratorController {
       rule_applied_id: this.RULE_ID,
     });
 
-    const result = await this.curatorService.refreshCelebrityEmbeddings(names, source);
-    return {
-      ok: true,
-      ...result,
-    };
+    const result = await this.curatorService.refreshGallery();
+    return result;
   }
 }

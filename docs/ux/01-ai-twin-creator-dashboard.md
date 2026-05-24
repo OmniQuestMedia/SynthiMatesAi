@@ -5,6 +5,10 @@
 **Status:** Alpha Frozen
 **Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
 
+> **Safe Synthetic Mode (default for photo-based twins):**
+> Creator flows must prefer Safe Synthetic Mode before any direct-style generation path.
+> Minimum 5 images, similarity safeguards, and C2PA provenance are mandatory.
+
 ---
 
 ## API / Presenter Binding
@@ -12,6 +16,7 @@
 | Operation             | Endpoint                                                             | Type file                                                     |
 | --------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------- |
 | Create twin record    | `POST /cyrano/ai-twin`                                               | `services/ai-twin/src/ai-twin.types.ts` → `CreateTwinRequest` |
+| Safe synthetic create | `POST /cyrano/ai-twin/synthetic`                                     | `SyntheticModelResult`                                        |
 | Upload photo          | `POST /cyrano/ai-twin/:id/photos`                                    | `PhotoUploadResult`                                           |
 | Start training        | `POST /cyrano/ai-twin/:id/train`                                     | `TrainingJobPayload`                                          |
 | Poll / receive status | NATS: `cyrano.twin.training.complete`, `cyrano.twin.training.failed` | `TrainingJobResult`                                           |
@@ -118,9 +123,10 @@ reason_code: TWIN_TRAINING_FAILED
 1. Creator drags / taps to open file chooser.
 2. GateGuard AV check fires on each upload batch.
    - If AV required: `ComplianceOverlay` blocks UI until check completes.
+3. Safe Synthetic Mode requires at least 5 images before generation is enabled.
    - If AV passes: thumbnail added to grid; photo count increments.
    - If GateGuard blocks: `reason_code: IMAGE_GEN_BLOCKED`; photo rejected with inline error.
-3. Minimum 10 photos required before "Next" is enabled.
+4. Minimum 10 photos required before "Next" is enabled.
 
 ### Publish
 
