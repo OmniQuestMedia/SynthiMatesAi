@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/implement-phase-5-item-1`
-**Commit:** `0c2cfae75a0a505ae1d23f74b55c9982cad7d999`
-**Generated:** 2026-05-24T20:59:09Z
+**Branch:** `claude/implement-shared-account-core`
+**Commit:** `1f059175144d001d4d93b91a7fb569cfcb9fe5c4`
+**Generated:** 2026-05-24T21:14:59Z
 
 ## All Files
 
