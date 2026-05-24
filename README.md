@@ -203,6 +203,44 @@ docker-compose up
 
 ---
 
+## Safe Synthetic Twin Creator
+
+The Safe Synthetic Twin Creator is the production-safe photo workflow for building transformative AI twins.
+
+### How it works
+
+1. **Multi-image blend + weighting** — users upload 5+ images, each image is embedded and celebrity-near samples are down-weighted.
+2. **Deviation + refinement loop** — controlled fantasy deviation is applied, then refinement attempts push embeddings away from known celebrity vectors.
+3. **Dissimilarity gate** — final embedding is checked against each input embedding and nudged if similarity is too high.
+4. **Generation + provenance** — generation runs through the synthetic endpoint and returns safeguard metadata; production generation should include C2PA provenance metadata in the final asset pipeline.
+
+### Wizard usage (UI)
+
+- Open **Create AI Twin**
+- Choose **Safe Synthetic Mode** (recommended default for photo-based twins)
+- Upload at least 5 photos, set fantasy level, confirm consent
+- Submit generation and wait for the safe synthetic result preview + safeguard metadata
+
+### API endpoints
+
+| Endpoint                         | Method | Purpose                                                                |
+| -------------------------------- | ------ | ---------------------------------------------------------------------- |
+| `/cyrano/ai-twin/synthetic`      | POST   | Safe synthetic generation from multipart images + `fantasyLevel` input |
+| `/admin/ai-twin/curator/trigger` | POST   | Manual curator refresh trigger for celebrity/news embedding ingestion  |
+
+### Curator bot schedule
+
+- Curator ingestion is intended to run on a regular schedule (daily/hourly, environment-dependent).
+- `NEWS_API_KEY` is required when curator ingestion is enabled against live news sources.
+- Admins can always run an immediate catch-up sync through the manual trigger endpoint above.
+
+### Legal / ethical warning
+
+Use Safe Synthetic Twin Creator only for lawful, consent-based, transformative content generation.
+Attempting to produce near-clones, impersonations, or rights-infringing outputs violates policy. The weighting, refinement, and dissimilarity safeguards are mandatory protections and must not be bypassed.
+
+---
+
 ## Environment Variables
 
 See [`.env.example`](.env.example) for a full list. Key variables:
