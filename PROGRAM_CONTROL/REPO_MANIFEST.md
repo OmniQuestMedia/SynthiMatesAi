@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `dependabot/npm_and_yarn/npm_and_yarn-05b1f1d78b`
-**Commit:** `41ee6ad1e517705a6c7b085ba13c8b0db25abfa1`
-**Generated:** 2026-05-24T18:24:00Z
+**Branch:** `copilot/add-celebrity-embedding-model-again`
+**Commit:** `5072eb1331a7c2b4cf94d3810d84fa1910f3981d`
+**Generated:** 2026-05-24T19:09:12Z
 
 ## All Files
 
