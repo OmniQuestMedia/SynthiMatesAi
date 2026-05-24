@@ -39,6 +39,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { BenefitsMiddleware } from './middleware/benefits.middleware';
 import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate-limit.middleware';
 import { AccountModule } from './account/account.module';
+import { VoiceChatModule } from './voice-chat/voice-chat.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { AccountModule } from './account/account.module';
     GateGuardModule, // Register before finance-adjacent modules — middleware
     //  wires against /purchase, /spend, /payout below.
     AccountModule, // PHASE1-ITEM5A: Account management endpoints
+    VoiceChatModule, // PHASE4-ITEM1: Voice chat with DreamCoins integration
     CreatorModule,
     SafetyModule,
     GrowthModule,

@@ -2488,6 +2488,10 @@ model MemoryBank {
   importance_score Float    @default(0.5)
   /// PHASE 3 ITEM 2: User can pin important memories for RAG retrieval
   is_pinned        Boolean  @default(false)
+  /// PHASE 4 ITEM 1: Voice chat integration
+  is_voice_message Boolean  @default(false)
+  voice_audio_url  String?  @db.Text
+  voice_transcript String?  @db.Text
   expires_at       DateTime? @db.Timestamptz
   correlation_id   String   @unique @db.VarChar(200)
   reason_code      String   @default("MEMORY_STORE") @db.VarChar(40)
