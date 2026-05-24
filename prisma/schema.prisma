@@ -1358,6 +1358,7 @@ model Creator {
 
   studio_affiliations StudioAffiliation[]
   studio_onboarding   CreatorOnboarding?
+  user_account        User?
 
   @@index([affiliation_number])
   @@map("creators")
