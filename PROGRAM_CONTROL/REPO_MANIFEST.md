@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/merge-account-core-architecture-again`
-**Commit:** `32c4cf45a7b7b60d0aca4c00d31165d14eccc3c7`
-**Generated:** 2026-05-24T22:10:33Z
+**Branch:** `claude/fix-github-actions-job-97`
+**Commit:** `8814bbdb5be60d4f6c965d8ed07ab1610f14cceb`
+**Generated:** 2026-05-24T22:11:18Z
 
 ## All Files
 
@@ -308,6 +308,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/cyrano-standalone/next.config.js`
 - `apps/cyrano-standalone/package.json`
 - `apps/cyrano-standalone/tsconfig.json`
+- `apps/cyrano-standalone/yarn.lock`
 - `apps/portals/LandingHero.tsx`
 - `apps/portals/barely-legal/.gitkeep`
 - `apps/portals/barely-legal/app/page.tsx`
