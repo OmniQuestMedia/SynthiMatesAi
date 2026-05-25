@@ -38,7 +38,7 @@ hardening in progress (Phases 2–4)**
 | CEO / CD / LD        | Kevin B. Hartley                                                          |
 | Platform (primary)   | Cyrano™ Standalone — photoreal AI Character Companions                    |
 | Secondary platform   | ChatNow.Zone (merge target post-Cyrano stabilization)                     |
-| Repo                 | `OmniQuestMediaInc/SythiMatesAi`                                            |
+| Repo                 | `OmniQuestMediaInc/SythiMatesAi`                                          |
 | Hard launch deadline | 2026-10-01 (CNZ); Cyrano alpha → beta during Q3 2026                      |
 | Governance ban (§12) | Banned entity (name [REDACTED]) — never referenced in any OQMInc material |
 
@@ -486,8 +486,8 @@ LINT-1 invariant.
 
 ### 11.1 `yarn lint:ci` Matrix Result
 
-| Repo       | Command        | Result  | Notes                                      |
-| ---------- | -------------- | ------- | ------------------------------------------ |
+| Repo         | Command        | Result  | Notes                                      |
+| ------------ | -------------- | ------- | ------------------------------------------ |
 | SythiMatesAi | `yarn lint:ci` | ✅ PASS | 0 errors, 0 warnings — see §11.3 for fixes |
 
 Cross-repo matrix (ChatNowZone--BUILD, Marketplace-Build, eCommsZone)

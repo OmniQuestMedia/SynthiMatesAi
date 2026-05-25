@@ -76,7 +76,9 @@ export class AiTwinSyntheticController {
       ? Math.min(1.0, Math.max(0.0, parsedFantasyLevel))
       : 0.25;
 
-    this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}, userId=${body.userId}`);
+    this.logger.log(
+      `Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}, userId=${body.userId}`,
+    );
 
     // PHASE 2 ITEM 4: Check user wallet balance and deduct cost
     const wallet = await this.prisma.canonicalWallet.findUnique({
