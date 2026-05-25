@@ -67,13 +67,95 @@
 
 ## 🎮 For Fans: Premium AI Companions
 
-## Architecture: One Engine → Multiple Portals (Active)
+## Architecture: Webhook-Based AI Engine Integration (Phase 7 Complete)
+
+**Status:** ✅ **PRODUCTION-READY** — Webhook integration to CyranoEngines complete with graceful fallbacks
+
+SynthiMatesAi is architected as a customer-facing platform that integrates with AI engines via webhooks/API. The system gracefully falls back to local services when external engines are unavailable.
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SynthiMatesAi Platform                   │
+│              (Customer-Facing + Business Logic)             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ Portal:  │  │ Portal:  │  │ Portal:  │  │  More    │   │
+│  │   Main   │  │Ink&Steel │  │  Lotus   │  │ Portals  │   │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘   │
+│       │             │              │             │         │
+│       └─────────────┴──────────────┴─────────────┘         │
+│                           │                                │
+│                  ┌────────▼────────┐                       │
+│                  │   core-api      │                       │
+│                  │   (NestJS)      │                       │
+│                  └────────┬────────┘                       │
+│                           │                                │
+│   ┌───────────────────────┼───────────────────────┐       │
+│   │                       │                       │       │
+│   ▼                       ▼                       ▼       │
+│ ┌─────────────┐    ┌──────────────┐    ┌────────────┐    │
+│ │Account-Core │    │ Memory System│    │   Cyrano   │    │
+│ │ • Ledger    │    │ • RAG Context│    │ • Sessions │    │
+│ │ • GateGuard │    │ • Summaries  │    │ • Personas │    │
+│ │ • Payouts   │    │ • Pinned Mem │    │ • Whisper  │    │
+│ └─────────────┘    └──────────────┘    └────────────┘    │
+│                                                           │
+└───────────────────────┬───────────────────────────────────┘
+                        │
+                        │ CyranoEnginesClient
+                        │ (Webhook/API + Circuit Breaker)
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│              CyranoEngines (External/Future)                │
+│                 AI Service Layer                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │  Image   │  │  Voice   │  │  Video   │  │Narrative │   │
+│  │   Gen    │  │   Gen    │  │   Gen    │  │  Engine  │   │
+│  │(FluxLoRA)│  │(11Labs)  │  │ (HeyGen) │  │(LLM+Mem) │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+               │ (When unavailable)
+               ▼
+      ┌─────────────────┐
+      │ Local Services  │
+      │   (Fallback)    │
+      └─────────────────┘
+```
+
+### Key Components
 
 - **Backend**: Single Cyrano Engine (`services/core-api` + all services)
 - **Frontends**: `apps/portals/{main,ink-and-steel,lotus-bloom,...}` (lightweight Next.js, shared-ui)
+- **Webhook Client**: `services/cyrano-engines-client/` — Unified client for all AI operations
 - **Key Fields**: `portal` on `AiTwin`, `is_spark_twin` for free-tier provisioning, `Subscription` model with tiers
 - **Free Tier**: Every new user receives a Spark Twin on signup (15 messages/day, upgrade nudges at 10)
 - **House Models**: Platform-owned AI characters seed the catalogue — 100% revenue to platform
+
+### How It Works
+
+1. **User Interaction** → Portal sends request to core-api
+2. **Token Deduction** → Account-Core validates balance via GateGuard
+3. **AI Generation** → CyranoEnginesClient calls external service (or falls back to local)
+4. **Memory Recording** → Result stored in hierarchical memory system
+5. **Creator Credit** → Ledger records creator earnings
+6. **Response** → User receives generated content
+
+### Integration Points
+
+- **StudioTokens (CZT)** — Unified currency for all AI operations (shared from Account-Core)
+- **Correlation IDs** — End-to-end request tracing across webhook calls
+- **Circuit Breaker** — Automatic fallback when CyranoEngines unavailable (threshold: 5 failures, cooldown: 60s)
+- **Memory System** — Hierarchical 3-layer context (short/medium/long-term) with RAG retrieval
+- **Analytics** — Comprehensive tracking of token usage, webhook performance, and memory metrics
+
+See [`PHASE7_COMPLETION_SUMMARY.md`](PHASE7_COMPLETION_SUMMARY.md) for complete architecture details.
 
 ### Multi-Portal Architecture
 

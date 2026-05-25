@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `04f283910bc0fe4594626759971753ad59a6ba89`
-**Generated:** 2026-05-25T02:59:04Z
+**Branch:** `claude/final-webhook-integration-polish`
+**Commit:** `d1496e0ef233440f3d6a3f6a9b4ff3d69c25102d`
+**Generated:** 2026-05-25T03:48:55Z
 
 ## All Files
 
@@ -47,6 +47,7 @@ Auto-generated on every push. Do not edit manually.
 - `HANDOFF.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
+- `PHASE7_COMPLETION_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
@@ -500,6 +501,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/analytics/account-core-metrics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
+- `services/core-api/src/analytics/memory-performance-metrics.service.ts`
+- `services/core-api/src/analytics/studio-tokens-analytics.service.ts`
 - `services/core-api/src/app.module.ts`
 - `services/core-api/src/audit/audit-bridge.service.ts`
 - `services/core-api/src/audit/audit-dashboard.controller.ts`
@@ -661,6 +664,10 @@ Auto-generated on every push. Do not edit manually.
 - `services/creator-onboarding/src/dto/onboarding.dto.ts`
 - `services/creator-onboarding/src/email-domain.policy.spec.ts`
 - `services/creator-onboarding/src/email-domain.policy.ts`
+- `services/cyrano-engines-client/README.md`
+- `services/cyrano-engines-client/src/cyrano-engines.client.ts`
+- `services/cyrano-engines-client/src/cyrano-engines.module.ts`
+- `services/cyrano-engines-client/src/index.ts`
 - `services/cyrano/ASSUMPTIONS.md`
 - `services/cyrano/FLAGS.md`
 - `services/cyrano/README.md`
