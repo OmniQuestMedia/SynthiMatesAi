@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-creator-earnings`
-**Commit:** `92a8264a63a369f0dde68f8cd661106ca67a94f2`
-**Generated:** 2026-05-25T02:12:23Z
+**Commit:** `20ddfb2d108bfbd3021faae9fb1db6178191358d`
+**Generated:** 2026-05-25T02:20:03Z
 
 ## All Files
 
@@ -367,9 +367,11 @@ Auto-generated on every push. Do not edit manually.
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
 - `docs/COMPETITIVE_ANALYSIS.md`
+- `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- `docs/PHASE5_VALIDATION_REPORT.md`
 - `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
