@@ -332,6 +332,40 @@ function renderChatMessages(messages: ChatMessage[]): RenderElement {
                 ].filter(Boolean) as RenderElement[],
               )
             : null,
+          // Vidu Reference-to-Video: Render generated video inline if present
+          m.video_url
+            ? el(
+                'div',
+                {
+                  test_id: `cyrano-session-msg-video-${m.message_id}`,
+                  classes: ['cnz-chat__message-video'],
+                },
+                [
+                  el(
+                    'video',
+                    {
+                      props: {
+                        src: m.video_url,
+                        controls: true,
+                        poster: m.thumbnail_url,
+                      },
+                      aria: { 'aria-label': 'AI generated video' },
+                    },
+                    [],
+                  ),
+                  m.video_cost
+                    ? el(
+                        'span',
+                        {
+                          classes: ['cnz-chat__video-cost'],
+                          aria: { 'aria-label': `Cost: ${m.video_cost} DreamCoins` },
+                        },
+                        [`🎬 ${m.video_cost} DreamCoins`],
+                      )
+                    : null,
+                ].filter(Boolean) as RenderElement[],
+              )
+            : null,
         ].filter(Boolean) as RenderElement[],
       ),
     ),
@@ -439,6 +473,26 @@ function renderChatInput(status: SessionStatus, sessionId: string): RenderElemen
           },
         },
         ['🎨 Generate Image'],
+      ),
+      // Vidu Reference-to-Video: Generate Video button
+      el(
+        'button',
+        {
+          test_id: 'cyrano-session-generate-video-btn',
+          classes: ['cnz-button', inputDisabled ? 'cnz-button--disabled' : 'cnz-button--secondary'],
+          on: { click: 'generateVideo' },
+          props: {
+            type: 'button',
+            disabled: inputDisabled,
+            session_id: sessionId,
+          },
+          aria: {
+            'aria-label': inputDisabled
+              ? 'Generate Video (session expired)'
+              : 'Generate Video (50 DreamCoins)',
+          },
+        },
+        ['🎬 Generate Video'],
       ),
       el(
         'button',

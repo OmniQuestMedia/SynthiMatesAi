@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-creator-earnings`
-**Commit:** `20ddfb2d108bfbd3021faae9fb1db6178191358d`
-**Generated:** 2026-05-25T02:20:03Z
+**Branch:** `claude/implement-hybrid-vidu-integration`
+**Commit:** `08720744dafd78567a1032cf43432adf7dcf6b85`
+**Generated:** 2026-05-25T02:20:40Z
 
 ## All Files
 
@@ -542,6 +542,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/cyrano/cyrano-auth.types.ts`
 - `services/core-api/src/cyrano/cyrano-memory.controller.ts`
 - `services/core-api/src/cyrano/cyrano-session-image.controller.ts`
+- `services/core-api/src/cyrano/cyrano-session-video.controller.ts`
 - `services/core-api/src/cyrano/video-generation.controller.ts`
 - `services/core-api/src/db.ts`
 - `services/core-api/src/dfsp/account-recovery-hold.service.ts`
