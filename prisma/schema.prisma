@@ -2385,7 +2385,7 @@ model AiTwin {
   photos            AiTwinPhoto[]
   voice_clones      VoiceClone[]
   image_caches      ImageCache[]
-  video_caches      VideoCache[]
+  video_caches      VideoCacheVidu[] @relation("VideoCacheViduToAiTwin")
   video_captures    VideoCapture[]
   memory_banks      MemoryBank[]
   narrative_branches NarrativeBranch[]
