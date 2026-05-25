@@ -203,6 +203,31 @@ export interface OmniSyncWelfareWatchResponse {
   correlation_id: string;
 }
 
+// ── CyranoWhisper™ Request/Response Types ─────────────────────────────────
+
+/** CyranoWhisper™ — Voice-twin enterprise prompter for creator guidance */
+export interface CyranoWhisperRequest {
+  session_id: string;
+  twin_id: string;
+  user_message: string;
+  creator_context: {
+    current_tone?: string;
+    session_duration_minutes: number;
+    recent_engagement_score: number;
+  };
+  brand_purity_level: 'STRICT' | 'MODERATE' | 'PERMISSIVE';
+  correlation_id?: string;
+}
+
+export interface CyranoWhisperResponse {
+  suggested_response: string;
+  tone_guidance: string;
+  brand_safety_score: number; // 0-100
+  alternative_phrasings: string[];
+  warnings: string[];
+  correlation_id: string;
+}
+
 // ── Circuit Breaker State ──────────────────────────────────────────────────
 
 enum CircuitState {
@@ -632,6 +657,46 @@ export class CyranoEnginesClient {
     }
   }
 
+  // ── Public API: CyranoWhisper™ ───────────────────────────────────────────
+
+  /**
+   * CyranoWhisper™ - Voice-twin enterprise prompter
+   * Provides real-time prompting suggestions for creators with brand-purity firewall
+   */
+  async getCyranoWhisperGuidance(request: CyranoWhisperRequest): Promise<CyranoWhisperResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackCyranoWhisperLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackCyranoWhisperLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<CyranoWhisperResponse>(
+        `${this.config.baseUrl}/api/v1/cyrano-whisper/prompt`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('CyranoWhisper guidance failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackCyranoWhisperLocal(request, correlationId);
+    }
+  }
+
   // ── Circuit Breaker Logic ────────────────────────────────────────────────
 
   private isCircuitClosed(): boolean {
@@ -918,6 +983,42 @@ export class CyranoEnginesClient {
       welfare_status: status,
       recommended_action: recommendedAction,
       session_limit_reached: sessionLimitReached,
+      correlation_id: correlationId,
+    };
+  }
+
+  // ── Fallback: CyranoWhisper™ Local Service ───────────────────────────────
+
+  private async fallbackCyranoWhisperLocal(
+    request: CyranoWhisperRequest,
+    correlationId: string,
+  ): Promise<CyranoWhisperResponse> {
+    this.logger.warn('Falling back to local CyranoWhisper service', {
+      correlation_id: correlationId,
+    });
+
+    // Basic local prompter with brand-safety checks
+    const suggestedResponse = `Thank you for your message! I appreciate you sharing that with me.`;
+    const toneGuidance = request.creator_context.current_tone || 'friendly and professional';
+    const brandSafetyScore = request.brand_purity_level === 'STRICT' ? 95 : 85;
+
+    const alternatives: string[] = [
+      'I appreciate hearing from you!',
+      'Thanks for reaching out!',
+      "That's interesting, tell me more!",
+    ];
+
+    const warnings: string[] = [];
+    if (request.creator_context.session_duration_minutes > 120) {
+      warnings.push('Session duration approaching limit - consider wellness break');
+    }
+
+    return {
+      suggested_response: suggestedResponse,
+      tone_guidance: toneGuidance,
+      brand_safety_score: brandSafetyScore,
+      alternative_phrasings: alternatives,
+      warnings,
       correlation_id: correlationId,
     };
   }

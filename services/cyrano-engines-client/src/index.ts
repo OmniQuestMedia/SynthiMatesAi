@@ -1,5 +1,5 @@
 // services/cyrano-engines-client/src/index.ts
-// CYR: Phase 8 — CyranoEngines Client Exports (with OmniSync™ Suite)
+// CYR: Phase 8 — CyranoEngines Client Exports (with OmniSync™ Suite + CyranoWhisper™)
 
 export { CyranoEnginesClient } from './cyrano-engines.client';
 export { CyranoEnginesModule } from './cyrano-engines.module';
@@ -23,5 +23,8 @@ export type {
   OmniSyncZoieResponse,
   OmniSyncWelfareWatchRequest,
   OmniSyncWelfareWatchResponse,
+  // CyranoWhisper™ types
+  CyranoWhisperRequest,
+  CyranoWhisperResponse,
   FallbackMetadata,
 } from './cyrano-engines.client';

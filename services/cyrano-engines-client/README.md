@@ -211,6 +211,33 @@ if (welfareCheck.session_limit_reached) {
 }
 ```
 
+### CyranoWhisper™ - Voice-Twin Enterprise Prompter
+
+Real-time prompting suggestions for creators with brand-purity firewall.
+
+```typescript
+const whisperGuidance = await this.cyranoClient.getCyranoWhisperGuidance({
+  session_id: 'session-789',
+  twin_id: 'twin-123',
+  user_message: 'What do you think about...?',
+  creator_context: {
+    current_tone: 'friendly',
+    session_duration_minutes: 45,
+    recent_engagement_score: 78,
+  },
+  brand_purity_level: 'STRICT', // STRICT/MODERATE/PERMISSIVE
+});
+
+console.log('Suggested response:', whisperGuidance.suggested_response);
+console.log('Tone guidance:', whisperGuidance.tone_guidance);
+console.log('Brand safety score:', whisperGuidance.brand_safety_score); // 0-100
+console.log('Alternative phrasings:', whisperGuidance.alternative_phrasings);
+
+if (whisperGuidance.warnings.length > 0) {
+  console.log('Warnings:', whisperGuidance.warnings);
+}
+```
+
 ### Health Check
 
 ```typescript
