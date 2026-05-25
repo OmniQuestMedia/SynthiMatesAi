@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `ca32632c31f39278368e20ccd9e44d39c0b404e9`
-**Generated:** 2026-05-25T11:27:48Z
+**Branch:** `claude/update-master-project-folder`
+**Commit:** `046be576039d635a2ef69fac2696b596f154a1e3`
+**Generated:** 2026-05-25T11:33:34Z
 
 ## All Files
 
@@ -47,6 +47,7 @@ Auto-generated on every push. Do not edit manually.
 - `HANDOFF.md`
 - `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
+- `MASTER_PROJECT_FOLDER.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
 - `PHASE7_COMPLETION_SUMMARY.md`
