@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/add-voice-chat-integration`
-**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
-**Generated:** 2026-05-24T22:55:16Z
+**Branch:** `claude/implement-phase-6-shared-account-core`
+**Commit:** `37a538fc287faf41ce0811c4afcfb114adf003cd`
+**Generated:** 2026-05-25T00:45:30Z
 
 ## All Files
 
@@ -46,6 +46,7 @@ Auto-generated on every push. Do not edit manually.
 - `DECISIONS.md`
 - `HANDOFF.md`
 - `OQMI_SYSTEM_STATE.md`
+- `PHASE6_COMPLETION_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
@@ -361,9 +362,11 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
 - `docker-compose.yml`
+- `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
@@ -770,6 +773,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/e2e/full-token-purchase-flow.spec.ts`
 - `tests/e2e/high-heat-cyrano-payout-flow.spec.ts`
 - `tests/e2e/phase3-flow.spec.ts`
+- `tests/e2e/phase6-complete-validation.spec.ts`
 - `tests/e2e/rbac-step-up-enforcement.spec.ts`
 - `tests/e2e/subscription-flow.spec.ts`
 - `tests/e2e/ui-presenters.spec.ts`
