@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/start-working-on-issue-106`
-**Commit:** `3024fe0598b0f58cde7144b1f46761bb1138c432`
-**Generated:** 2026-05-25T02:35:46Z
+**Branch:** `claude/fix-hybrid-vidu-integration`
+**Commit:** `322565085fbf41d5aae6c4d236d0bd58689f1b63`
+**Generated:** 2026-05-25T02:42:26Z
 
 ## All Files
 

@@ -58,7 +58,7 @@ export class HeyGenService {
       request.durationSeconds,
     );
 
-    const cached = await this.prisma.videoCache.findFirst({
+    const cached = await this.prisma.videoCacheVidu.findFirst({
       where: {
         twin_id: request.twinId,
         provider: 'heygen',
@@ -100,7 +100,7 @@ export class HeyGenService {
     }
 
     // Store in cache
-    const record = await this.prisma.videoCache.create({
+    const record = await this.prisma.videoCacheVidu.create({
       data: {
         twin_id: request.twinId,
         creator_id: request.creatorId,
