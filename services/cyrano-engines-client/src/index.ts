@@ -1,5 +1,5 @@
 // services/cyrano-engines-client/src/index.ts
-// CYR: Phase 8 — CyranoEngines Client Exports (with OmniSync™ Suite + CyranoWhisper™)
+// CYR: Phase 8 — CyranoEngines Client Exports (Full Suite)
 
 export { CyranoEnginesClient } from './cyrano-engines.client';
 export { CyranoEnginesModule } from './cyrano-engines.module';
@@ -26,5 +26,10 @@ export type {
   // CyranoWhisper™ types
   CyranoWhisperRequest,
   CyranoWhisperResponse,
+  // HeyGen Feedback Loop types
+  HeyGenFeedbackCaptureRequest,
+  HeyGenFeedbackCaptureResponse,
+  HeyGenModelSignalsRequest,
+  HeyGenModelSignalsResponse,
   FallbackMetadata,
 } from './cyrano-engines.client';

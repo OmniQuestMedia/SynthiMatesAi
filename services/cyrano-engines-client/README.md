@@ -238,6 +238,58 @@ if (whisperGuidance.warnings.length > 0) {
 }
 ```
 
+### HeyGen Feedback Loop - 30-Day Data Capture
+
+Enriched prompt-output pair capture and model improvement signals.
+
+#### Capture Feedback
+
+```typescript
+const captureResult = await this.cyranoClient.captureHeyGenFeedback({
+  session_id: 'session-789',
+  twin_id: 'twin-123',
+  user_id: 'user-456',
+  prompt_input: 'Generate a video of me waving',
+  generated_output: {
+    type: 'video',
+    content_url: 'https://cdn.example.com/video.mp4',
+    generation_metadata: {
+      duration_seconds: 5,
+      resolution: '1080p',
+      model_version: 'v2.1',
+    },
+  },
+  feedback_signals: {
+    user_engagement: 85,
+    completion_rate: 100,
+    quality_indicators: ['smooth_motion', 'good_lighting'],
+  },
+});
+
+console.log('Capture ID:', captureResult.capture_id);
+console.log('Stored for training:', captureResult.stored_for_training);
+console.log('Retention days:', captureResult.retention_days);
+```
+
+#### Retrieve Model Improvement Signals
+
+```typescript
+const signals = await this.cyranoClient.getHeyGenModelSignals({
+  twin_id: 'twin-123',
+  date_range_start: '2026-04-01T00:00:00Z',
+  date_range_end: '2026-04-30T23:59:59Z',
+  signal_type: 'video', // or 'voice' or 'all'
+});
+
+console.log('Total captures analyzed:', signals.total_captures_analyzed);
+signals.signals.forEach((signal) => {
+  console.log('Signal type:', signal.signal_type);
+  console.log('Suggestion:', signal.improvement_suggestion);
+  console.log('Confidence:', signal.confidence_score);
+  console.log('Affected prompts:', signal.affected_prompts_count);
+});
+```
+
 ### Health Check
 
 ```typescript

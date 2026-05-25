@@ -228,6 +228,56 @@ export interface CyranoWhisperResponse {
   correlation_id: string;
 }
 
+// ── HeyGen Feedback Loop Request/Response Types ──────────────────────────
+
+/** HeyGen 30-day feedback loop - Enriched prompt-output capture for model improvement */
+export interface HeyGenFeedbackCaptureRequest {
+  session_id: string;
+  twin_id: string;
+  user_id: string;
+  prompt_input: string;
+  generated_output: {
+    type: 'voice' | 'video' | 'narrative';
+    content_url?: string;
+    text_content?: string;
+    generation_metadata: Record<string, unknown>;
+  };
+  feedback_signals: {
+    user_engagement?: number; // 0-100
+    completion_rate?: number; // 0-100
+    quality_indicators?: string[];
+  };
+  correlation_id?: string;
+}
+
+export interface HeyGenFeedbackCaptureResponse {
+  capture_id: string;
+  accepted: boolean;
+  stored_for_training: boolean;
+  retention_days: number;
+  correlation_id: string;
+}
+
+/** HeyGen model improvement signals retrieval */
+export interface HeyGenModelSignalsRequest {
+  twin_id: string;
+  date_range_start: string; // ISO 8601
+  date_range_end: string; // ISO 8601
+  signal_type?: 'voice' | 'video' | 'all';
+  correlation_id?: string;
+}
+
+export interface HeyGenModelSignalsResponse {
+  signals: Array<{
+    signal_type: string;
+    improvement_suggestion: string;
+    confidence_score: number;
+    affected_prompts_count: number;
+  }>;
+  total_captures_analyzed: number;
+  correlation_id: string;
+}
+
 // ── Circuit Breaker State ──────────────────────────────────────────────────
 
 enum CircuitState {
@@ -697,6 +747,88 @@ export class CyranoEnginesClient {
     }
   }
 
+  // ── Public API: HeyGen Feedback Loop ─────────────────────────────────────
+
+  /**
+   * HeyGen Feedback Capture - Store enriched prompt-output pairs for 30-day training loop
+   * Captures generation data with feedback signals for model improvement
+   */
+  async captureHeyGenFeedback(
+    request: HeyGenFeedbackCaptureRequest,
+  ): Promise<HeyGenFeedbackCaptureResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackHeyGenCaptureLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackHeyGenCaptureLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<HeyGenFeedbackCaptureResponse>(
+        `${this.config.baseUrl}/api/v1/heygen/feedback/capture`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('HeyGen feedback capture failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackHeyGenCaptureLocal(request, correlationId);
+    }
+  }
+
+  /**
+   * HeyGen Model Signals - Retrieve model improvement suggestions from training loop
+   * Returns aggregated signals from captured prompt-output pairs
+   */
+  async getHeyGenModelSignals(
+    request: HeyGenModelSignalsRequest,
+  ): Promise<HeyGenModelSignalsResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackHeyGenSignalsLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackHeyGenSignalsLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<HeyGenModelSignalsResponse>(
+        `${this.config.baseUrl}/api/v1/heygen/feedback/signals`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('HeyGen model signals retrieval failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackHeyGenSignalsLocal(request, correlationId);
+    }
+  }
+
   // ── Circuit Breaker Logic ────────────────────────────────────────────────
 
   private isCircuitClosed(): boolean {
@@ -1019,6 +1151,49 @@ export class CyranoEnginesClient {
       brand_safety_score: brandSafetyScore,
       alternative_phrasings: alternatives,
       warnings,
+      correlation_id: correlationId,
+    };
+  }
+
+  // ── Fallback: HeyGen Feedback Loop Local Services ────────────────────────
+
+  private async fallbackHeyGenCaptureLocal(
+    request: HeyGenFeedbackCaptureRequest,
+    correlationId: string,
+  ): Promise<HeyGenFeedbackCaptureResponse> {
+    this.logger.warn('Falling back to local HeyGen feedback capture', {
+      correlation_id: correlationId,
+    });
+
+    // Local storage simulation - in production would integrate with local analytics DB
+    return {
+      capture_id: `local-capture-${correlationId}`,
+      accepted: true,
+      stored_for_training: false, // Local mode doesn't train models
+      retention_days: 30,
+      correlation_id: correlationId,
+    };
+  }
+
+  private async fallbackHeyGenSignalsLocal(
+    request: HeyGenModelSignalsRequest,
+    correlationId: string,
+  ): Promise<HeyGenModelSignalsResponse> {
+    this.logger.warn('Falling back to local HeyGen model signals', {
+      correlation_id: correlationId,
+    });
+
+    // Basic local signals - in production would analyze local capture DB
+    return {
+      signals: [
+        {
+          signal_type: 'general',
+          improvement_suggestion: 'Local mode - no training signals available',
+          confidence_score: 0,
+          affected_prompts_count: 0,
+        },
+      ],
+      total_captures_analyzed: 0,
       correlation_id: correlationId,
     };
   }
