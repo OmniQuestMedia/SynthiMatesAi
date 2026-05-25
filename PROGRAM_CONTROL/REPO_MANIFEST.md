@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-vidu-video-integration`
-**Commit:** `308441da00df984b754bfac87834777d22a0ef78`
-**Generated:** 2026-05-25T01:00:47Z
+**Commit:** `d60a415a2dde268a2eaa83995f3fcda0d6a8c693`
+**Generated:** 2026-05-25T01:03:55Z
 
 ## All Files
 
@@ -765,9 +765,12 @@ Auto-generated on every push. Do not edit manually.
 - `services/studio-affiliation/src/affiliation-number.generator.ts`
 - `services/studio-affiliation/src/studio-affiliation.module.ts`
 - `services/studio-affiliation/src/studio.service.ts`
+- `services/video-generation/src/heygen.service.ts`
+- `services/video-generation/src/heygen.types.ts`
 - `services/video-generation/src/hybrid-video.service.ts`
 - `services/video-generation/src/video.controller.ts`
 - `services/video-generation/src/video.module.ts`
+- `services/video-generation/src/video.service.ts`
 - `services/video-generation/src/video.types.ts`
 - `services/video-generation/src/vidu.service.ts`
 - `services/voice-cloning/src/voice.controller.ts`
