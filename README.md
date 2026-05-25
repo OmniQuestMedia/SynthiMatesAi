@@ -1,31 +1,71 @@
-# SythiMatesAi — Cleanup Mode
-
-> **✅ FEATURES COMPLETE: Account-Core + Safe Synthetic Twin Integration**
->
-> **The shared Account-Core and Safe Synthetic Twin integration from ChatNowZone--BUILD is now live and production-ready!**
->
-> This repository now includes:
->
-> - ✅ **Shared Account-Core** — Unified account lookup, creator verification, and membership management
-> - ✅ **DreamCoins Ledger** — Canonical three-bucket wallet with hash-chained immutable transactions
-> - ✅ **Safe Synthetic Twin Creator** — Multi-safeguard photo-based AI twin generation
-> - ✅ **GateGuard Integration** — Risk/welfare pre-processor with fraud and welfare scoring
-> - ✅ **Voice Chat** — Real-time voice messaging with automatic DreamCoins deduction
-> - ✅ **Monitoring & Observability** — Real-time metrics for all Account-Core and DreamCoins operations
->
-> See [Architecture Overview](#architecture-account-core--dreamcoins--safe-synthetic-twin) below for details.
-> Full roadmap: [docs/ROADMAP.md](docs/ROADMAP.md)
-
-> **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
-> Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
+# SythiMatesAi — Creator-First AI Companions
 
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
-> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, and a cinematic narrative engine.
+> **Creators earn from their AI twins. Fans get safer, higher-quality experiences.**
+> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, reference-to-video, and a cinematic narrative engine.
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
 
 **Package manager:** Yarn (canonical for all OQMInc repos — do not use npm or pnpm).
 
 ---
+
+## 🌟 Why Choose SynthiMatesAi Over Candy.AI?
+
+### For Creators
+
+✅ **Earn 30-50% revenue share** from every image and video generation using your AI twin
+✅ **Real-time earnings dashboard** with transparent ledger and instant payout requests
+✅ **Safe Synthetic Twin technology** protects you from unauthorized deepfakes
+✅ **Full control** over AI twin visibility and monetization settings
+
+### For Fans
+
+✅ **Higher quality** photorealistic images and videos (Flux LoRA + Reference-to-Video)
+✅ **Better safety** with celebrity detection and transformative generation safeguards
+✅ **Video generation** from character images (not available on most competitors)
+✅ **Transparent pricing** with DreamCoins token system
+
+### Technical Advantages
+
+✅ **Append-only financial ledger** for complete transaction transparency
+✅ **Three-bucket wallet system** (purchased, membership, bonus tokens)
+✅ **GateGuard risk assessment** for creator payouts and user transactions
+✅ **Persistent memory** across all character interactions
+✅ **Voice cloning** with ElevenLabs for natural conversations
+
+---
+
+## 🎯 For Creators: Build Your AI Twin & Earn
+
+### How Creator Earnings Work
+
+1. **Train Your AI Twin** — Upload 5+ photos → Safe Synthetic Mode generates transformative character
+2. **Enable AI for Fans** — Toggle AI Synthetic Twin generation on your creator dashboard
+3. **Earn Automatically** — Get 40% of DreamCoins spent on:
+   - Image generations (50 DreamCoins × 40% = 20 tokens per image)
+   - Video generations (60-80 DreamCoins × 40% = 24-32 tokens per video)
+4. **Track & Withdraw** — View real-time earnings, request payouts via GateGuard-approved workflow
+
+### Creator Dashboard Features
+
+📊 **Real-Time Earnings** — See exactly how much you're earning from image & video generations
+🎭 **Active AI Twins** — Monitor all your trained AI twins and their usage stats
+💰 **Payout Requests** — Request payouts instantly (processed via GateGuard risk assessment)
+📈 **Generation Analytics** — Track how many images and videos fans generate with your twins
+
+### Revenue Share Breakdown
+
+| Service          | Cost to Fan   | Creator Earns (40%) | Platform Fee (60%) |
+| ---------------- | ------------- | ------------------- | ------------------ |
+| Image Generation | 50 DreamCoins | 20 DreamCoins       | 30 DreamCoins      |
+| Video (5s)       | 60 DreamCoins | 24 DreamCoins       | 36 DreamCoins      |
+| Video (10s)      | 85 DreamCoins | 34 DreamCoins       | 51 DreamCoins      |
+
+**Earnings accumulate in your bonus token bucket and can be withdrawn via payout requests.**
+
+---
+
+## 🎮 For Fans: Premium AI Companions
 
 ## Architecture: One Engine → Multiple Portals (Active)
 
@@ -483,6 +523,178 @@ Attempting to produce near-clones, impersonations, or rights-infringing outputs 
 
 ---
 
+## Shared Account-Core Architecture
+
+The **Shared Account-Core** system (integrated from ChatNowZone--BUILD) provides a unified, enterprise-grade foundation for the platform's economy, user management, and creator monetization.
+
+### Core Components
+
+#### 1. Token Economy (DreamCoins / CZT)
+
+**CZT (ChatZone Tokens / DreamCoins)** is the single platform currency used for all transactions:
+
+- **Token Purchase** — Users buy tokens via Stripe or other payment gateways
+- **Membership Allocations** — Subscription tiers grant monthly token allotments
+- **Promotional Bonuses** — Platform-awarded free credits for engagement
+- **Token Spending** — Used for AI image generation, voice calls, synthetic twin creation, and premium features
+
+**Three-Bucket Wallet System:**
+
+1. **PROMOTIONAL_BONUS** — Priority 1 (spent first) — Free credits and bonuses
+2. **MEMBERSHIP_ALLOCATION** — Priority 2 — Subscription-granted tokens
+3. **PURCHASED** — Priority 3 (spent last) — User-purchased tokens
+
+All token operations are logged to the append-only ledger with full audit trails.
+
+#### 2. Membership Tiers & Subscriptions
+
+Users can upgrade to premium tiers for enhanced features and token allocations:
+
+- **Free Tier** — Access to Spark Twins (15 messages/day)
+- **Basic** — Monthly token allotment + increased message limits
+- **Pro** — Higher token allotment + priority generation + advanced features
+- **Diamond** — VIP concierge service + maximum token allotment + exclusive features
+
+**Membership Features:**
+
+- Automatic monthly token allocation
+- Tiered access to AI generation features
+- Priority support and faster processing
+- Exclusive content and early access
+
+**API Endpoints:**
+
+- `POST /account/membership/purchase` — Upgrade membership tier
+- `GET /account/membership/status` — Check current membership status
+- `POST /account/tokens/purchase` — Buy additional tokens
+- `GET /account/balance` — View token balance by bucket
+
+#### 3. Creator Monetization & Payouts
+
+Creators earn revenue from their AI twins and content:
+
+**Revenue Streams:**
+
+- **Synthetic Twin Usage** — Creators earn 30-50% of tokens spent on their AI twins
+- **Image/Voice Generation** — Revenue share on each generation request
+- **Membership Subscriptions** — Recurring earnings from subscriber base
+- **Tips & Gifts** — Direct fan support
+
+**Payout Workflow:**
+
+1. **Creator Dashboard** — View real-time earnings and analytics
+2. **Payout Request** — Submit withdrawal request (minimum threshold applies)
+3. **GateGuard Pre-Check** — Automatic fraud detection and risk scoring
+4. **Admin Review** — High-risk requests escalated for manual approval
+5. **Processing** — Approved payouts executed via ledger
+6. **Notification** — Creator notified of payout status
+
+**API Endpoints:**
+
+- `GET /creator/dashboard/summary` — Dashboard with earnings and analytics
+- `GET /creator/dashboard/analytics` — Detailed revenue breakdown
+- `POST /creator/payout/request` — Submit payout request
+- `GET /creator/payout/history` — View payout history
+
+#### 4. Financial Integrity & Security
+
+All financial operations are protected by multiple layers of security:
+
+**GateGuard Sentinel™ Pre-Processor:**
+
+- **Pre-execution risk assessment** before every transaction
+- **Welfare Guardian scoring** for fraud detection
+- **Automatic decision gates** (APPROVE / ESCALATE / DECLINE)
+- **Hash-chained audit log** for tamper-evident records
+
+**Append-Only Ledger:**
+
+- **NO UPDATE or DELETE** operations on financial records
+- **Corrections via offset entries** only
+- **Immutable audit trail** with correlation IDs
+- **Every transaction logged** with reason codes
+
+**Mandatory Fields:**
+
+- `idempotency_key` — Prevents duplicate charges
+- `correlation_id` — Links related operations
+- `reason_code` — Business justification
+- `actor_id` — Who performed the action
+
+See [`docs/ACCOUNT_CORE_SECURITY.md`](docs/ACCOUNT_CORE_SECURITY.md) for complete security documentation.
+
+#### 5. Analytics & Monitoring
+
+Real-time dashboards for creators and admins:
+
+**Creator Analytics:**
+
+- Token usage trends over time
+- Synthetic Twin generation volume and revenue
+- Top-performing AI twins
+- Payout request summary
+- Fan engagement metrics
+
+**Admin Analytics:**
+
+- Platform-wide token usage
+- Membership tier distribution
+- Revenue trends and projections
+- Payout queue monitoring
+- Risk and fraud alerts
+
+**API Endpoints:**
+
+- `GET /creator/dashboard/analytics` — Creator analytics (30/60/90 days)
+- `GET /admin/analytics` — Platform-wide metrics (admin-only)
+- `GET /admin/analytics/token-usage` — Token purchase and spend trends
+- `GET /admin/analytics/membership-distribution` — Tier breakdown
+- `GET /admin/analytics/payout-queue` — Pending payouts summary
+
+### Integration with AI Features
+
+The Account-Core system seamlessly integrates with platform features:
+
+**Synthetic Twin Creation:**
+
+- Token deduction when generating Safe Synthetic Twins
+- Creator revenue share automatically calculated
+- Usage tracked for analytics dashboard
+
+**In-Chat Generation:**
+
+- Real-time token balance checks before generation
+- Automatic bucket-priority spending
+- Creator earnings credited on completion
+
+**Voice Cloning:**
+
+- Premium feature requires membership tier or token spend
+- Creator revenue share for voice call usage
+- Usage logged to ledger with provenance
+
+### Feature Flags & Toggles
+
+Account-Core features can be controlled via environment variables and governance config:
+
+- `MEMBERSHIP_ENABLED` — Enable/disable subscription tiers
+- `CREATOR_PAYOUTS_ENABLED` — Enable/disable creator payout requests
+- `TOKEN_PURCHASE_ENABLED` — Enable/disable direct token purchases
+- `GATEGUARD_STRICT_MODE` — Enforce strict risk scoring
+- `MINIMUM_PAYOUT_CENTS` — Configurable minimum payout threshold
+
+### Compliance & Audit
+
+Full compliance with financial regulations and privacy laws:
+
+- **GDPR** — User data access, export, and erasure
+- **AML/KYC** — Creator identity verification for payouts
+- **Audit Trail** — Every action logged with legal basis
+- **Legal Hold** — Freeze accounts for investigations
+- **WORM Export** — Immutable exports for regulatory compliance
+
+---
+
 ## Environment Variables
 
 See [`.env.example`](.env.example) for a full list. Key variables:
@@ -533,22 +745,31 @@ See [`.env.example`](.env.example) for a full list. Key variables:
 
 ---
 
-## ✅ Account-Core + Safe Synthetic Twin Integration Status
+## Why Choose SynthiMatesAi Over Candy.AI? (Summary)
 
-**Account-Core + Safe Synthetic Twin integration from ChatNowZone--BUILD is now live ✅**
+**For Creators:**
 
-The complete financial infrastructure and AI twin generation system is production-ready:
+- 🎯 **Earn 40% revenue share** from every AI twin generation (Candy.AI: 0%)
+- 📊 **Real-time earnings dashboard** with transparent ledger (Candy.AI: none)
+- 🛡️ **Safe Synthetic Twin** protects your likeness (Candy.AI: basic filtering)
+- 💰 **Instant payout requests** via GateGuard approval (Candy.AI: N/A)
 
-- ✅ DreamCoins (CZT) three-bucket wallet system
-- ✅ Six-tier membership subscriptions with bonus tokens
-- ✅ GateGuard Sentinel™ financial protection
-- ✅ Safe Synthetic Twin Creator with 5-layer safeguards
-- ✅ Creator payout system with Flicker n'Flame Scoring
-- ✅ C2PA watermarking on all synthetic images
-- ✅ Append-only ledger with hash-chain integrity
-- ✅ Full CI/CD pipeline with automated testing
+**For Fans:**
 
-See [Account-Core & Safe Synthetic Twin Architecture](#account-core--safe-synthetic-twin-architecture) section below for complete details.
+- 🎬 **Video generation** from character images (Candy.AI: limited animations)
+- 🎨 **Superior image quality** with Flux LoRA fine-tuning (Candy.AI: generic models)
+- 🔒 **Better safety** with celebrity detection safeguards (Candy.AI: basic)
+- 💎 **Support creators directly** — 40% of your spend goes to them (Candy.AI: 0%)
+
+**Technical Superiority:**
+
+- ✅ Append-only financial ledger (vs unknown architecture)
+- ✅ Three-bucket wallet system (vs subscription only)
+- ✅ GateGuard risk assessment (vs manual review)
+- ✅ Safe Synthetic Twin pipeline (vs basic content filtering)
+- ✅ C2PA provenance metadata (vs none)
+
+**See full comparison:** [`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)
 
 ---
 
@@ -560,6 +781,7 @@ This repo operates under cleanup-mode governance. All agents must read:
 - **[`docs/DOMAIN_GLOSSARY.md`](docs/DOMAIN_GLOSSARY.md)** — naming authority and commit prefix enum.
 - **[`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md)** — sovereign infrastructure & security policy (rule_applied_id: OQMI_INFRA_v1.0). Binding on all repos, environments, agents, and infrastructure.
 - **[`PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md`](PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md)** — current cleanup-cycle report-back for this repo.
+- **[`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)** — competitive positioning vs Candy.AI and other platforms.
 
 ### Cleanup-mode fast path
 

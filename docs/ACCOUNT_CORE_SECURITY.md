@@ -85,7 +85,11 @@ All financial transactions must be recorded in an append-only ledger with hash-c
 **Service:** `services/ledger/ledger.service.ts`
 **Schema:** `prisma/schema.prisma` → `CanonicalLedgerEntry`
 
-**Key Features:**
+**Models:** `prisma/schema.prisma`
+
+- `LedgerEntry` — All token transactions
+- `Transaction` — High-level transaction records
+- `AuditEvent` — Compliance and access audit trail
 
 1. **Hash-Chaining:** Each entry includes:
    - `hash_prev` — SHA-256 hash of previous entry
@@ -216,7 +220,13 @@ Privacy and consent disclaimers must be present in the SafeSyntheticWizard UI fl
 
 #### Consent Text
 
-**Required Disclaimer:**
+Admins can query audit trails via:
+
+- User ID
+- Date range
+- Event type
+- Outcome status
+- Performer/creator ID
 
 > I confirm I have the legal right to use all uploaded images, consent to transformative synthetic generation, and will not attempt impersonation, rights infringement, or deceptive identity cloning.
 
@@ -257,9 +267,12 @@ All synthetic generation must apply 5-layer safety architecture to prevent imper
 
 **Layer 1: Multi-Image Blending**
 
-- **Implementation:** ArcFace embeddings from 5-20 input photos
-- **Purpose:** Prevents single-image replication
-- **Threshold:** Minimum 5 images required
+All synthetic content generated via the platform includes:
+
+- **Content Credentials** — Provenance chain from creation
+- **Transformation Markers** — AI-generated indicators
+- **Creator Attribution** — Links to original creator
+- **Timestamp** — Immutable creation time
 
 **Layer 2: Celebrity Down-Weighting**
 
@@ -301,10 +314,12 @@ All synthetic generation must apply 5-layer safety architecture to prevent imper
 
 **Evidence:**
 
-- ✅ All 5 safeguards implemented
-- ✅ Validation constraints enforced
-- ✅ No bypass mechanisms
-- ✅ Safeguards reported in metadata
+All sensitive endpoints require:
+
+- Valid session token
+- Role verification via `@Roles()` decorator
+- Rate limiting via `@Throttle()` guard
+- GateGuard pre-check for financial operations
 
 ---
 
@@ -322,21 +337,16 @@ API endpoints must include rate limiting to prevent abuse and burst attacks.
 
 **Protected Endpoints:**
 
-| Endpoint                               | Limit       | Window      |
-| -------------------------------------- | ----------- | ----------- |
-| `/cyrano/ai-twin` (create)             | 10 requests | 60 seconds  |
-| `/cyrano/ai-twin/:id/photos` (upload)  | 20 requests | 60 seconds  |
-| `/cyrano/ai-twin/:id/train` (training) | 5 requests  | 300 seconds |
-| `/api/ai-twin/test-synthetic` (smoke)  | 5 requests  | 60 seconds  |
+For regulatory investigations or legal requirements:
 
-**Controller:** `services/ai-twin/src/ai-twin.controller.ts`
+- **Legal Hold Service** — Freeze account data
+- **WORM Export** — Write-Once-Read-Many compliant exports
+- **Audit Chain Export** — Full history with hash chain verification
 
-**Evidence:**
+**Services:**
 
-- ✅ `@Throttle()` decorators applied
-- ✅ Rate limits documented
-- ✅ Abuse risk reduced
-- ✅ Burst impersonation attempts mitigated
+- `services/core-api/src/compliance/legal-hold.service.ts`
+- `services/core-api/src/compliance/worm-export.service.ts`
 
 ---
 

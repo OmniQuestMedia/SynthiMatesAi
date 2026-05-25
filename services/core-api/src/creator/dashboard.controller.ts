@@ -1,15 +1,11 @@
 // WO: WO-INIT-001
 // CHORE: Enhanced with Account-Core analytics (Phase 5 Item 2)
 import { Injectable, Controller, Get, Query, Req, Logger } from '@nestjs/common';
+import { Request } from 'express';
 import {
   AccountCoreAnalyticsService,
-  CreatorDashboardAnalytics,
+  CreatorAnalytics,
 } from '../analytics/account-core-analytics.service';
-import { Request } from 'express';
-
-type DashboardRequest = Request & {
-  user?: { id?: string };
-};
 
 export interface DashboardSummary {
   creatorId: string;
@@ -39,12 +35,15 @@ export class DashboardController {
    */
   @Get('summary')
   async getSummary(
-    @Req() req: CreatorDashboardRequest,
-    @Query('days') _days: string = '30',
+    @Req() req: Request & { user?: { id: string } },
+    @Query('days') days: string = '30',
   ): Promise<DashboardSummary> {
-    const creatorHeader = req.headers?.['x-user-id'];
-    const creatorId =
-      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
+    const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
+    const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
+    const daysNum = parseInt(days, 10) || 30;
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysNum);
 
     this.logger.log(`Fetching dashboard summary for creator ${creatorId}`);
 
@@ -69,17 +68,14 @@ export class DashboardController {
    */
   @Get('analytics')
   async getAnalytics(
-    @Req() req: CreatorDashboardRequest,
-    @Query('startDate') _startDate: string,
-    @Query('endDate') _endDate: string,
-  ): Promise<CreatorDashboardAnalytics> {
-    const headerUserId = req.headers?.['x-user-id'];
-    const creatorId =
-      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
-
-    if (!creatorId) {
-      throw new Error('Creator ID is required');
-    }
+    @Req() req: Request & { user?: { id: string } },
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<CreatorAnalytics> {
+    const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
+    const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
 
     this.logger.log(`Fetching detailed analytics for creator ${creatorId}`);
 

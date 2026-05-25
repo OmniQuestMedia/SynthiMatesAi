@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-phase-6-shared-account-core`
-**Commit:** `8246d121471b421a30cfdf2b88ddf0cac6543ad4`
-**Generated:** 2026-05-25T02:16:37Z
+**Branch:** `claude/implement-creator-earnings`
+**Commit:** `20ddfb2d108bfbd3021faae9fb1db6178191358d`
+**Generated:** 2026-05-25T02:20:03Z
 
 ## All Files
 
@@ -366,11 +366,13 @@ Auto-generated on every push. Do not edit manually.
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/COMPETITIVE_ANALYSIS.md`
 - `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
 - `docs/PHASE5_VALIDATION_REPORT.md`
+- `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
@@ -850,6 +852,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/three-bucket-spend-guard.spec.ts`
 - `tests/integration/zonebot-service.spec.ts`
 - `tests/jest-uuid-shim.cjs`
+- `tests/phase6-creator-earnings.test.ts`
 - `tests/seed_data/admin_rules_TEST DATA.csv`
 - `tests/seed_data/channels_TEST DATA.csv`
 - `tests/seed_data/content_TEST DATA.csv`

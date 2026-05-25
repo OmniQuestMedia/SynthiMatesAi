@@ -2386,7 +2386,6 @@ model AiTwin {
   voice_clones      VoiceClone[]
   image_caches      ImageCache[]
   video_caches      VideoCache[]
-  video_caches_vidu VideoCacheVidu[] @relation("VideoCacheViduToAiTwin")
   video_captures    VideoCapture[]
   memory_banks      MemoryBank[]
   narrative_branches NarrativeBranch[]
@@ -2437,32 +2436,36 @@ model ImageCache {
   @@map("image_caches")
 }
 
-// ── Video Generation / Cache ──────────────────────────────────────────────────
+// ── Video Generation / Cache (Unified Vidu + HeyGen) ─────────────────────────
 
 model VideoCacheVidu {
   video_cache_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   twin_id            String   @db.Uuid
   creator_id         String   @db.Uuid
   user_id            String   @db.Uuid
-  prompt_hash        String?  @db.VarChar(64)
-  prompt_used        String   @db.Text
-  /// Provider: "vidu" | "heygen"
-  provider           String   @db.VarChar(30)
-  /// Model/version used: "vidu-1.0" | "vidu-1.5" | "heygen"
-  model              String   @db.VarChar(30)
-  storage_url        String?  @db.Text
-  video_url          String?  @db.Text
-  thumbnail_url      String?  @db.Text
+
+  // Cache key fields
+  cache_key          String?  @db.VarChar(64) // HeyGen cache key
+  prompt_hash        String?  @db.VarChar(64) // Vidu prompt hash
+  prompt             String?  @db.Text // HeyGen prompt
+  prompt_used        String?  @db.Text // Vidu prompt
+
+  // Video metadata
   duration_seconds   Int
+  storage_url        String?  @db.Text // Vidu storage URL
+  video_url          String?  @db.Text // HeyGen video URL
+  thumbnail_url      String?  @db.Text
   resolution         String?  @db.VarChar(10)
-  /// Reference image used for video generation
-  reference_image_id String?  @db.Uuid
-  /// Vidu tier: "premium" | "enterprise"
-  vidu_tier          String?  @db.VarChar(20)
-  /// HeyGen's internal video ID
-  heygen_video_id    String?  @db.VarChar(100)
-  /// Tier for HeyGen: "business" | "enterprise"
-  tier               String?  @db.VarChar(20)
+  model              String?  @db.VarChar(30) // "vidu-1.0" | "vidu-1.5" | etc
+
+  // Provider-specific fields
+  reference_image_id String?  @db.Uuid // Vidu reference image
+  heygen_video_id    String?  @db.VarChar(100) // HeyGen video ID
+  provider           String   @default("vidu") @db.VarChar(30) // "vidu" | "heygen"
+  tier               String?  @db.VarChar(20) // "premium" | "enterprise" | "business"
+  vidu_tier          String?  @db.VarChar(20) // Legacy field for Vidu
+
+  // Standard fields
   correlation_id     String   @unique @db.VarChar(200)
   reason_code        String   @default("VIDEO_GEN") @db.VarChar(40)
   generated_at       DateTime @default(now()) @db.Timestamptz
@@ -2470,9 +2473,10 @@ model VideoCacheVidu {
   twin               AiTwin   @relation("VideoCacheViduToAiTwin", fields: [twin_id], references: [twin_id])
 
   @@index([twin_id, prompt_hash, generated_at])
+  @@index([twin_id, cache_key, generated_at])
   @@index([user_id, generated_at])
-  @@index([vidu_tier, generated_at])
-  @@map("video_caches_vidu")
+  @@index([provider, generated_at])
+  @@map("video_caches")
 }
 
 // ── Voice Cloning ─────────────────────────────────────────────────────────────
@@ -2516,7 +2520,8 @@ model VoiceCloneSample {
   @@map("voice_clone_samples")
 }
 
-// ── Video Capture (HeyGen Learning) ───────────────────────────────────────────
+// ── Video Generation (HeyGen) ─────────────────────────────────────────────────
+// Note: VideoCache model is defined earlier in the schema (unified Vidu + HeyGen)
 
 model VideoCapture {
   capture_id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid

@@ -4,7 +4,7 @@
 import { Controller, Get, Query, Logger } from '@nestjs/common';
 import {
   AccountCoreAnalyticsService,
-  AdminAnalyticsSummary,
+  AdminAnalytics,
 } from '../analytics/account-core-analytics.service';
 
 @Controller('admin/analytics')
