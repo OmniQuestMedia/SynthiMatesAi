@@ -1,15 +1,23 @@
 // services/video-generation/src/video.module.ts
-// CYR: Video Generation Module
+// CYR: Video Generation Module — NestJS Module Registration
 
 import { Module } from '@nestjs/common';
-import { VideoService } from './video.service';
-import { HeyGenService } from './heygen.service';
+import { VideoController } from './video.controller';
+import { HybridVideoService } from './hybrid-video.service';
+import { ViduService } from './vidu.service';
 import { PrismaService } from '../../core-api/src/prisma.service';
 import { NatsService } from '../../core-api/src/nats/nats.service';
 import { SyntheticPipelineService } from '../../ai-twin/src/synthetic-pipeline.service';
 
 @Module({
-  providers: [VideoService, HeyGenService, PrismaService, NatsService, SyntheticPipelineService],
-  exports: [VideoService, HeyGenService],
+  controllers: [VideoController],
+  providers: [
+    HybridVideoService,
+    ViduService,
+    SyntheticPipelineService,
+    PrismaService,
+    NatsService,
+  ],
+  exports: [HybridVideoService, ViduService],
 })
 export class VideoModule {}

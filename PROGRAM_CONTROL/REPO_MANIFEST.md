@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-heygen-phase-testing`
-**Commit:** `df027a1d848e427290363ffddc819ea1a19d03ec`
-**Generated:** 2026-05-25T00:58:46Z
+**Branch:** `claude/implement-vidu-video-integration`
+**Commit:** `d60a415a2dde268a2eaa83995f3fcda0d6a8c693`
+**Generated:** 2026-05-25T01:03:55Z
 
 ## All Files
 
@@ -767,8 +767,12 @@ Auto-generated on every push. Do not edit manually.
 - `services/studio-affiliation/src/studio.service.ts`
 - `services/video-generation/src/heygen.service.ts`
 - `services/video-generation/src/heygen.types.ts`
+- `services/video-generation/src/hybrid-video.service.ts`
+- `services/video-generation/src/video.controller.ts`
 - `services/video-generation/src/video.module.ts`
 - `services/video-generation/src/video.service.ts`
+- `services/video-generation/src/video.types.ts`
+- `services/video-generation/src/vidu.service.ts`
 - `services/voice-cloning/src/voice.controller.ts`
 - `services/voice-cloning/src/voice.module.ts`
 - `services/voice-cloning/src/voice.service.ts`
