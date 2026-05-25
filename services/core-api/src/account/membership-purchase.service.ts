@@ -97,7 +97,9 @@ export class MembershipPurchaseService {
    * 5. Grant bonus tokens to membership bucket
    * 6. Create audit ledger entry
    */
-  async purchaseMembership(request: PurchaseMembershipRequest): Promise<PurchaseMembershipResponse> {
+  async purchaseMembership(
+    request: PurchaseMembershipRequest,
+  ): Promise<PurchaseMembershipResponse> {
     const { userId, tier, billingInterval, idempotencyKey } = request;
 
     this.logger.log('Membership purchase request initiated', {

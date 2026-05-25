@@ -12,7 +12,7 @@
 **Rule Applied:** OQMI_GOVERNANCE
 **Predecessor reference:** `PROGRAM_CONTROL/DIRECTIVES/DONE/GOVERNANCE-EQ-001.md`
 
------
+---
 
 ## 1. CONTEXT
 

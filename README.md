@@ -1,5 +1,21 @@
 # SythiMatesAi — Cleanup Mode
 
+> **✅ FEATURES COMPLETE: Account-Core + Safe Synthetic Twin Integration**
+>
+> **The shared Account-Core and Safe Synthetic Twin integration from ChatNowZone--BUILD is now live and production-ready!**
+>
+> This repository now includes:
+>
+> - ✅ **Shared Account-Core** — Unified account lookup, creator verification, and membership management
+> - ✅ **DreamCoins Ledger** — Canonical three-bucket wallet with hash-chained immutable transactions
+> - ✅ **Safe Synthetic Twin Creator** — Multi-safeguard photo-based AI twin generation
+> - ✅ **GateGuard Integration** — Risk/welfare pre-processor with fraud and welfare scoring
+> - ✅ **Voice Chat** — Real-time voice messaging with automatic DreamCoins deduction
+> - ✅ **Monitoring & Observability** — Real-time metrics for all Account-Core and DreamCoins operations
+>
+> See [Architecture Overview](#architecture-account-core--dreamcoins--safe-synthetic-twin) below for details.
+> Full roadmap: [docs/ROADMAP.md](docs/ROADMAP.md)
+
 > **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
 > Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
 

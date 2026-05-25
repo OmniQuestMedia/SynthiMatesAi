@@ -5,6 +5,11 @@ import {
   AccountCoreAnalyticsService,
   CreatorDashboardAnalytics,
 } from '../analytics/account-core-analytics.service';
+import { Request } from 'express';
+
+type DashboardRequest = Request & {
+  user?: { id?: string };
+};
 
 export interface DashboardSummary {
   creatorId: string;
@@ -37,7 +42,7 @@ export class DashboardController {
     @Req() req: CreatorDashboardRequest,
     @Query('days') _days: string = '30',
   ): Promise<DashboardSummary> {
-    const headerUserId = req.headers?.['x-user-id'];
+    const creatorHeader = req.headers?.['x-user-id'];
     const creatorId =
       req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
 
