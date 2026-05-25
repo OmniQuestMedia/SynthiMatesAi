@@ -469,6 +469,178 @@ Attempting to produce near-clones, impersonations, or rights-infringing outputs 
 
 ---
 
+## Shared Account-Core Architecture
+
+The **Shared Account-Core** system (integrated from ChatNowZone--BUILD) provides a unified, enterprise-grade foundation for the platform's economy, user management, and creator monetization.
+
+### Core Components
+
+#### 1. Token Economy (DreamCoins / CZT)
+
+**CZT (ChatZone Tokens / DreamCoins)** is the single platform currency used for all transactions:
+
+- **Token Purchase** — Users buy tokens via Stripe or other payment gateways
+- **Membership Allocations** — Subscription tiers grant monthly token allotments
+- **Promotional Bonuses** — Platform-awarded free credits for engagement
+- **Token Spending** — Used for AI image generation, voice calls, synthetic twin creation, and premium features
+
+**Three-Bucket Wallet System:**
+
+1. **PROMOTIONAL_BONUS** — Priority 1 (spent first) — Free credits and bonuses
+2. **MEMBERSHIP_ALLOCATION** — Priority 2 — Subscription-granted tokens
+3. **PURCHASED** — Priority 3 (spent last) — User-purchased tokens
+
+All token operations are logged to the append-only ledger with full audit trails.
+
+#### 2. Membership Tiers & Subscriptions
+
+Users can upgrade to premium tiers for enhanced features and token allocations:
+
+- **Free Tier** — Access to Spark Twins (15 messages/day)
+- **Basic** — Monthly token allotment + increased message limits
+- **Pro** — Higher token allotment + priority generation + advanced features
+- **Diamond** — VIP concierge service + maximum token allotment + exclusive features
+
+**Membership Features:**
+
+- Automatic monthly token allocation
+- Tiered access to AI generation features
+- Priority support and faster processing
+- Exclusive content and early access
+
+**API Endpoints:**
+
+- `POST /account/membership/purchase` — Upgrade membership tier
+- `GET /account/membership/status` — Check current membership status
+- `POST /account/tokens/purchase` — Buy additional tokens
+- `GET /account/balance` — View token balance by bucket
+
+#### 3. Creator Monetization & Payouts
+
+Creators earn revenue from their AI twins and content:
+
+**Revenue Streams:**
+
+- **Synthetic Twin Usage** — Creators earn 30-50% of tokens spent on their AI twins
+- **Image/Voice Generation** — Revenue share on each generation request
+- **Membership Subscriptions** — Recurring earnings from subscriber base
+- **Tips & Gifts** — Direct fan support
+
+**Payout Workflow:**
+
+1. **Creator Dashboard** — View real-time earnings and analytics
+2. **Payout Request** — Submit withdrawal request (minimum threshold applies)
+3. **GateGuard Pre-Check** — Automatic fraud detection and risk scoring
+4. **Admin Review** — High-risk requests escalated for manual approval
+5. **Processing** — Approved payouts executed via ledger
+6. **Notification** — Creator notified of payout status
+
+**API Endpoints:**
+
+- `GET /creator/dashboard/summary` — Dashboard with earnings and analytics
+- `GET /creator/dashboard/analytics` — Detailed revenue breakdown
+- `POST /creator/payout/request` — Submit payout request
+- `GET /creator/payout/history` — View payout history
+
+#### 4. Financial Integrity & Security
+
+All financial operations are protected by multiple layers of security:
+
+**GateGuard Sentinel™ Pre-Processor:**
+
+- **Pre-execution risk assessment** before every transaction
+- **Welfare Guardian scoring** for fraud detection
+- **Automatic decision gates** (APPROVE / ESCALATE / DECLINE)
+- **Hash-chained audit log** for tamper-evident records
+
+**Append-Only Ledger:**
+
+- **NO UPDATE or DELETE** operations on financial records
+- **Corrections via offset entries** only
+- **Immutable audit trail** with correlation IDs
+- **Every transaction logged** with reason codes
+
+**Mandatory Fields:**
+
+- `idempotency_key` — Prevents duplicate charges
+- `correlation_id` — Links related operations
+- `reason_code` — Business justification
+- `actor_id` — Who performed the action
+
+See [`docs/ACCOUNT_CORE_SECURITY.md`](docs/ACCOUNT_CORE_SECURITY.md) for complete security documentation.
+
+#### 5. Analytics & Monitoring
+
+Real-time dashboards for creators and admins:
+
+**Creator Analytics:**
+
+- Token usage trends over time
+- Synthetic Twin generation volume and revenue
+- Top-performing AI twins
+- Payout request summary
+- Fan engagement metrics
+
+**Admin Analytics:**
+
+- Platform-wide token usage
+- Membership tier distribution
+- Revenue trends and projections
+- Payout queue monitoring
+- Risk and fraud alerts
+
+**API Endpoints:**
+
+- `GET /creator/dashboard/analytics` — Creator analytics (30/60/90 days)
+- `GET /admin/analytics` — Platform-wide metrics (admin-only)
+- `GET /admin/analytics/token-usage` — Token purchase and spend trends
+- `GET /admin/analytics/membership-distribution` — Tier breakdown
+- `GET /admin/analytics/payout-queue` — Pending payouts summary
+
+### Integration with AI Features
+
+The Account-Core system seamlessly integrates with platform features:
+
+**Synthetic Twin Creation:**
+
+- Token deduction when generating Safe Synthetic Twins
+- Creator revenue share automatically calculated
+- Usage tracked for analytics dashboard
+
+**In-Chat Generation:**
+
+- Real-time token balance checks before generation
+- Automatic bucket-priority spending
+- Creator earnings credited on completion
+
+**Voice Cloning:**
+
+- Premium feature requires membership tier or token spend
+- Creator revenue share for voice call usage
+- Usage logged to ledger with provenance
+
+### Feature Flags & Toggles
+
+Account-Core features can be controlled via environment variables and governance config:
+
+- `MEMBERSHIP_ENABLED` — Enable/disable subscription tiers
+- `CREATOR_PAYOUTS_ENABLED` — Enable/disable creator payout requests
+- `TOKEN_PURCHASE_ENABLED` — Enable/disable direct token purchases
+- `GATEGUARD_STRICT_MODE` — Enforce strict risk scoring
+- `MINIMUM_PAYOUT_CENTS` — Configurable minimum payout threshold
+
+### Compliance & Audit
+
+Full compliance with financial regulations and privacy laws:
+
+- **GDPR** — User data access, export, and erasure
+- **AML/KYC** — Creator identity verification for payouts
+- **Audit Trail** — Every action logged with legal basis
+- **Legal Hold** — Freeze accounts for investigations
+- **WORM Export** — Immutable exports for regulatory compliance
+
+---
+
 ## Environment Variables
 
 See [`.env.example`](.env.example) for a full list. Key variables:
