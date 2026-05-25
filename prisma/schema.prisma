@@ -2385,6 +2385,7 @@ model AiTwin {
   photos            AiTwinPhoto[]
   voice_clones      VoiceClone[]
   image_caches      ImageCache[]
+  video_caches      VideoCache[]
   memory_banks      MemoryBank[]
   narrative_branches NarrativeBranch[]
 
@@ -2431,6 +2432,37 @@ model ImageCache {
   @@index([twin_id, prompt_hash, generated_at])
   @@index([user_id, generated_at])
   @@map("image_caches")
+}
+
+// ── Video Generation / Cache ──────────────────────────────────────────────────
+
+model VideoCache {
+  video_cache_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twin_id            String   @db.Uuid
+  creator_id         String   @db.Uuid
+  user_id            String   @db.Uuid
+  prompt_hash        String   @db.VarChar(64)
+  prompt_used        String   @db.Text
+  /// "vidu-1.0" | "vidu-1.5"
+  model              String   @db.VarChar(30)
+  storage_url        String   @db.Text
+  thumbnail_url      String?  @db.Text
+  duration_seconds   Int
+  resolution         String   @db.VarChar(10)
+  /// Reference image used for video generation
+  reference_image_id String?  @db.Uuid
+  /// Vidu tier used: "premium" | "enterprise"
+  vidu_tier          String   @db.VarChar(20)
+  correlation_id     String   @unique @db.VarChar(200)
+  reason_code        String   @default("VIDEO_GEN") @db.VarChar(40)
+  generated_at       DateTime @default(now()) @db.Timestamptz
+
+  twin               AiTwin   @relation(fields: [twin_id], references: [twin_id])
+
+  @@index([twin_id, prompt_hash, generated_at])
+  @@index([user_id, generated_at])
+  @@index([vidu_tier, generated_at])
+  @@map("video_caches")
 }
 
 // ── Voice Cloning ─────────────────────────────────────────────────────────────
