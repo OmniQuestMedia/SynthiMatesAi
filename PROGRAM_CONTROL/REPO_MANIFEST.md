@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/add-voice-chat-integration`
-**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
-**Generated:** 2026-05-24T22:55:16Z
+**Branch:** `claude/implement-phase-5-shared-account-core`
+**Commit:** `9930367ca0cf704991dbdf247d7186215491a5c4`
+**Generated:** 2026-05-25T00:45:41Z
 
 ## All Files
 
@@ -361,12 +361,15 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
 - `docker-compose.yml`
+- `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- `docs/PHASE5_VALIDATION_REPORT.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
@@ -486,6 +489,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-analytics.controller.ts`
+- `services/core-api/src/analytics/account-core-analytics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
 - `services/core-api/src/app.module.ts`
