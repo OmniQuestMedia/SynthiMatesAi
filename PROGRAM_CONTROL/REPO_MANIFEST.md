@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/add-voice-chat-integration`
-**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
-**Generated:** 2026-05-24T22:55:16Z
+**Branch:** `claude/implement-creator-earnings`
+**Commit:** `2e31810cb0ce6e4def9cc12eb4676300c902d265`
+**Generated:** 2026-05-25T00:59:01Z
 
 ## All Files
 
@@ -364,9 +364,11 @@ Auto-generated on every push. Do not edit manually.
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/COMPETITIVE_ANALYSIS.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
@@ -530,6 +532,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/cyrano/cyrano-auth.types.ts`
 - `services/core-api/src/cyrano/cyrano-memory.controller.ts`
 - `services/core-api/src/cyrano/cyrano-session-image.controller.ts`
+- `services/core-api/src/cyrano/video-generation.controller.ts`
 - `services/core-api/src/db.ts`
 - `services/core-api/src/dfsp/account-recovery-hold.service.ts`
 - `services/core-api/src/dfsp/checkout-confirmation.service.ts`
@@ -761,6 +764,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/studio-affiliation/src/affiliation-number.generator.ts`
 - `services/studio-affiliation/src/studio-affiliation.module.ts`
 - `services/studio-affiliation/src/studio.service.ts`
+- `services/video-generation/src/video.service.ts`
 - `services/voice-cloning/src/voice.controller.ts`
 - `services/voice-cloning/src/voice.module.ts`
 - `services/voice-cloning/src/voice.service.ts`
@@ -820,6 +824,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/three-bucket-spend-guard.spec.ts`
 - `tests/integration/zonebot-service.spec.ts`
 - `tests/jest-uuid-shim.cjs`
+- `tests/phase6-creator-earnings.test.ts`
 - `tests/seed_data/admin_rules_TEST DATA.csv`
 - `tests/seed_data/channels_TEST DATA.csv`
 - `tests/seed_data/content_TEST DATA.csv`
