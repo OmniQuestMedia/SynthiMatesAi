@@ -5,6 +5,11 @@ import {
   AccountCoreAnalyticsService,
   CreatorAnalytics,
 } from '../analytics/account-core-analytics.service';
+import { Request } from 'express';
+
+type DashboardRequest = Request & {
+  user?: { id?: string };
+};
 
 export interface DashboardSummary {
   creatorId: string;
@@ -34,12 +39,12 @@ export class DashboardController {
    */
   @Get('summary')
   async getSummary(
-    @Req() req: CreatorDashboardRequest,
+    @Req() req: DashboardRequest,
     @Query('days') days: string = '30',
   ): Promise<DashboardSummary> {
-    const headerUserId = req.headers?.['x-user-id'];
+    const creatorHeader = req.headers?.['x-user-id'];
     const creatorId =
-      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
+      req.user?.id || (Array.isArray(creatorHeader) ? creatorHeader[0] : creatorHeader) || '';
     const daysNum = parseInt(days, 10) || 30;
     const endDate = new Date();
     const startDate = new Date();
@@ -71,13 +76,13 @@ export class DashboardController {
    */
   @Get('analytics')
   async getAnalytics(
-    @Req() req: CreatorDashboardRequest,
+    @Req() req: DashboardRequest,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ): Promise<CreatorAnalytics> {
-    const headerUserId = req.headers?.['x-user-id'];
+    const creatorHeader = req.headers?.['x-user-id'];
     const creatorId =
-      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
+      req.user?.id || (Array.isArray(creatorHeader) ? creatorHeader[0] : creatorHeader) || '';
     const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ? new Date(endDate) : new Date();
 
