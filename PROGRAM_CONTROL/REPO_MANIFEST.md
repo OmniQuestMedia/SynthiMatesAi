@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-superior-memory-system`
-**Commit:** `ad70d99fafd0549a6c528fe9866a8be590f33353`
-**Generated:** 2026-05-25T02:07:05Z
+**Commit:** `afe37674225557be5111725ac624d48c79edc681`
+**Generated:** 2026-05-25T02:11:33Z
 
 ## All Files
 
@@ -365,9 +365,11 @@ Auto-generated on every push. Do not edit manually.
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- `docs/PHASE5_VALIDATION_REPORT.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
@@ -489,6 +491,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-analytics.controller.ts`
 - `services/core-api/src/analytics/account-core-analytics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
