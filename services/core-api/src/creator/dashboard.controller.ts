@@ -3,7 +3,7 @@
 import { Injectable, Controller, Get, Query, Req, Logger } from '@nestjs/common';
 import {
   AccountCoreAnalyticsService,
-  CreatorAnalytics,
+  CreatorDashboardAnalytics,
 } from '../analytics/account-core-analytics.service';
 
 export interface DashboardSummary {
@@ -12,7 +12,7 @@ export interface DashboardSummary {
   pendingPayoutCents: bigint;
   syntheticTwinCount: number;
   recentGenerations: number;
-  analytics?: CreatorAnalytics;
+  analytics?: CreatorDashboardAnalytics;
 }
 
 interface CreatorDashboardRequest {
@@ -35,33 +35,26 @@ export class DashboardController {
   @Get('summary')
   async getSummary(
     @Req() req: CreatorDashboardRequest,
-    @Query('days') days: string = '30',
+    @Query('days') _days: string = '30',
   ): Promise<DashboardSummary> {
     const headerUserId = req.headers?.['x-user-id'];
     const creatorId =
       req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
-    const daysNum = parseInt(days, 10) || 30;
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - daysNum);
 
     this.logger.log(`Fetching dashboard summary for creator ${creatorId}`);
 
-    const analytics = await this.analyticsService.getCreatorAnalytics(
-      creatorId,
-      startDate,
-      endDate,
-    );
+    if (!creatorId) {
+      throw new Error('Creator ID is required');
+    }
+
+    const analytics = await this.analyticsService.getCreatorDashboardAnalytics(creatorId);
 
     return {
       creatorId,
-      totalEarningsCents: analytics.totalEarningsCents,
-      pendingPayoutCents: BigInt(analytics.payoutSummary.totalAmountCents),
-      syntheticTwinCount: analytics.syntheticTwinUsage.length,
-      recentGenerations: analytics.syntheticTwinUsage.reduce(
-        (sum, twin) => sum + twin.generationCount,
-        0,
-      ),
+      totalEarningsCents: analytics.dreamCoinsEarned,
+      pendingPayoutCents: analytics.pendingPayoutCents,
+      syntheticTwinCount: analytics.syntheticTwinsCreated,
+      recentGenerations: 0, // Not available in current analytics
       analytics,
     };
   }
@@ -72,17 +65,19 @@ export class DashboardController {
   @Get('analytics')
   async getAnalytics(
     @Req() req: CreatorDashboardRequest,
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ): Promise<CreatorAnalytics> {
+    @Query('startDate') _startDate: string,
+    @Query('endDate') _endDate: string,
+  ): Promise<CreatorDashboardAnalytics> {
     const headerUserId = req.headers?.['x-user-id'];
     const creatorId =
       req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
-    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
+
+    if (!creatorId) {
+      throw new Error('Creator ID is required');
+    }
 
     this.logger.log(`Fetching detailed analytics for creator ${creatorId}`);
 
-    return this.analyticsService.getCreatorAnalytics(creatorId, start, end);
+    return this.analyticsService.getCreatorDashboardAnalytics(creatorId);
   }
 }
