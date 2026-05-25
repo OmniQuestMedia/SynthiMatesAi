@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-vidu-video-integration`
-**Commit:** `d60a415a2dde268a2eaa83995f3fcda0d6a8c693`
-**Generated:** 2026-05-25T01:03:55Z
+**Branch:** `claude/implement-shared-account-core-again`
+**Commit:** `1fbc3160c295bb29ec31ab44c6f30feaf34d5a9b`
+**Generated:** 2026-05-25T01:55:00Z
 
 ## All Files
 
