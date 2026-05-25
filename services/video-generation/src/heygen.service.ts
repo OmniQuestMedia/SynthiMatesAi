@@ -27,7 +27,6 @@ const NATS_VIDEO_FAILED = 'cyrano.video.failed';
 const HEYGEN_API_KEY = process.env.HEYGEN_API_KEY ?? '';
 const HEYGEN_ENTERPRISE_API_KEY = process.env.HEYGEN_ENTERPRISE_API_KEY ?? '';
 const HEYGEN_API_BASE_URL = process.env.HEYGEN_API_BASE_URL ?? 'https://api.heygen.com/v1';
-const VIDEO_PROVIDER = process.env.VIDEO_PROVIDER ?? 'heygen';
 const VIDEO_TIER = (process.env.VIDEO_TIER as HeyGenTier) ?? 'business';
 
 // Circuit breaker and HTTP client for HeyGen
@@ -62,7 +61,8 @@ export class HeyGenService {
     const cached = await this.prisma.videoCache.findFirst({
       where: {
         twin_id: request.twinId,
-        cache_key: cacheKey,
+        provider: 'heygen',
+        prompt_hash: cacheKey,
         generated_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }, // 24h TTL
       },
     });
@@ -105,12 +105,13 @@ export class HeyGenService {
         twin_id: request.twinId,
         creator_id: request.creatorId,
         user_id: request.userId,
-        cache_key: cacheKey,
-        prompt: request.prompt,
+        prompt_hash: cacheKey,
+        prompt_used: request.prompt,
+        model: 'heygen',
+        provider: 'heygen',
         duration_seconds: request.durationSeconds,
         video_url: videoUrl,
         heygen_video_id: heygenVideoId,
-        provider: VIDEO_PROVIDER,
         tier,
         correlation_id: request.correlationId,
         reason_code: 'VIDEO_GEN_HEYGEN',

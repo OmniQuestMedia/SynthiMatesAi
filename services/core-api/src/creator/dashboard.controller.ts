@@ -13,7 +13,14 @@ export interface DashboardSummary {
   pendingPayoutCents: bigint;
   syntheticTwinCount: number;
   recentGenerations: number;
-  analytics?: CreatorAnalytics;
+  analytics?: CreatorDashboardAnalytics;
+}
+
+interface CreatorDashboardRequest {
+  user?: {
+    id?: string;
+  };
+  headers?: Record<string, string | string[] | undefined>;
 }
 
 @Injectable()
@@ -40,21 +47,18 @@ export class DashboardController {
 
     this.logger.log(`Fetching dashboard summary for creator ${creatorId}`);
 
-    const analytics = await this.analyticsService.getCreatorAnalytics(
-      creatorId,
-      startDate,
-      endDate,
-    );
+    if (!creatorId) {
+      throw new Error('Creator ID is required');
+    }
+
+    const analytics = await this.analyticsService.getCreatorDashboardAnalytics(creatorId);
 
     return {
       creatorId,
-      totalEarningsCents: analytics.totalEarningsCents,
-      pendingPayoutCents: BigInt(analytics.payoutSummary.totalAmountCents),
-      syntheticTwinCount: analytics.syntheticTwinUsage.length,
-      recentGenerations: analytics.syntheticTwinUsage.reduce(
-        (sum, twin) => sum + twin.generationCount,
-        0,
-      ),
+      totalEarningsCents: analytics.dreamCoinsEarned,
+      pendingPayoutCents: analytics.pendingPayoutCents,
+      syntheticTwinCount: analytics.syntheticTwinsCreated,
+      recentGenerations: 0, // Not available in current analytics
       analytics,
     };
   }
@@ -75,6 +79,6 @@ export class DashboardController {
 
     this.logger.log(`Fetching detailed analytics for creator ${creatorId}`);
 
-    return this.analyticsService.getCreatorAnalytics(creatorId, start, end);
+    return this.analyticsService.getCreatorDashboardAnalytics(creatorId);
   }
 }

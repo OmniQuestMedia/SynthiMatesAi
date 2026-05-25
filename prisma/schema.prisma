@@ -15,47 +15,47 @@ datasource db {
 // ── Append-only: no update/delete permitted (enforced by DB triggers) ──────
 
 model LedgerEntry {
-  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  transaction_ref       String   @unique @db.VarChar(100)
-  idempotency_key       String   @unique @db.VarChar(200)
-  parent_entry_id       String?  @db.Uuid
-  user_id               String   @db.Uuid
-  studio_id             String?  @db.Uuid
-  performer_id          String?  @db.Uuid
-  contract_id           String?  @db.Uuid
-  entry_type            String   @db.VarChar(50)
-  status                String   @default("PENDING") @db.VarChar(20)
-  gross_amount_cents    BigInt
-  fee_amount_cents      BigInt   @default(0)
-  net_amount_cents      BigInt
-  currency              String   @default("USD") @db.Char(3)
-  studio_amount_cents   BigInt   @default(0)
-  performer_amount_cents BigInt  @default(0)
-  platform_amount_cents BigInt   @default(0)
-  gateway               String?  @db.VarChar(50)
-  gateway_txn_id        String?  @db.VarChar(200)
-  gateway_response      Json?
-  description           String?
-  metadata              Json?
-  created_at            DateTime @default(now()) @db.Timestamptz
+  id                     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaction_ref        String   @unique @db.VarChar(100)
+  idempotency_key        String   @unique @db.VarChar(200)
+  parent_entry_id        String?  @db.Uuid
+  user_id                String   @db.Uuid
+  studio_id              String?  @db.Uuid
+  performer_id           String?  @db.Uuid
+  contract_id            String?  @db.Uuid
+  entry_type             String   @db.VarChar(50)
+  status                 String   @default("PENDING") @db.VarChar(20)
+  gross_amount_cents     BigInt
+  fee_amount_cents       BigInt   @default(0)
+  net_amount_cents       BigInt
+  currency               String   @default("USD") @db.Char(3)
+  studio_amount_cents    BigInt   @default(0)
+  performer_amount_cents BigInt   @default(0)
+  platform_amount_cents  BigInt   @default(0)
+  gateway                String?  @db.VarChar(50)
+  gateway_txn_id         String?  @db.VarChar(200)
+  gateway_response       Json?
+  description            String?
+  metadata               Json?
+  created_at             DateTime @default(now()) @db.Timestamptz
 
   @@map("ledger_entries")
 }
 
 model Transaction {
-  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  transaction_ref  String   @unique @db.VarChar(100)
-  idempotency_key  String   @unique @db.VarChar(200)
-  user_id          String   @db.Uuid
-  performer_id     String?  @db.Uuid
-  studio_id        String?  @db.Uuid
-  transaction_type String   @db.VarChar(50)
-  status           String   @default("PENDING") @db.VarChar(20)
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaction_ref    String   @unique @db.VarChar(100)
+  idempotency_key    String   @unique @db.VarChar(200)
+  user_id            String   @db.Uuid
+  performer_id       String?  @db.Uuid
+  studio_id          String?  @db.Uuid
+  transaction_type   String   @db.VarChar(50)
+  status             String   @default("PENDING") @db.VarChar(20)
   gross_amount_cents BigInt
-  currency         String   @default("USD") @db.Char(3)
-  metadata         Json?
-  created_at       DateTime @default(now()) @db.Timestamptz
-  updated_at       DateTime @default(now()) @db.Timestamptz
+  currency           String   @default("USD") @db.Char(3)
+  metadata           Json?
+  created_at         DateTime @default(now()) @db.Timestamptz
+  updated_at         DateTime @default(now()) @db.Timestamptz
 
   @@map("transactions")
 }
@@ -78,18 +78,18 @@ model AuditEvent {
 }
 
 model IdentityVerification {
-  verification_id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  performer_id                 String    @db.Uuid
-  document_hash                String    @db.Char(64)
-  dob                          DateTime  @db.Date
-  status                       String    @default("PENDING") @db.VarChar(20)
-  expiry_date                  DateTime? @db.Timestamptz
-  liveness_pass                Boolean   @default(false)
-  expiry_override_actor_id     String?   @db.Uuid
-  expiry_override_reason_code  String?   @db.VarChar(100)
-  expiry_override_at           DateTime? @db.Timestamptz
-  created_at                   DateTime  @default(now()) @db.Timestamptz
-  updated_at                   DateTime  @default(now()) @db.Timestamptz
+  verification_id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  performer_id                String    @db.Uuid
+  document_hash               String    @db.Char(64)
+  dob                         DateTime  @db.Date
+  status                      String    @default("PENDING") @db.VarChar(20)
+  expiry_date                 DateTime? @db.Timestamptz
+  liveness_pass               Boolean   @default(false)
+  expiry_override_actor_id    String?   @db.Uuid
+  expiry_override_reason_code String?   @db.VarChar(100)
+  expiry_override_at          DateTime? @db.Timestamptz
+  created_at                  DateTime  @default(now()) @db.Timestamptz
+  updated_at                  DateTime  @default(now()) @db.Timestamptz
 
   @@map("identity_verification")
 }
@@ -132,16 +132,16 @@ model StudioContract {
 }
 
 model ReferralLink {
-  id                       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id               String   @db.Uuid
-  campaign_id              String   @db.Uuid
-  attribution_window_days  Int
-  link_slug                String   @unique @db.VarChar(100)
-  device_fingerprint       String?  @db.VarChar(255)
-  payment_instrument_hash  String?  @db.VarChar(64)
-  is_active                Boolean  @default(true)
-  metadata                 Json?
-  created_at               DateTime @default(now()) @db.Timestamptz
+  id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id              String   @db.Uuid
+  campaign_id             String   @db.Uuid
+  attribution_window_days Int
+  link_slug               String   @unique @db.VarChar(100)
+  device_fingerprint      String?  @db.VarChar(255)
+  payment_instrument_hash String?  @db.VarChar(64)
+  is_active               Boolean  @default(true)
+  metadata                Json?
+  created_at              DateTime @default(now()) @db.Timestamptz
 
   @@map("referral_links")
 }
@@ -165,13 +165,13 @@ model AttributionEvent {
 }
 
 model NotificationConsentStore {
-  id                       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id                  String   @db.Uuid
-  channel                  String   @db.VarChar(20)
-  is_opted_in              Boolean  @default(false)
-  jurisdiction_rule_version String  @db.VarChar(50)
-  created_at               DateTime @default(now()) @db.Timestamptz
-  updated_at               DateTime @default(now()) @db.Timestamptz
+  id                        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                   String   @db.Uuid
+  channel                   String   @db.VarChar(20)
+  is_opted_in               Boolean  @default(false)
+  jurisdiction_rule_version String   @db.VarChar(50)
+  created_at                DateTime @default(now()) @db.Timestamptz
+  updated_at                DateTime @default(now()) @db.Timestamptz
 
   @@unique([user_id, channel])
   @@map("notification_consent_store")
@@ -227,38 +227,38 @@ model PrizeTable {
 }
 
 model CallBooking {
-  booking_id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id         String   @db.Uuid
-  vip_user_id        String   @db.Uuid
-  scheduled_at_utc   DateTime @db.Timestamptz
-  block_type         String   @db.VarChar(20)
+  booking_id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id          String   @db.Uuid
+  vip_user_id         String   @db.Uuid
+  scheduled_at_utc    DateTime @db.Timestamptz
+  block_type          String   @db.VarChar(20)
   block_duration_mins Int
-  price_usd          Decimal  @db.Decimal(10, 2)
-  status             String   @default("SCHEDULED") @db.VarChar(20)
-  reschedule_fee_usd Decimal  @default(0.00) @db.Decimal(10, 2)
-  ledger_entry_id    String?  @db.Uuid
-  idempotency_key    String   @unique @db.VarChar(200)
-  rule_applied_id    String   @default("PRIVATE_CALL_v1") @db.VarChar(100)
-  created_at         DateTime @default(now()) @db.Timestamptz
+  price_usd           Decimal  @db.Decimal(10, 2)
+  status              String   @default("SCHEDULED") @db.VarChar(20)
+  reschedule_fee_usd  Decimal  @default(0.00) @db.Decimal(10, 2)
+  ledger_entry_id     String?  @db.Uuid
+  idempotency_key     String   @unique @db.VarChar(200)
+  rule_applied_id     String   @default("PRIVATE_CALL_v1") @db.VarChar(100)
+  created_at          DateTime @default(now()) @db.Timestamptz
 
   @@map("call_bookings")
 }
 
 model CallSession {
-  session_id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  booking_id          String    @db.Uuid
-  creator_login_at    DateTime? @db.Timestamptz
-  vip_login_at        DateTime? @db.Timestamptz
-  creator_ready_at    DateTime? @db.Timestamptz
-  vip_ready_at        DateTime? @db.Timestamptz
-  call_start_at       DateTime? @db.Timestamptz
-  call_end_at         DateTime? @db.Timestamptz
+  session_id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  booking_id           String    @db.Uuid
+  creator_login_at     DateTime? @db.Timestamptz
+  vip_login_at         DateTime? @db.Timestamptz
+  creator_ready_at     DateTime? @db.Timestamptz
+  vip_ready_at         DateTime? @db.Timestamptz
+  call_start_at        DateTime? @db.Timestamptz
+  call_end_at          DateTime? @db.Timestamptz
   actual_duration_secs Int?
-  creator_no_show     Boolean   @default(false)
-  vip_no_show         Boolean   @default(false)
-  voip_session_id     String?   @db.VarChar(200)
-  rule_applied_id     String    @default("PRIVATE_CALL_v1") @db.VarChar(100)
-  created_at          DateTime  @default(now()) @db.Timestamptz
+  creator_no_show      Boolean   @default(false)
+  vip_no_show          Boolean   @default(false)
+  voip_session_id      String?   @db.VarChar(200)
+  rule_applied_id      String    @default("PRIVATE_CALL_v1") @db.VarChar(100)
+  created_at           DateTime  @default(now()) @db.Timestamptz
 
   @@map("call_sessions")
 }
@@ -504,24 +504,24 @@ model DiamondContract {
 }
 
 model TokenBalance {
-  id                  String   @id @default(uuid())
-  account_id          String
-  contract_id         String?
-  quantity            Int
-  state               String
-  state_changed_at    DateTime @default(now())
-  state_changed_by    String?
-  state_change_reason String?
-  issued_at           DateTime @default(now())
-  lifespan_days       Int
-  expires_at          DateTime
-  frozen_reason       String?
+  id                   String   @id @default(uuid())
+  account_id           String
+  contract_id          String?
+  quantity             Int
+  state                String
+  state_changed_at     DateTime @default(now())
+  state_changed_by     String?
+  state_change_reason  String?
+  issued_at            DateTime @default(now())
+  lifespan_days        Int
+  expires_at           DateTime
+  frozen_reason        String?
   compliance_review_id String?
-  organization_id     String
-  tenant_id           String
-  token_origin        String   @default("PURCHASED")
+  organization_id      String
+  tenant_id            String
+  token_origin         String   @default("PURCHASED")
   /// Single-token economy: always 'CZT'. Immutable default enforced by application layer.
-  token_type          String   @default("CZT") @db.VarChar(10)
+  token_type           String   @default("CZT") @db.VarChar(10)
 
   @@index([token_type])
   @@map("token_balances")
@@ -665,67 +665,67 @@ model CollectionsQueue {
 // Ontario ESA 2026 compliance. Append-only for audit logs.
 
 model StaffMember {
-  id                      String    @id @default(uuid())
-  employee_ref            String    @unique @db.VarChar(50)
-  display_name            String    @db.VarChar(100)
-  role                    String    @db.VarChar(20)       // GZM, GZAM, GZS, GZSA
-  employment_type         String    @db.VarChar(10)       // FT, PT
-  staff_category          String    @db.VarChar(10)       // CORE, EDGE
-  department              String    @db.VarChar(30)       // GUESTZONE, FINANCE, TECH, LEGAL, MAINTENANCE, RECEPTION
-  languages               String[]                        // e.g. ['EN','FR','ES']
-  hourly_rate_cad         Decimal?  @db.Decimal(8, 2)    // Hourly staff
-  annual_salary_cad       Decimal?  @db.Decimal(10, 2)   // Salaried staff
-  is_active               Boolean   @default(true)
-  hire_date               DateTime  @db.Date
+  id                     String    @id @default(uuid())
+  employee_ref           String    @unique @db.VarChar(50)
+  display_name           String    @db.VarChar(100)
+  role                   String    @db.VarChar(20) // GZM, GZAM, GZS, GZSA
+  employment_type        String    @db.VarChar(10) // FT, PT
+  staff_category         String    @db.VarChar(10) // CORE, EDGE
+  department             String    @db.VarChar(30) // GUESTZONE, FINANCE, TECH, LEGAL, MAINTENANCE, RECEPTION
+  languages              String[] // e.g. ['EN','FR','ES']
+  hourly_rate_cad        Decimal?  @db.Decimal(8, 2) // Hourly staff
+  annual_salary_cad      Decimal?  @db.Decimal(10, 2) // Salaried staff
+  is_active              Boolean   @default(true)
+  hire_date              DateTime  @db.Date
   // WO-002: HCZ Zoey scheduler additions
-  target_weekly_hours     Int       @default(385)         // Tenths of hours: 385 = 38.5h target
-  min_weekly_hours        Int       @default(360)         // Tenths of hours: 360 = 36.0h floor
-  jurisdiction            String    @default("ON")        // Provincial jurisdiction code
-  birthday                DateTime? @db.Date
-  sick_hours_remaining    Int       @default(40)          // Hours: 40h = 5 sick days
-  sick_carryover_hours    Int       @default(0)
-  sick_carryover_expires  DateTime? @db.Date
-  correlation_id          String    @db.VarChar(64)
-  reason_code             String    @db.VarChar(100)
-  created_at              DateTime  @default(now()) @db.Timestamptz
+  target_weekly_hours    Int       @default(385) // Tenths of hours: 385 = 38.5h target
+  min_weekly_hours       Int       @default(360) // Tenths of hours: 360 = 36.0h floor
+  jurisdiction           String    @default("ON") // Provincial jurisdiction code
+  birthday               DateTime? @db.Date
+  sick_hours_remaining   Int       @default(40) // Hours: 40h = 5 sick days
+  sick_carryover_hours   Int       @default(0)
+  sick_carryover_expires DateTime? @db.Date
+  correlation_id         String    @db.VarChar(64)
+  reason_code            String    @db.VarChar(100)
+  created_at             DateTime  @default(now()) @db.Timestamptz
 
   @@map("staff_members")
 }
 
 model SchedulePeriod {
-  id                  String    @id @default(uuid())
-  period_ref          String    @unique @db.VarChar(50)
-  department          String    @db.VarChar(30)
-  period_start        DateTime  @db.Date
-  period_end          DateTime  @db.Date
-  block_cutoff_at     DateTime  @db.Timestamptz      // B-Lock: 21 days before period_start
-  final_lock_at       DateTime  @db.Timestamptz      // Final Lock: 14 days before period_start
-  status              String    @default("DRAFT") @db.VarChar(20) // DRAFT, B_LOCKED, FINAL_LOCKED, ACTIVE, ARCHIVED
-  published_by        String?   @db.Uuid
-  published_at        DateTime? @db.Timestamptz
-  correlation_id      String    @db.VarChar(64)
-  reason_code         String    @db.VarChar(100)
-  rule_applied_id     String    @default("GZ_SCHEDULE_v1") @db.VarChar(100)
-  created_at          DateTime  @default(now()) @db.Timestamptz
+  id              String    @id @default(uuid())
+  period_ref      String    @unique @db.VarChar(50)
+  department      String    @db.VarChar(30)
+  period_start    DateTime  @db.Date
+  period_end      DateTime  @db.Date
+  block_cutoff_at DateTime  @db.Timestamptz // B-Lock: 21 days before period_start
+  final_lock_at   DateTime  @db.Timestamptz // Final Lock: 14 days before period_start
+  status          String    @default("DRAFT") @db.VarChar(20) // DRAFT, B_LOCKED, FINAL_LOCKED, ACTIVE, ARCHIVED
+  published_by    String?   @db.Uuid
+  published_at    DateTime? @db.Timestamptz
+  correlation_id  String    @db.VarChar(64)
+  reason_code     String    @db.VarChar(100)
+  rule_applied_id String    @default("GZ_SCHEDULE_v1") @db.VarChar(100)
+  created_at      DateTime  @default(now()) @db.Timestamptz
 
   @@map("schedule_periods")
 }
 
 model ShiftTemplate {
-  id                String   @id @default(uuid())
-  shift_code        String   @db.VarChar(10)       // A, B, C
-  department        String   @db.VarChar(30)
-  shift_label       String   @db.VarChar(50)       // "Morning", "Swing", "Night"
-  start_time        String   @db.VarChar(5)        // "07:00" (HH:mm, America/Toronto)
-  end_time          String   @db.VarChar(5)        // "15:45"
-  duration_hours    Decimal  @db.Decimal(4, 2)     // 8.75
-  meal_break_start  String?  @db.VarChar(5)        // "11:30"
-  meal_break_mins   Int?                           // 30
-  is_active         Boolean  @default(true)
-  correlation_id    String   @db.VarChar(64)
-  reason_code       String   @db.VarChar(100)
-  rule_applied_id   String   @default("GZ_SHIFT_TEMPLATE_v1") @db.VarChar(100)
-  created_at        DateTime @default(now()) @db.Timestamptz
+  id               String   @id @default(uuid())
+  shift_code       String   @db.VarChar(10) // A, B, C
+  department       String   @db.VarChar(30)
+  shift_label      String   @db.VarChar(50) // "Morning", "Swing", "Night"
+  start_time       String   @db.VarChar(5) // "07:00" (HH:mm, America/Toronto)
+  end_time         String   @db.VarChar(5) // "15:45"
+  duration_hours   Decimal  @db.Decimal(4, 2) // 8.75
+  meal_break_start String?  @db.VarChar(5) // "11:30"
+  meal_break_mins  Int? // 30
+  is_active        Boolean  @default(true)
+  correlation_id   String   @db.VarChar(64)
+  reason_code      String   @db.VarChar(100)
+  rule_applied_id  String   @default("GZ_SHIFT_TEMPLATE_v1") @db.VarChar(100)
+  created_at       DateTime @default(now()) @db.Timestamptz
 
   @@unique([shift_code, department])
   @@map("shift_templates")
@@ -737,13 +737,13 @@ model ShiftAssignment {
   staff_member_id     String   @db.Uuid
   shift_template_id   String   @db.Uuid
   shift_date          DateTime @db.Date
-  override_start_time String?  @db.VarChar(5)       // Edge staff may have different start
+  override_start_time String?  @db.VarChar(5) // Edge staff may have different start
   override_end_time   String?  @db.VarChar(5)
   is_stat_holiday     Boolean  @default(false)
   pay_multiplier      Decimal  @default(1.00) @db.Decimal(3, 2) // 1.50 for stat holiday
-  assignment_source   String   @db.VarChar(20)       // ROSTER, ZONEBOT, MANUAL, SWAP
+  assignment_source   String   @db.VarChar(20) // ROSTER, ZONEBOT, MANUAL, SWAP
   on_call             Boolean  @default(false)
-  meal_cover_role     Boolean  @default(false)       // True if this person covers meal breaks
+  meal_cover_role     Boolean  @default(false) // True if this person covers meal breaks
   correlation_id      String   @db.VarChar(64)
   reason_code         String   @db.VarChar(100)
   rule_applied_id     String   @default("GZ_SHIFT_ASSIGN_v1") @db.VarChar(100)
@@ -754,38 +754,38 @@ model ShiftAssignment {
 }
 
 model ShiftGap {
-  id                  String    @id @default(uuid())
-  schedule_period_id  String    @db.Uuid
-  shift_template_id   String    @db.Uuid
-  gap_date            DateTime  @db.Date
-  department          String    @db.VarChar(30)
-  required_role       String    @db.VarChar(20)
-  status              String    @default("OPEN") @db.VarChar(20) // OPEN, BIDDING, AWARDED, FILLED, CANCELLED
-  posted_at           DateTime  @default(now()) @db.Timestamptz
-  filled_at           DateTime? @db.Timestamptz
-  filled_by           String?   @db.Uuid
-  correlation_id      String    @db.VarChar(64)
-  reason_code         String    @db.VarChar(100)
-  rule_applied_id     String    @default("GZ_SHIFT_GAP_v1") @db.VarChar(100)
-  created_at          DateTime  @default(now()) @db.Timestamptz
+  id                 String    @id @default(uuid())
+  schedule_period_id String    @db.Uuid
+  shift_template_id  String    @db.Uuid
+  gap_date           DateTime  @db.Date
+  department         String    @db.VarChar(30)
+  required_role      String    @db.VarChar(20)
+  status             String    @default("OPEN") @db.VarChar(20) // OPEN, BIDDING, AWARDED, FILLED, CANCELLED
+  posted_at          DateTime  @default(now()) @db.Timestamptz
+  filled_at          DateTime? @db.Timestamptz
+  filled_by          String?   @db.Uuid
+  correlation_id     String    @db.VarChar(64)
+  reason_code        String    @db.VarChar(100)
+  rule_applied_id    String    @default("GZ_SHIFT_GAP_v1") @db.VarChar(100)
+  created_at         DateTime  @default(now()) @db.Timestamptz
 
   @@map("shift_gaps")
 }
 
 model ShiftBid {
-  id              String    @id @default(uuid())
-  shift_gap_id    String    @db.Uuid
-  staff_member_id String    @db.Uuid
-  lottery_position Int?                           // 1, 2, or 3 (assigned by ZoneBot)
-  status          String    @default("PENDING") @db.VarChar(20) // PENDING, POSITION_ASSIGNED, OFFERED, ACCEPTED, DECLINED, EXPIRED
-  offered_at      DateTime? @db.Timestamptz
-  expires_at      DateTime? @db.Timestamptz       // 16-hour confirmation clock
-  responded_at    DateTime? @db.Timestamptz
-  suppressed_until DateTime? @db.Date             // Suppressed for next 2 cycles after award
-  correlation_id  String    @db.VarChar(64)
-  reason_code     String    @db.VarChar(100)
-  rule_applied_id String    @default("GZ_ZONEBOT_BID_v1") @db.VarChar(100)
-  created_at      DateTime  @default(now()) @db.Timestamptz
+  id               String    @id @default(uuid())
+  shift_gap_id     String    @db.Uuid
+  staff_member_id  String    @db.Uuid
+  lottery_position Int? // 1, 2, or 3 (assigned by ZoneBot)
+  status           String    @default("PENDING") @db.VarChar(20) // PENDING, POSITION_ASSIGNED, OFFERED, ACCEPTED, DECLINED, EXPIRED
+  offered_at       DateTime? @db.Timestamptz
+  expires_at       DateTime? @db.Timestamptz // 16-hour confirmation clock
+  responded_at     DateTime? @db.Timestamptz
+  suppressed_until DateTime? @db.Date // Suppressed for next 2 cycles after award
+  correlation_id   String    @db.VarChar(64)
+  reason_code      String    @db.VarChar(100)
+  rule_applied_id  String    @default("GZ_ZONEBOT_BID_v1") @db.VarChar(100)
+  created_at       DateTime  @default(now()) @db.Timestamptz
 
   @@unique([shift_gap_id, staff_member_id])
   @@map("shift_bids")
@@ -794,12 +794,12 @@ model ShiftBid {
 // Append-only: no UPDATE or DELETE permitted
 model ScheduleAuditLog {
   id              String   @id @default(uuid())
-  event_type      String   @db.VarChar(50)        // PERIOD_CREATED, SHIFT_ASSIGNED, GAP_POSTED, LOTTERY_RUN, BID_AWARDED, COMPLIANCE_VIOLATION, COVERAGE_GAP
-  actor_id        String   @db.VarChar(100)       // Staff ID or 'ZONEBOT'
-  target_id       String?  @db.VarChar(100)       // Entity being acted upon
-  target_type     String?  @db.VarChar(30)        // PERIOD, SHIFT, GAP, BID, STAFF
+  event_type      String   @db.VarChar(50) // PERIOD_CREATED, SHIFT_ASSIGNED, GAP_POSTED, LOTTERY_RUN, BID_AWARDED, COMPLIANCE_VIOLATION, COVERAGE_GAP
+  actor_id        String   @db.VarChar(100) // Staff ID or 'ZONEBOT'
+  target_id       String?  @db.VarChar(100) // Entity being acted upon
+  target_type     String?  @db.VarChar(30) // PERIOD, SHIFT, GAP, BID, STAFF
   department      String?  @db.VarChar(30)
-  details         Json?                           // Structured event payload
+  details         Json? // Structured event payload
   correlation_id  String   @db.VarChar(64)
   reason_code     String   @db.VarChar(100)
   rule_applied_id String   @default("GZ_SCHEDULE_AUDIT_v1") @db.VarChar(100)
@@ -809,50 +809,50 @@ model ScheduleAuditLog {
 }
 
 model DepartmentCoverage {
-  id                  String   @id @default(uuid())
-  department          String   @db.VarChar(30)
-  day_of_week         Int                          // 0=Mon, 6=Sun
-  coverage_start      String   @db.VarChar(5)      // "09:00"
-  coverage_end        String   @db.VarChar(5)      // "21:00"
-  min_staff_count     Int
-  min_supervisor_count Int     @default(1)
-  requires_manager    Boolean  @default(false)
-  is_on_call_only     Boolean  @default(false)     // e.g. Legal weekends
-  crossover_mins      Int      @default(30)        // Handoff/crossover buffer
-  correlation_id      String   @db.VarChar(64)
-  reason_code         String   @db.VarChar(100)
-  rule_applied_id     String   @default("GZ_DEPT_COVERAGE_v1") @db.VarChar(100)
-  created_at          DateTime @default(now()) @db.Timestamptz
+  id                   String   @id @default(uuid())
+  department           String   @db.VarChar(30)
+  day_of_week          Int // 0=Mon, 6=Sun
+  coverage_start       String   @db.VarChar(5) // "09:00"
+  coverage_end         String   @db.VarChar(5) // "21:00"
+  min_staff_count      Int
+  min_supervisor_count Int      @default(1)
+  requires_manager     Boolean  @default(false)
+  is_on_call_only      Boolean  @default(false) // e.g. Legal weekends
+  crossover_mins       Int      @default(30) // Handoff/crossover buffer
+  correlation_id       String   @db.VarChar(64)
+  reason_code          String   @db.VarChar(100)
+  rule_applied_id      String   @default("GZ_DEPT_COVERAGE_v1") @db.VarChar(100)
+  created_at           DateTime @default(now()) @db.Timestamptz
 
   @@unique([department, day_of_week, coverage_start])
   @@map("department_coverage")
 }
 
 model StatHoliday {
-  id              String   @id @default(uuid())
-  holiday_date    DateTime @unique @db.Date
-  holiday_name    String   @db.VarChar(100)
-  pay_multiplier  Decimal  @default(1.50) @db.Decimal(3, 2) // 1.5x Premium Pay
-  requires_on_call_manager Boolean @default(true)
-  correlation_id  String   @db.VarChar(64)
-  reason_code     String   @db.VarChar(100)
-  rule_applied_id String   @default("GZ_STAT_HOLIDAY_v1") @db.VarChar(100)
-  created_at      DateTime @default(now()) @db.Timestamptz
+  id                       String   @id @default(uuid())
+  holiday_date             DateTime @unique @db.Date
+  holiday_name             String   @db.VarChar(100)
+  pay_multiplier           Decimal  @default(1.50) @db.Decimal(3, 2) // 1.5x Premium Pay
+  requires_on_call_manager Boolean  @default(true)
+  correlation_id           String   @db.VarChar(64)
+  reason_code              String   @db.VarChar(100)
+  rule_applied_id          String   @default("GZ_STAT_HOLIDAY_v1") @db.VarChar(100)
+  created_at               DateTime @default(now()) @db.Timestamptz
 
   @@map("stat_holidays")
 }
 
 // ── PROC-001: Webhook Idempotency Log (append-only — no UPDATE or DELETE permitted) ──
 model WebhookIdempotencyLog {
-  id             String   @id @default(uuid())
-  event_id       String   @unique @db.VarChar(200)
-  event_type     String   @db.VarChar(100)
-  schema_version String   @db.VarChar(20)
-  correlation_id String   @db.VarChar(64)
-  reason_code    String   @db.VarChar(100)
-  organization_id String  @db.VarChar(100)
-  tenant_id      String   @db.VarChar(100)
-  received_at    DateTime @default(now())
+  id              String   @id @default(uuid())
+  event_id        String   @unique @db.VarChar(200)
+  event_type      String   @db.VarChar(100)
+  schema_version  String   @db.VarChar(20)
+  correlation_id  String   @db.VarChar(64)
+  reason_code     String   @db.VarChar(100)
+  organization_id String   @db.VarChar(100)
+  tenant_id       String   @db.VarChar(100)
+  received_at     DateTime @default(now())
 
   @@map("webhook_idempotency_log")
 }
@@ -861,23 +861,23 @@ model WebhookIdempotencyLog {
 // Stub model to support membership relations. Full user profile fields deferred.
 
 model User {
-  id                    String          @id @default(uuid())
-  organization_id       String          @db.VarChar(100)
-  tenant_id             String          @db.VarChar(100)
-  created_at            DateTime        @default(now()) @db.Timestamptz
-  updated_at            DateTime        @updatedAt @db.Timestamptz
+  id              String   @id @default(uuid())
+  organization_id String   @db.VarChar(100)
+  tenant_id       String   @db.VarChar(100)
+  created_at      DateTime @default(now()) @db.Timestamptz
+  updated_at      DateTime @updatedAt @db.Timestamptz
 
   // PHASE1-ITEM2: Creator account integration from ChatNowZone--BUILD
   // Allows User accounts to have an associated Creator profile (dual-role accounts)
-  is_creator            Boolean         @default(false)
-  creator_profile_id    String?         @unique @db.VarChar(100)
+  is_creator         Boolean @default(false)
+  creator_profile_id String? @unique @db.VarChar(100)
 
-  membership                 Membership?
-  card_on_file               CardOnFile?
-  extension_action_records   ExtensionActionRecord[]
-  guest_risk_profile         GuestRiskProfile?
-  friendly_fraud_signals     FriendlyFraudSignal[]
-  creator_profile            Creator?     @relation(fields: [creator_profile_id], references: [id])
+  membership               Membership?
+  card_on_file             CardOnFile?
+  extension_action_records ExtensionActionRecord[]
+  guest_risk_profile       GuestRiskProfile?
+  friendly_fraud_signals   FriendlyFraudSignal[]
+  creator_profile          Creator?                @relation(fields: [creator_profile_id], references: [id])
 
   @@map("users")
 }
@@ -895,29 +895,29 @@ enum MembershipTier {
 
 enum AccountStatus {
   ACTIVE
-  GUEST_LOCKED           // policy §3.1 — 31 days elapsed, no upgrade
-  SUSPENDED              // policy §3.2, §3.3 — age-verification failure
-  CARD_FROZEN            // policy §5 — card-on-file incomplete
+  GUEST_LOCKED // policy §3.1 — 31 days elapsed, no upgrade
+  SUSPENDED // policy §3.2, §3.3 — age-verification failure
+  CARD_FROZEN // policy §5 — card-on-file incomplete
 }
 
 enum TransitionTrigger {
-  GATE_1_GUEST_GRANTED           // policy §2 Gate 1
-  GATE_2_VIP_GRANTED             // policy §2 Gate 2
-  GATE_3_PAID_TIER_PURCHASED     // policy §2 Gate 3
-  PAID_TIER_RENEWED              // policy §3.3
-  PAID_TIER_LAPSED_TO_VIP        // policy §3.3
-  GUEST_EXPIRED_TO_LOCKED        // policy §3.1 — 31 days elapsed
-  GUEST_PURGED                   // policy §3.1 — 366 days post-lock
-  GUEST_REACTIVATED              // policy §3.1
-  VIP_AGE_VERIFY_SUSPENDED       // policy §3.2
-  PAID_AGE_VERIFY_SUSPENDED      // policy §3.3
-  SUSPENSION_LIFTED              // reactivation after age-verify success
-  CARD_FROZEN                    // policy §5
-  CARD_FREEZE_LIFTED             // policy §5
+  GATE_1_GUEST_GRANTED // policy §2 Gate 1
+  GATE_2_VIP_GRANTED // policy §2 Gate 2
+  GATE_3_PAID_TIER_PURCHASED // policy §2 Gate 3
+  PAID_TIER_RENEWED // policy §3.3
+  PAID_TIER_LAPSED_TO_VIP // policy §3.3
+  GUEST_EXPIRED_TO_LOCKED // policy §3.1 — 31 days elapsed
+  GUEST_PURGED // policy §3.1 — 366 days post-lock
+  GUEST_REACTIVATED // policy §3.1
+  VIP_AGE_VERIFY_SUSPENDED // policy §3.2
+  PAID_AGE_VERIFY_SUSPENDED // policy §3.3
+  SUSPENSION_LIFTED // reactivation after age-verify success
+  CARD_FROZEN // policy §5
+  CARD_FREEZE_LIFTED // policy §5
 }
 
 enum AgeVerificationMethod {
-  UNSPECIFIED           // placeholder — concrete methods defined in future AV-001 directive
+  UNSPECIFIED // placeholder — concrete methods defined in future AV-001 directive
 }
 
 enum AgeVerificationResult {
@@ -927,60 +927,60 @@ enum AgeVerificationResult {
 }
 
 enum AgeVerificationTrigger {
-  ACCOUNT_CREATION              // policy §4.1
-  GUEST_TO_VIP_UPGRADE          // policy §4.2
-  VIP_THIRTY_DAY_CADENCE        // policy §4.3
-  PAID_TIER_PURCHASE            // policy §4.4
-  GUEST_REACTIVATION            // policy §4.5
-  POST_SUSPENSION_REACTIVATION  // policy §4.6
+  ACCOUNT_CREATION // policy §4.1
+  GUEST_TO_VIP_UPGRADE // policy §4.2
+  VIP_THIRTY_DAY_CADENCE // policy §4.3
+  PAID_TIER_PURCHASE // policy §4.4
+  GUEST_REACTIVATION // policy §4.5
+  POST_SUSPENSION_REACTIVATION // policy §4.6
 }
 
 // ─── MEMB-001: Membership Schema Foundation ──────────────────────────────────
 // Policy source: docs/MEMBERSHIP_LIFECYCLE_POLICY.md v1.0
 
 model Membership {
-  id                    String          @id @default(cuid())
-  user_id               String          @unique
+  id                    String         @id @default(cuid())
+  user_id               String         @unique
   tier                  MembershipTier
-  account_status        AccountStatus   @default(ACTIVE)
-  product_variant       String?         // e.g. "SILVER_BULLET" for §7.3 variant; null for standard tier
-  paid_block_started_at DateTime?       // null for GUEST and VIP; non-null for paid tiers
-  paid_block_expires_at DateTime?       // null for GUEST and VIP; set to paid_block_started_at + 91 days for paid tiers
-  guest_expires_at      DateTime?       // non-null for GUEST only; 31 days from creation/reactivation
-  guest_purge_at        DateTime?       // non-null when GUEST is locked; 366 days post-lock
-  created_at            DateTime        @default(now())
-  updated_at            DateTime        @updatedAt
+  account_status        AccountStatus  @default(ACTIVE)
+  product_variant       String? // e.g. "SILVER_BULLET" for §7.3 variant; null for standard tier
+  paid_block_started_at DateTime? // null for GUEST and VIP; non-null for paid tiers
+  paid_block_expires_at DateTime? // null for GUEST and VIP; set to paid_block_started_at + 91 days for paid tiers
+  guest_expires_at      DateTime? // non-null for GUEST only; 31 days from creation/reactivation
+  guest_purge_at        DateTime? // non-null when GUEST is locked; 366 days post-lock
+  created_at            DateTime       @default(now())
+  updated_at            DateTime       @updatedAt
   organization_id       String
   tenant_id             String
 
-  user                  User            @relation(fields: [user_id], references: [id])
-  transitions           MembershipTierTransition[]
-  age_verifications     AgeVerification[]
+  user              User                       @relation(fields: [user_id], references: [id])
+  transitions       MembershipTierTransition[]
+  age_verifications AgeVerification[]
 
   @@index([tier])
   @@index([account_status])
   @@index([organization_id, tenant_id])
-  @@index([guest_expires_at])          // for scheduler queries (policy §3.1)
-  @@index([paid_block_expires_at])     // for scheduler queries (policy §3.3)
+  @@index([guest_expires_at]) // for scheduler queries (policy §3.1)
+  @@index([paid_block_expires_at]) // for scheduler queries (policy §3.3)
   @@map("memberships")
 }
 
 model MembershipTierTransition {
-  id                    String                @id @default(cuid())
-  membership_id         String
-  user_id               String                // denormalized for audit queries
-  previous_tier         MembershipTier?       // null for initial GUEST grant (Gate 1)
-  new_tier              MembershipTier
-  previous_status       AccountStatus?
-  new_status            AccountStatus
-  trigger_type          TransitionTrigger
-  actor_id              String?               // null for system-triggered transitions (e.g. scheduler)
-  rule_applied_id       String                // mandatory per global invariant
-  occurred_at           DateTime              @default(now())
-  organization_id       String
-  tenant_id             String
+  id              String            @id @default(cuid())
+  membership_id   String
+  user_id         String // denormalized for audit queries
+  previous_tier   MembershipTier? // null for initial GUEST grant (Gate 1)
+  new_tier        MembershipTier
+  previous_status AccountStatus?
+  new_status      AccountStatus
+  trigger_type    TransitionTrigger
+  actor_id        String? // null for system-triggered transitions (e.g. scheduler)
+  rule_applied_id String // mandatory per global invariant
+  occurred_at     DateTime          @default(now())
+  organization_id String
+  tenant_id       String
 
-  membership            Membership            @relation(fields: [membership_id], references: [id])
+  membership Membership @relation(fields: [membership_id], references: [id])
 
   @@index([membership_id, occurred_at])
   @@index([user_id, occurred_at])
@@ -990,18 +990,18 @@ model MembershipTierTransition {
 }
 
 model AgeVerification {
-  id                    String                  @id @default(cuid())
-  membership_id         String
-  user_id               String                  // denormalized for audit queries
-  method                AgeVerificationMethod
-  result                AgeVerificationResult
-  triggering_event      AgeVerificationTrigger
-  rule_applied_id       String                  // mandatory per global invariant
-  occurred_at           DateTime                @default(now())
-  organization_id       String
-  tenant_id             String
+  id               String                 @id @default(cuid())
+  membership_id    String
+  user_id          String // denormalized for audit queries
+  method           AgeVerificationMethod
+  result           AgeVerificationResult
+  triggering_event AgeVerificationTrigger
+  rule_applied_id  String // mandatory per global invariant
+  occurred_at      DateTime               @default(now())
+  organization_id  String
+  tenant_id        String
 
-  membership            Membership              @relation(fields: [membership_id], references: [id])
+  membership Membership @relation(fields: [membership_id], references: [id])
 
   @@index([membership_id, occurred_at])
   @@index([user_id, occurred_at])
@@ -1011,23 +1011,23 @@ model AgeVerification {
 }
 
 model CardOnFile {
-  id                       String      @id @default(cuid())
-  user_id                  String      @unique
-  cardholder_name          String?
-  billing_address          String?     // single-field address; structured breakdown TBD in future directive if needed
-  phone_number             String?
-  email                    String?
-  card_expiration_month    Int?        // 1–12
-  card_expiration_year     Int?        // 4-digit year
-  card_cvv_hash            String?     // SHA-256 hash only — never store raw CVV
-  card_token               String?     // payment processor token (e.g. Stripe Payment Method ID)
-  is_complete              Boolean     @default(false)  // computed: all 6 fields non-null
-  created_at               DateTime    @default(now())
-  updated_at               DateTime    @updatedAt
-  organization_id          String
-  tenant_id                String
+  id                    String   @id @default(cuid())
+  user_id               String   @unique
+  cardholder_name       String?
+  billing_address       String? // single-field address; structured breakdown TBD in future directive if needed
+  phone_number          String?
+  email                 String?
+  card_expiration_month Int? // 1–12
+  card_expiration_year  Int? // 4-digit year
+  card_cvv_hash         String? // SHA-256 hash only — never store raw CVV
+  card_token            String? // payment processor token (e.g. Stripe Payment Method ID)
+  is_complete           Boolean  @default(false) // computed: all 6 fields non-null
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+  organization_id       String
+  tenant_id             String
 
-  user                     User        @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 
   @@index([is_complete])
   @@index([organization_id, tenant_id])
@@ -1049,21 +1049,21 @@ enum BillingInterval {
 }
 
 model MembershipSubscription {
-  id                    String             @id @default(uuid())
-  user_id               String             @db.Uuid
-  tier                  MembershipTier
-  status                SubscriptionStatus @default(ACTIVE)
-  billing_interval      BillingInterval
-  commitment_months     Int
-  bonus_months          Int                @default(0)
-  current_period_start  DateTime           @db.Timestamptz
-  current_period_end    DateTime           @db.Timestamptz
-  cancelled_at          DateTime?          @db.Timestamptz
-  promo_code            String?            @db.VarChar(50)
-  organization_id       String             @db.VarChar(100)
-  tenant_id             String             @db.VarChar(100)
-  created_at            DateTime           @default(now()) @db.Timestamptz
-  updated_at            DateTime           @updatedAt @db.Timestamptz
+  id                   String             @id @default(uuid())
+  user_id              String             @db.Uuid
+  tier                 MembershipTier
+  status               SubscriptionStatus @default(ACTIVE)
+  billing_interval     BillingInterval
+  commitment_months    Int
+  bonus_months         Int                @default(0)
+  current_period_start DateTime           @db.Timestamptz
+  current_period_end   DateTime           @db.Timestamptz
+  cancelled_at         DateTime?          @db.Timestamptz
+  promo_code           String?            @db.VarChar(50)
+  organization_id      String             @db.VarChar(100)
+  tenant_id            String             @db.VarChar(100)
+  created_at           DateTime           @default(now()) @db.Timestamptz
+  updated_at           DateTime           @updatedAt @db.Timestamptz
 
   // Application-level invariant: one ACTIVE subscription per user.
   // Enforced in MembershipService.createSubscription before insert.
@@ -1122,19 +1122,19 @@ enum CyranoSubscriptionStatus {
 }
 
 model Subscription {
-  id                       String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id                  String                   @db.Uuid
-  tier                     SubscriptionTier
-  portal                   Portal
-  status                   CyranoSubscriptionStatus @default(ACTIVE)
-  stripe_customer_id       String?                  @db.VarChar(200)
-  stripe_subscription_id   String?                  @db.VarChar(200)
-  start_date               DateTime                 @default(now()) @db.Timestamptz
-  cancelled_at             DateTime?                @db.Timestamptz
-  correlation_id           String                   @unique @db.VarChar(200)
-  reason_code              String                   @default("CYRANO_SUB_CREATED") @db.VarChar(60)
-  created_at               DateTime                 @default(now()) @db.Timestamptz
-  updated_at               DateTime                 @updatedAt @db.Timestamptz
+  id                     String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                String                   @db.Uuid
+  tier                   SubscriptionTier
+  portal                 Portal
+  status                 CyranoSubscriptionStatus @default(ACTIVE)
+  stripe_customer_id     String?                  @db.VarChar(200)
+  stripe_subscription_id String?                  @db.VarChar(200)
+  start_date             DateTime                 @default(now()) @db.Timestamptz
+  cancelled_at           DateTime?                @db.Timestamptz
+  correlation_id         String                   @unique @db.VarChar(200)
+  reason_code            String                   @default("CYRANO_SUB_CREATED") @db.VarChar(60)
+  created_at             DateTime                 @default(now()) @db.Timestamptz
+  updated_at             DateTime                 @updatedAt @db.Timestamptz
 
   @@unique([user_id, portal])
   @@index([user_id, status])
@@ -1145,17 +1145,17 @@ model Subscription {
 // Monthly usage counters per guest, enforced by BenefitsMiddleware.
 
 model BenefitUsage {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id         String   @db.Uuid
-  month           String   @db.VarChar(7)    // "YYYY-MM"
-  images_used     Int      @default(0)
-  messages_used   Int      @default(0)
-  videos_used     Int      @default(0)
-  voice_minutes   Int      @default(0)
-  correlation_id  String   @unique @db.VarChar(200)
-  reason_code     String   @default("BENEFIT_USAGE_INIT") @db.VarChar(60)
-  created_at      DateTime @default(now()) @db.Timestamptz
-  updated_at      DateTime @updatedAt @db.Timestamptz
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String   @db.Uuid
+  month          String   @db.VarChar(7) // "YYYY-MM"
+  images_used    Int      @default(0)
+  messages_used  Int      @default(0)
+  videos_used    Int      @default(0)
+  voice_minutes  Int      @default(0)
+  correlation_id String   @unique @db.VarChar(200)
+  reason_code    String   @default("BENEFIT_USAGE_INIT") @db.VarChar(60)
+  created_at     DateTime @default(now()) @db.Timestamptz
+  updated_at     DateTime @updatedAt @db.Timestamptz
 
   @@unique([user_id, month], name: "userId_month")
   @@index([user_id, month])
@@ -1172,16 +1172,16 @@ enum BijouSessionStatus {
 }
 
 model BijouSession {
-  id                String             @id @default(uuid())
-  creator_id        String             @db.Uuid
-  scheduled_start   DateTime           @db.Timestamptz
-  scheduled_end     DateTime           @db.Timestamptz
-  capacity          Int                @default(24)
-  status            BijouSessionStatus @default(SCHEDULED)
-  organization_id   String             @db.VarChar(100)
-  tenant_id         String             @db.VarChar(100)
-  created_at        DateTime           @default(now()) @db.Timestamptz
-  updated_at        DateTime           @updatedAt @db.Timestamptz
+  id              String             @id @default(uuid())
+  creator_id      String             @db.Uuid
+  scheduled_start DateTime           @db.Timestamptz
+  scheduled_end   DateTime           @db.Timestamptz
+  capacity        Int                @default(24)
+  status          BijouSessionStatus @default(SCHEDULED)
+  organization_id String             @db.VarChar(100)
+  tenant_id       String             @db.VarChar(100)
+  created_at      DateTime           @default(now()) @db.Timestamptz
+  updated_at      DateTime           @updatedAt @db.Timestamptz
 
   @@index([status, scheduled_start])
   @@index([creator_id, scheduled_start])
@@ -1260,19 +1260,19 @@ model CreatorDwellAccrual {
 // Append-only: wallet_ledger_entries never UPDATE or DELETE (hash-chained).
 
 model CanonicalWallet {
-  id               String   @id @default(cuid())
-  user_id          String   @unique
-  user_type        String   // "guest" | "creator" | "diamond"
+  id        String @id @default(cuid())
+  user_id   String @unique
+  user_type String // "guest" | "creator" | "diamond"
 
   // Three-bucket balances — enforced by services/ledger/ (never write directly).
-  purchased_tokens  Int     @default(0)
-  membership_tokens Int     @default(0)
-  bonus_tokens      Int     @default(0)
+  purchased_tokens  Int @default(0)
+  membership_tokens Int @default(0)
+  bonus_tokens      Int @default(0)
 
-  last_updated     DateTime @updatedAt
-  organization_id  String
-  tenant_id        String
-  created_at       DateTime @default(now())
+  last_updated    DateTime @updatedAt
+  organization_id String
+  tenant_id       String
+  created_at      DateTime @default(now())
 
   ledger_entries    CanonicalLedgerEntry[]
   token_expirations CanonicalTokenExpiration[]
@@ -1283,19 +1283,19 @@ model CanonicalWallet {
 }
 
 model CanonicalLedgerEntry {
-  id              String   @id @default(cuid())
-  wallet_id       String
-  correlation_id  String   @unique
-  reason_code     String   // "PURCHASE" | "SPEND" | "PAYOUT" | "EXPIRY_RECOVERY" | "TOKEN_BRIDGE" | "THREE_FIFTHS_EXIT" | ...
-  amount          Int      // signed: positive = credit, negative = debit
-  bucket          String   // "purchased" | "membership" | "bonus"
-  token_type      String   @default("CZT") @db.VarChar(10) // CZT only — single-token economy enforced at DB level
-  metadata        Json?
-  hash_prev       String?
-  hash_current    String
-  created_at      DateTime @default(now())
+  id             String   @id @default(cuid())
+  wallet_id      String
+  correlation_id String   @unique
+  reason_code    String // "PURCHASE" | "SPEND" | "PAYOUT" | "EXPIRY_RECOVERY" | "TOKEN_BRIDGE" | "THREE_FIFTHS_EXIT" | ...
+  amount         Int // signed: positive = credit, negative = debit
+  bucket         String // "purchased" | "membership" | "bonus"
+  token_type     String   @default("CZT") @db.VarChar(10) // CZT only — single-token economy enforced at DB level
+  metadata       Json?
+  hash_prev      String?
+  hash_current   String
+  created_at     DateTime @default(now())
 
-  wallet          CanonicalWallet @relation(fields: [wallet_id], references: [id])
+  wallet CanonicalWallet @relation(fields: [wallet_id], references: [id])
 
   @@index([wallet_id, correlation_id])
   @@index([wallet_id, created_at])
@@ -1305,15 +1305,15 @@ model CanonicalLedgerEntry {
 }
 
 model CanonicalTokenExpiration {
-  id           String    @id @default(cuid())
+  id           String   @id @default(cuid())
   wallet_id    String
   tokens       Int
   expires_at   DateTime
-  status       String    // "active" | "expired" | "recovered" | "extended"
-  recovery_fee Decimal?  @db.Decimal(10, 2)
-  created_at   DateTime  @default(now())
+  status       String // "active" | "expired" | "recovered" | "extended"
+  recovery_fee Decimal? @db.Decimal(10, 2)
+  created_at   DateTime @default(now())
 
-  wallet       CanonicalWallet @relation(fields: [wallet_id], references: [id])
+  wallet CanonicalWallet @relation(fields: [wallet_id], references: [id])
 
   @@index([wallet_id, status])
   @@index([status, expires_at])
@@ -1322,13 +1322,13 @@ model CanonicalTokenExpiration {
 
 model CanonicalRateCard {
   id              String    @id @default(cuid())
-  tier            String    // "tease_regular" | "tease_showzone" | "diamond_floor" | "vip_baseline"
+  tier            String // "tease_regular" | "tease_showzone" | "diamond_floor" | "vip_baseline"
   guest_price     Decimal   @db.Decimal(10, 2)
   member_price    Decimal   @db.Decimal(10, 2)
-  creator_payout  Decimal   @db.Decimal(6, 4)  // $0.065–$0.090 per token
+  creator_payout  Decimal   @db.Decimal(6, 4) // $0.065–$0.090 per token
   platform_margin Decimal   @db.Decimal(6, 4)
   min_volume      Int?
-  heat_level      String?   // for Flicker n'Flame Scoring (FFS) scaling: "cold" | "warm" | "hot" | "inferno"
+  heat_level      String? // for Flicker n'Flame Scoring (FFS) scaling: "cold" | "warm" | "hot" | "inferno"
   valid_from      DateTime
   valid_to        DateTime?
 
@@ -1341,22 +1341,22 @@ model CanonicalRateCard {
 // flag. Canonical identity / profile fields are deferred to a future directive.
 
 model Creator {
-  id              String   @id @default(uuid())
+  id                   String   @id @default(uuid())
   // OBS-001: stream key stored as SHA-256 hash — never plaintext.
-  stream_key_hash String?  @unique @db.VarChar(64)
+  stream_key_hash      String?  @unique @db.VarChar(64)
   // OBS-001: CREATOR_AUTO flag gates persona auto-responses. Default false.
-  creator_auto    Boolean  @default(false)
+  creator_auto         Boolean  @default(false)
   // PHASE 3 ITEM 4: Feature flag for AI Synthetic Twin generation
-  ai_synthetic_enabled Boolean @default(true)
+  ai_synthetic_enabled Boolean  @default(true)
   // RBAC-STUDIO-001: denormalised affiliation number for fast profile reads
   // and login/verification flows. Source-of-truth lives on the Studio row;
   // this column mirrors it after the StudioAffiliation is created. Permanent
   // once set — no regeneration policy is enforced at the application layer.
-  affiliation_number String? @db.VarChar(9)
-  organization_id String   @db.VarChar(100)
-  tenant_id       String   @db.VarChar(100)
-  created_at      DateTime @default(now()) @db.Timestamptz
-  updated_at      DateTime @updatedAt @db.Timestamptz
+  affiliation_number   String?  @db.VarChar(9)
+  organization_id      String   @db.VarChar(100)
+  tenant_id            String   @db.VarChar(100)
+  created_at           DateTime @default(now()) @db.Timestamptz
+  updated_at           DateTime @updatedAt @db.Timestamptz
 
   studio_affiliations StudioAffiliation[]
   studio_onboarding   CreatorOnboarding?
@@ -1405,29 +1405,29 @@ enum StudioContractStatus {
 }
 
 model Studio {
-  id                  String       @id @default(uuid())
-  name                String       @db.VarChar(200)
+  id                 String       @id @default(uuid())
+  name               String       @db.VarChar(200)
   // 6-9 char uppercase alphanumeric (A-Z, 2-9 — excludes 0, 1, O, I).
   // Length range enforced by the AffiliationNumberService + DB CHECK.
   // Uniqueness enforced globally (no organization scope).
-  affiliation_number  String       @unique @db.VarChar(9)
-  status              StudioStatus @default(PENDING)
+  affiliation_number String       @unique @db.VarChar(9)
+  status             StudioStatus @default(PENDING)
   // Commission set by PLATFORM_ADMIN only (read-only on the studio dashboard).
   // Stored as a 4-decimal fraction (e.g. 0.2500 == 25%). Bounded 0..1.
-  commission_rate     Decimal      @default(0.0000) @db.Decimal(5, 4)
+  commission_rate    Decimal      @default(0.0000) @db.Decimal(5, 4)
   // Multi-tenant scoping (every write must include).
-  organization_id     String       @db.VarChar(100)
-  tenant_id           String       @db.VarChar(100)
+  organization_id    String       @db.VarChar(100)
+  tenant_id          String       @db.VarChar(100)
   // Canonical audit columns — populated on every mutation by the service layer.
-  correlation_id      String       @db.VarChar(128)
-  reason_code         String       @db.VarChar(64)
-  rule_applied_id     String       @db.VarChar(100)
-  created_at          DateTime     @default(now()) @db.Timestamptz
-  updated_at          DateTime     @updatedAt @db.Timestamptz
+  correlation_id     String       @db.VarChar(128)
+  reason_code        String       @db.VarChar(64)
+  rule_applied_id    String       @db.VarChar(100)
+  created_at         DateTime     @default(now()) @db.Timestamptz
+  updated_at         DateTime     @updatedAt @db.Timestamptz
 
-  affiliations        StudioAffiliation[]
-  contracts           StudioContractDocument[]
-  onboardings         CreatorOnboarding[]
+  affiliations StudioAffiliation[]
+  contracts    StudioContractDocument[]
+  onboardings  CreatorOnboarding[]
 
   @@index([affiliation_number])
   @@index([status, organization_id])
@@ -1450,8 +1450,8 @@ model StudioAffiliation {
   created_at      DateTime          @default(now()) @db.Timestamptz
   updated_at      DateTime          @updatedAt @db.Timestamptz
 
-  studio          Studio            @relation(fields: [studio_id], references: [id])
-  creator         Creator           @relation(fields: [creator_id], references: [id])
+  studio  Studio  @relation(fields: [studio_id], references: [id])
+  creator Creator @relation(fields: [creator_id], references: [id])
 
   @@unique([studio_id, creator_id])
   @@index([creator_id])
@@ -1460,29 +1460,29 @@ model StudioAffiliation {
 }
 
 model CreatorOnboarding {
-  id                  String           @id @default(uuid())
-  creator_id          String           @unique
+  id                 String           @id @default(uuid())
+  creator_id         String           @unique
   // Resolved studio (NULL until affiliation is granted).
-  studio_id           String?
+  studio_id          String?
   // Mirror of studio.affiliation_number for read-side convenience.
-  affiliation_number  String?          @db.VarChar(9)
-  status              OnboardingStatus @default(PENDING)
+  affiliation_number String?          @db.VarChar(9)
+  status             OnboardingStatus @default(PENDING)
   // Secondary email used for the verification code step.
-  secondary_email     String?          @db.VarChar(255)
-  email_verified_at   DateTime?        @db.Timestamptz
+  secondary_email    String?          @db.VarChar(255)
+  email_verified_at  DateTime?        @db.Timestamptz
   // Optional studio-domain block reason (audit only).
-  email_block_reason  String?          @db.VarChar(64)
+  email_block_reason String?          @db.VarChar(64)
   // Canonical audit columns.
-  correlation_id      String           @db.VarChar(128)
-  reason_code         String           @db.VarChar(64)
-  rule_applied_id     String           @db.VarChar(100)
-  organization_id     String           @db.VarChar(100)
-  tenant_id           String           @db.VarChar(100)
-  created_at          DateTime         @default(now()) @db.Timestamptz
-  updated_at          DateTime         @updatedAt @db.Timestamptz
+  correlation_id     String           @db.VarChar(128)
+  reason_code        String           @db.VarChar(64)
+  rule_applied_id    String           @db.VarChar(100)
+  organization_id    String           @db.VarChar(100)
+  tenant_id          String           @db.VarChar(100)
+  created_at         DateTime         @default(now()) @db.Timestamptz
+  updated_at         DateTime         @updatedAt @db.Timestamptz
 
-  creator             Creator          @relation(fields: [creator_id], references: [id])
-  studio              Studio?          @relation(fields: [studio_id], references: [id])
+  creator Creator @relation(fields: [creator_id], references: [id])
+  studio  Studio? @relation(fields: [studio_id], references: [id])
 
   @@index([affiliation_number])
   @@index([status])
@@ -1490,28 +1490,28 @@ model CreatorOnboarding {
 }
 
 model StudioContractDocument {
-  id                  String               @id @default(uuid())
-  studio_id           String
+  id                String               @id @default(uuid())
+  studio_id         String
   // FK to Creator (the signing party). Studio side is the studio owner.
-  creator_id          String
+  creator_id        String
   // Storage URI for the uploaded document (e.g. s3://… or assets-service ref).
-  storage_uri         String               @db.VarChar(500)
+  storage_uri       String               @db.VarChar(500)
   // SHA-256 of the document bytes — used to detect tampering at sign time.
-  document_hash       String               @db.Char(64)
-  status              StudioContractStatus @default(UPLOADED)
+  document_hash     String               @db.Char(64)
+  status            StudioContractStatus @default(UPLOADED)
   // Typed-name signature block (MVP). Prod: replace with cryptographic.
-  signed_typed_name   String?              @db.VarChar(200)
-  signed_at           DateTime?            @db.Timestamptz
+  signed_typed_name String?              @db.VarChar(200)
+  signed_at         DateTime?            @db.Timestamptz
   // Canonical audit columns.
-  correlation_id      String               @db.VarChar(128)
-  reason_code         String               @db.VarChar(64)
-  rule_applied_id     String               @db.VarChar(100)
-  organization_id     String               @db.VarChar(100)
-  tenant_id           String               @db.VarChar(100)
-  created_at          DateTime             @default(now()) @db.Timestamptz
-  updated_at          DateTime             @updatedAt @db.Timestamptz
+  correlation_id    String               @db.VarChar(128)
+  reason_code       String               @db.VarChar(64)
+  rule_applied_id   String               @db.VarChar(100)
+  organization_id   String               @db.VarChar(100)
+  tenant_id         String               @db.VarChar(100)
+  created_at        DateTime             @default(now()) @db.Timestamptz
+  updated_at        DateTime             @updatedAt @db.Timestamptz
 
-  studio              Studio               @relation(fields: [studio_id], references: [id])
+  studio Studio @relation(fields: [studio_id], references: [id])
 
   @@index([studio_id, status])
   @@index([creator_id])
@@ -1649,27 +1649,27 @@ model RoomEffectConfig {
 // Whale profile — spending intelligence, preference vectors, loyalty scoring.
 // Append-heavy: new rows on each rescore event. No update of previous rows.
 model WhaleProfile {
-  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  guest_id              String   @db.Uuid
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  guest_id          String   @db.Uuid
   // Loyalty tier derived from multi-window spend analysis.
-  loyalty_tier          String   @db.VarChar(30)
+  loyalty_tier      String   @db.VarChar(30)
   // Composite whale score 0..100.
-  whale_score           Decimal  @db.Decimal(5, 2)
+  whale_score       Decimal  @db.Decimal(5, 2)
   // Rolling spend windows (CZT tokens).
-  spend_24h             Decimal  @default(0) @db.Decimal(14, 4)
-  spend_72h             Decimal  @default(0) @db.Decimal(14, 4)
-  spend_7d              Decimal  @default(0) @db.Decimal(14, 4)
-  spend_14d             Decimal  @default(0) @db.Decimal(14, 4)
-  spend_30d             Decimal  @default(0) @db.Decimal(14, 4)
+  spend_24h         Decimal  @default(0) @db.Decimal(14, 4)
+  spend_72h         Decimal  @default(0) @db.Decimal(14, 4)
+  spend_7d          Decimal  @default(0) @db.Decimal(14, 4)
+  spend_14d         Decimal  @default(0) @db.Decimal(14, 4)
+  spend_30d         Decimal  @default(0) @db.Decimal(14, 4)
   // Preference vector — opaque JSON envelope; shape is intentionally flexible.
-  preference_vector     Json?
+  preference_vector Json?
   // Geo-pricing region tag (ISO 3166-1 alpha-2 or CNZ region code).
-  geo_region            String?  @db.VarChar(10)
-  correlation_id        String   @db.VarChar(100)
-  reason_code           String   @db.VarChar(100)
-  rule_applied_id       String   @db.VarChar(100)
-  scored_at             DateTime @default(now()) @db.Timestamptz
-  created_at            DateTime @default(now()) @db.Timestamptz
+  geo_region        String?  @db.VarChar(10)
+  correlation_id    String   @db.VarChar(100)
+  reason_code       String   @db.VarChar(100)
+  rule_applied_id   String   @db.VarChar(100)
+  scored_at         DateTime @default(now()) @db.Timestamptz
+  created_at        DateTime @default(now()) @db.Timestamptz
 
   @@index([guest_id, scored_at])
   @@index([loyalty_tier, scored_at])
@@ -1679,25 +1679,25 @@ model WhaleProfile {
 // Gemstone awards — queued symbolic gifting from the platform to a guest.
 // Append-only; delivery state updated via reason_code field progression.
 model GemstoneAward {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  guest_id       String    @db.Uuid
-  session_id     String?   @db.VarChar(100)
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  guest_id        String    @db.Uuid
+  session_id      String?   @db.VarChar(100)
   // Gem type (e.g. RUBY, SAPPHIRE, EMERALD, DIAMOND).
-  gem_type       String    @db.VarChar(40)
+  gem_type        String    @db.VarChar(40)
   // Symbolic description shown to the guest (customisable).
-  symbolism      String    @db.VarChar(255)
+  symbolism       String    @db.VarChar(255)
   // PUBLIC or PRIVATE visibility in room feed.
-  visibility     String    @db.VarChar(20)
+  visibility      String    @db.VarChar(20)
   // QUEUED | SENT | VIEWED | DECLINED.
-  status         String    @default("QUEUED") @db.VarChar(20)
+  status          String    @default("QUEUED") @db.VarChar(20)
   // ISO timestamp of when the gem was dispatched (null until sent).
-  sent_at        DateTime? @db.Timestamptz
+  sent_at         DateTime? @db.Timestamptz
   // Deliberate send delay in seconds (simulates human-like timing).
-  send_delay_sec Int       @default(0)
-  correlation_id String    @db.VarChar(100)
-  reason_code    String    @db.VarChar(100)
-  rule_applied_id String   @db.VarChar(100)
-  created_at     DateTime  @default(now()) @db.Timestamptz
+  send_delay_sec  Int       @default(0)
+  correlation_id  String    @db.VarChar(100)
+  reason_code     String    @db.VarChar(100)
+  rule_applied_id String    @db.VarChar(100)
+  created_at      DateTime  @default(now()) @db.Timestamptz
 
   @@index([guest_id, status])
   @@index([session_id, status])
@@ -1749,23 +1749,23 @@ model ExtensionActionRecord {
   ceoReviewFlagged    Boolean  @default(false)
   createdAt           DateTime @default(now())
 
-  user                User     @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [guestId], references: [id], onDelete: Cascade)
 
   @@index([guestId, executedAt])
   @@map("extension_action_records")
 }
 
 model GuestRiskProfile {
-  guestId        String   @id
-  riskScore      Int      @default(0)
-  tier           String   @default("GREEN")
-  activeSignals  String[]
-  lastUpdated    DateTime @updatedAt
-  notes          String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  guestId       String   @id
+  riskScore     Int      @default(0)
+  tier          String   @default("GREEN")
+  activeSignals String[]
+  lastUpdated   DateTime @updatedAt
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  user           User     @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [guestId], references: [id], onDelete: Cascade)
 
   @@index([riskScore])
   @@index([tier])
@@ -1781,7 +1781,7 @@ model FriendlyFraudSignal {
   detectedAt     DateTime @default(now())
   rawData        Json?
 
-  user           User     @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [guestId], references: [id], onDelete: Cascade)
 
   @@index([guestId])
   @@index([detectedAt])
@@ -1867,20 +1867,20 @@ model HczShift {
 }
 
 model HczLeaveRequest {
-  id               String    @id @default(uuid())
-  staff_member_id  String    @db.Uuid
-  leave_type       String                      // SICK, VACATION, PERSONAL, BEREAVEMENT
-  start_date       DateTime  @db.Date
-  end_date         DateTime  @db.Date
-  hours_requested  Int
-  status           String    @default("PENDING")  // PENDING, APPROVED, DENIED
-  approved_by      String?   @db.Uuid
-  approved_at      DateTime? @db.Timestamptz
-  denial_reason    String?
-  correlation_id   String
-  reason_code      String
-  rule_applied_id  String    @default("HCZ_LEAVE_v1")
-  created_at       DateTime  @default(now()) @db.Timestamptz
+  id              String    @id @default(uuid())
+  staff_member_id String    @db.Uuid
+  leave_type      String // SICK, VACATION, PERSONAL, BEREAVEMENT
+  start_date      DateTime  @db.Date
+  end_date        DateTime  @db.Date
+  hours_requested Int
+  status          String    @default("PENDING") // PENDING, APPROVED, DENIED
+  approved_by     String?   @db.Uuid
+  approved_at     DateTime? @db.Timestamptz
+  denial_reason   String?
+  correlation_id  String
+  reason_code     String
+  rule_applied_id String    @default("HCZ_LEAVE_v1")
+  created_at      DateTime  @default(now()) @db.Timestamptz
 
   @@index([staff_member_id])
   @@map("hcz_leave_requests")
@@ -1890,7 +1890,7 @@ model HczShiftOffer {
   id              String    @id @default(uuid())
   shift_id        String    @db.Uuid
   offered_by      String    @db.Uuid
-  status          String    @default("OPEN")   // OPEN, CLAIMED, EXPIRED, CANCELLED
+  status          String    @default("OPEN") // OPEN, CLAIMED, EXPIRED, CANCELLED
   claimed_by      String?   @db.Uuid
   claimed_at      DateTime? @db.Timestamptz
   expires_at      DateTime? @db.Timestamptz
@@ -1903,36 +1903,36 @@ model HczShiftOffer {
 }
 
 model HczShiftSwap {
-  id                  String    @id @default(uuid())
-  initiator_id        String    @db.Uuid
-  initiator_shift_id  String    @db.Uuid
-  recipient_id        String    @db.Uuid
-  recipient_shift_id  String    @db.Uuid
-  status              String    @default("PENDING")  // PENDING, APPROVED, REJECTED, CANCELLED
-  approved_by         String?   @db.Uuid
-  approved_at         DateTime? @db.Timestamptz
-  rejection_reason    String?
-  correlation_id      String
-  reason_code         String
-  rule_applied_id     String    @default("HCZ_SHIFT_SWAP_v1")
-  created_at          DateTime  @default(now()) @db.Timestamptz
+  id                 String    @id @default(uuid())
+  initiator_id       String    @db.Uuid
+  initiator_shift_id String    @db.Uuid
+  recipient_id       String    @db.Uuid
+  recipient_shift_id String    @db.Uuid
+  status             String    @default("PENDING") // PENDING, APPROVED, REJECTED, CANCELLED
+  approved_by        String?   @db.Uuid
+  approved_at        DateTime? @db.Timestamptz
+  rejection_reason   String?
+  correlation_id     String
+  reason_code        String
+  rule_applied_id    String    @default("HCZ_SHIFT_SWAP_v1")
+  created_at         DateTime  @default(now()) @db.Timestamptz
 
   @@map("hcz_shift_swaps")
 }
 
 model HczWellbeingResponse {
-  id                   String   @id @default(uuid())
-  staff_member_id      String   @db.Uuid
-  response_date        DateTime @db.Date
-  energy_score         Int                        // 1-10
-  stress_score         Int                        // 1-10
-  satisfaction_score   Int                        // 1-10
-  notes                String?
-  is_anonymous         Boolean  @default(false)
-  correlation_id       String
-  reason_code          String
-  rule_applied_id      String   @default("HCZ_WELLBEING_v1")
-  created_at           DateTime @default(now()) @db.Timestamptz
+  id                 String   @id @default(uuid())
+  staff_member_id    String   @db.Uuid
+  response_date      DateTime @db.Date
+  energy_score       Int // 1-10
+  stress_score       Int // 1-10
+  satisfaction_score Int // 1-10
+  notes              String?
+  is_anonymous       Boolean  @default(false)
+  correlation_id     String
+  reason_code        String
+  rule_applied_id    String   @default("HCZ_WELLBEING_v1")
+  created_at         DateTime @default(now()) @db.Timestamptz
 
   @@index([staff_member_id, response_date])
   @@map("hcz_wellbeing_responses")
@@ -1942,7 +1942,7 @@ model HczFatigueScore {
   id                    String   @id @default(uuid())
   staff_member_id       String   @db.Uuid
   score_date            DateTime @db.Date
-  score                 Int                        // 0-100; higher = more fatigued
+  score                 Int // 0-100; higher = more fatigued
   consecutive_days      Int      @default(0)
   hours_past_7_days     Int      @default(0)
   recent_overtime_hours Int      @default(0)
@@ -1958,56 +1958,56 @@ model HczFatigueScore {
 
 // Append-only: no UPDATE or DELETE permitted (cash incentive disbursements)
 model HczIncentiveLedger {
-  id                  String   @id @default(uuid())
-  staff_member_id     String   @db.Uuid
-  incentive_type      String                      // SPIN_WIN, COVERAGE_BONUS, REFERRAL, OTHER
-  amount_cad_cents    Int                         // Always in cents (e.g. 5000 = $50.00)
-  reference_shift_id  String?  @db.Uuid
-  awarded_at          DateTime @default(now()) @db.Timestamptz
-  payroll_period      String?
-  correlation_id      String
-  reason_code         String
-  rule_applied_id     String   @default("HCZ_INCENTIVE_v1")
-  created_at          DateTime @default(now()) @db.Timestamptz
+  id                 String   @id @default(uuid())
+  staff_member_id    String   @db.Uuid
+  incentive_type     String // SPIN_WIN, COVERAGE_BONUS, REFERRAL, OTHER
+  amount_cad_cents   Int // Always in cents (e.g. 5000 = $50.00)
+  reference_shift_id String?  @db.Uuid
+  awarded_at         DateTime @default(now()) @db.Timestamptz
+  payroll_period     String?
+  correlation_id     String
+  reason_code        String
+  rule_applied_id    String   @default("HCZ_INCENTIVE_v1")
+  created_at         DateTime @default(now()) @db.Timestamptz
 
   @@index([staff_member_id])
   @@map("hcz_incentive_ledger")
 }
 
 model HczDemandHistory {
-  id                   String   @id @default(uuid())
-  week_start           DateTime @db.Date
-  department           String
-  day_of_week          Int                        // 0=Mon, 6=Sun
-  hour_of_day          Int                        // 0-23
-  volume_index         Decimal  @db.Decimal(6, 3) // normalized 0.000-1.000
-  actual_staff_count   Int      @default(0)
-  source               String   @default("ACTUAL")  // ACTUAL, FORECAST
-  correlation_id       String
-  reason_code          String
-  rule_applied_id      String   @default("HCZ_DEMAND_v1")
-  created_at           DateTime @default(now()) @db.Timestamptz
+  id                 String   @id @default(uuid())
+  week_start         DateTime @db.Date
+  department         String
+  day_of_week        Int // 0=Mon, 6=Sun
+  hour_of_day        Int // 0-23
+  volume_index       Decimal  @db.Decimal(6, 3) // normalized 0.000-1.000
+  actual_staff_count Int      @default(0)
+  source             String   @default("ACTUAL") // ACTUAL, FORECAST
+  correlation_id     String
+  reason_code        String
+  rule_applied_id    String   @default("HCZ_DEMAND_v1")
+  created_at         DateTime @default(now()) @db.Timestamptz
 
   @@unique([week_start, department, day_of_week, hour_of_day])
   @@map("hcz_demand_history")
 }
 
 model HczBudgetForecast {
-  id                           String    @id @default(uuid())
-  week_start                   DateTime  @db.Date
-  department                   String
-  projected_labour_cad_cents   BigInt    @default(0)
-  actual_labour_cad_cents      BigInt?
-  projected_ft_hours           Int       @default(0)
-  projected_pt_hours           Int       @default(0)
-  projected_ot_hours           Int       @default(0)
-  headcount_ft                 Int       @default(0)
-  headcount_pt                 Int       @default(0)
-  status                       String    @default("DRAFT")  // DRAFT, APPROVED, ACTUAL
-  correlation_id               String
-  reason_code                  String
-  rule_applied_id              String    @default("HCZ_BUDGET_v1")
-  created_at                   DateTime  @default(now()) @db.Timestamptz
+  id                         String   @id @default(uuid())
+  week_start                 DateTime @db.Date
+  department                 String
+  projected_labour_cad_cents BigInt   @default(0)
+  actual_labour_cad_cents    BigInt?
+  projected_ft_hours         Int      @default(0)
+  projected_pt_hours         Int      @default(0)
+  projected_ot_hours         Int      @default(0)
+  headcount_ft               Int      @default(0)
+  headcount_pt               Int      @default(0)
+  status                     String   @default("DRAFT") // DRAFT, APPROVED, ACTUAL
+  correlation_id             String
+  reason_code                String
+  rule_applied_id            String   @default("HCZ_BUDGET_v1")
+  created_at                 DateTime @default(now()) @db.Timestamptz
 
   @@unique([week_start, department])
   @@map("hcz_budget_forecasts")
@@ -2087,31 +2087,31 @@ model SenSyncTierConfig {
 }
 
 model SenSyncConsent {
-  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id              String    @db.Uuid
-  creator_id              String    @db.Uuid
-  guest_id                String    @db.Uuid
-  consent_version         String    @db.VarChar(20)          // e.g. "SENSYNC_CONSENT_v1"
-  basis                   String    @db.VarChar(50)          // EXPLICIT_OPT_IN | REVOKED
-  consent_granted_at      DateTime  @db.Timestamptz
-  consent_revoked_at      DateTime? @db.Timestamptz          // null until revoked
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id         String    @db.Uuid
+  creator_id         String    @db.Uuid
+  guest_id           String    @db.Uuid
+  consent_version    String    @db.VarChar(20) // e.g. "SENSYNC_CONSENT_v1"
+  basis              String    @db.VarChar(50) // EXPLICIT_OPT_IN | REVOKED
+  consent_granted_at DateTime  @db.Timestamptz
+  consent_revoked_at DateTime? @db.Timestamptz // null until revoked
   /// Phase 5.3 — granular consent scopes (JSON string array).
   /// Default: ['BPM_TO_FFS','BPM_TO_HAPTIC','BPM_TO_CYRANO','BPM_TO_PARTNER']
   /// Single scopes can be revoked without revoking the entire consent row.
-  consent_scopes          Json      @default("[\"BPM_TO_FFS\",\"BPM_TO_HAPTIC\",\"BPM_TO_CYRANO\",\"BPM_TO_PARTNER\"]")
+  consent_scopes     Json      @default("[\"BPM_TO_FFS\",\"BPM_TO_HAPTIC\",\"BPM_TO_CYRANO\",\"BPM_TO_PARTNER\"]")
   /// Phase 5.3 — ephemerality TTL. NULL means no auto-expiry.
   /// Default lifetime is 24h from grant; the rate-limit / submit gate refuses
   /// samples once the row has expired and the purge worker tombstones the row.
-  consent_expires_at      DateTime? @db.Timestamptz
-  ip_hash                 String?   @db.Char(64)             // SHA-256 of guest IP — never raw
-  device_fingerprint      String?   @db.VarChar(255)
-  domain                  String    @default("ADULT_ENTERTAINMENT") @db.VarChar(50)
-  correlation_id          String    @db.VarChar(200)
-  reason_code             String    @db.VarChar(100)
-  rule_applied_id         String    @default("SENSYNC_v1") @db.VarChar(100)
-  purge_requested_at      DateTime? @db.Timestamptz          // Law 25 deletion request
-  purge_completed_at      DateTime? @db.Timestamptz
-  created_at              DateTime  @default(now()) @db.Timestamptz
+  consent_expires_at DateTime? @db.Timestamptz
+  ip_hash            String?   @db.Char(64) // SHA-256 of guest IP — never raw
+  device_fingerprint String?   @db.VarChar(255)
+  domain             String    @default("ADULT_ENTERTAINMENT") @db.VarChar(50)
+  correlation_id     String    @db.VarChar(200)
+  reason_code        String    @db.VarChar(100)
+  rule_applied_id    String    @default("SENSYNC_v1") @db.VarChar(100)
+  purge_requested_at DateTime? @db.Timestamptz // Law 25 deletion request
+  purge_completed_at DateTime? @db.Timestamptz
+  created_at         DateTime  @default(now()) @db.Timestamptz
 
   @@index([session_id])
   @@index([creator_id, guest_id])
@@ -2126,20 +2126,20 @@ model SenSyncConsent {
 // Soft-delete on guest purge.
 
 model CyranoSessionMemory {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id        String    @db.Uuid
-  guest_id          String    @db.Uuid
-  memory_type       String    @db.VarChar(10)        // FACT | ARC
-  memory_key        String    @db.VarChar(200)       // fact.key or arc_id
-  memory_value      Json                             // MemoryFact | SessionArc payload
-  confidence        Decimal?  @db.Decimal(4, 3)      // 0.000–1.000 (facts only)
-  last_touched_at   DateTime  @db.Timestamptz
-  is_purged         Boolean   @default(false)
-  correlation_id    String    @db.VarChar(200)
-  reason_code       String    @db.VarChar(100)
-  rule_applied_id   String    @default("CYRANO_MEMORY_v1") @db.VarChar(100)
-  created_at        DateTime  @default(now()) @db.Timestamptz
-  updated_at        DateTime  @updatedAt @db.Timestamptz
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id      String   @db.Uuid
+  guest_id        String   @db.Uuid
+  memory_type     String   @db.VarChar(10) // FACT | ARC
+  memory_key      String   @db.VarChar(200) // fact.key or arc_id
+  memory_value    Json // MemoryFact | SessionArc payload
+  confidence      Decimal? @db.Decimal(4, 3) // 0.000–1.000 (facts only)
+  last_touched_at DateTime @db.Timestamptz
+  is_purged       Boolean  @default(false)
+  correlation_id  String   @db.VarChar(200)
+  reason_code     String   @db.VarChar(100)
+  rule_applied_id String   @default("CYRANO_MEMORY_v1") @db.VarChar(100)
+  created_at      DateTime @default(now()) @db.Timestamptz
+  updated_at      DateTime @updatedAt @db.Timestamptz
 
   @@unique([creator_id, guest_id, memory_type, memory_key])
   @@index([creator_id, guest_id])
@@ -2153,21 +2153,21 @@ model CyranoSessionMemory {
 /// Per-creator payout rate tier audit trail.
 /// FIZ-scoped: any mutation requires REASON/IMPACT/CORRELATION_ID in commit.
 model CreatorRateTier {
-  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tier_id          String   @unique @db.Uuid
-  creator_id       String   @db.Uuid
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tier_id          String    @unique @db.Uuid
+  creator_id       String    @db.Uuid
   /// Tier name: 'FOUNDING' | 'STANDARD' | 'POST_DAY_61'
-  tier_name        String   @db.VarChar(30)
+  tier_name        String    @db.VarChar(30)
   /// Minimum payout rate (USD per CZT).
-  rate_floor_usd   Decimal  @db.Decimal(8, 6)
+  rate_floor_usd   Decimal   @db.Decimal(8, 6)
   /// Maximum payout rate (USD per CZT).
-  rate_ceiling_usd Decimal  @db.Decimal(8, 6)
-  effective_from   DateTime @db.Timestamptz
+  rate_ceiling_usd Decimal   @db.Decimal(8, 6)
+  effective_from   DateTime  @db.Timestamptz
   effective_to     DateTime? @db.Timestamptz
-  correlation_id   String   @db.VarChar(128)
-  reason_code      String   @db.VarChar(100)
-  rule_applied_id  String   @default("VELOCITYZONE_v1") @db.VarChar(100)
-  created_at       DateTime @default(now()) @db.Timestamptz
+  correlation_id   String    @db.VarChar(128)
+  reason_code      String    @db.VarChar(100)
+  rule_applied_id  String    @default("VELOCITYZONE_v1") @db.VarChar(100)
+  created_at       DateTime  @default(now()) @db.Timestamptz
 
   @@index([creator_id, effective_from])
   @@index([tier_name])
@@ -2203,15 +2203,15 @@ model VelocityZoneEvent {
 // and RRR-burn payments. Edits produce a new row with a bumped `version`.
 
 model PrizePool {
-  pool_id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id        String   @db.Uuid
-  name              String   @db.VarChar(120)
+  pool_id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id       String   @db.Uuid
+  name             String   @db.VarChar(120)
   /// Null = shared (applies to all games). Otherwise SPIN_WHEEL | SLOT_MACHINE | DICE.
-  scoped_game_type  String?  @db.VarChar(20)
-  version           String   @db.VarChar(50)
-  rule_applied_id   String   @default("PRIZE_POOL_v1") @db.VarChar(100)
-  is_active         Boolean  @default(true)
-  created_at        DateTime @default(now()) @db.Timestamptz
+  scoped_game_type String?  @db.VarChar(20)
+  version          String   @db.VarChar(50)
+  rule_applied_id  String   @default("PRIZE_POOL_v1") @db.VarChar(100)
+  is_active        Boolean  @default(true)
+  created_at       DateTime @default(now()) @db.Timestamptz
 
   @@index([creator_id, is_active, scoped_game_type])
   @@map("prize_pools")
@@ -2236,18 +2236,18 @@ model PrizePoolEntry {
 }
 
 model CreatorGameConfig {
-  config_id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id                 String   @db.Uuid
-  game_type                  String   @db.VarChar(20)
+  config_id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id                String   @db.Uuid
+  game_type                 String   @db.VarChar(20)
   /// Comma-separated positive integers, 1–3 entries (e.g. "25,40,55").
-  token_tiers_csv            String   @db.VarChar(60)
-  prize_pool_id              String   @db.Uuid
-  cooldown_seconds_override  Int?
-  enabled                    Boolean  @default(true)
-  accepts_rrr_burn           Boolean  @default(false)
-  version                    String   @db.VarChar(50)
-  rule_applied_id            String   @default("CREATOR_GAME_CONFIG_v1") @db.VarChar(100)
-  created_at                 DateTime @default(now()) @db.Timestamptz
+  token_tiers_csv           String   @db.VarChar(60)
+  prize_pool_id             String   @db.Uuid
+  cooldown_seconds_override Int?
+  enabled                   Boolean  @default(true)
+  accepts_rrr_burn          Boolean  @default(false)
+  version                   String   @db.VarChar(50)
+  rule_applied_id           String   @default("CREATOR_GAME_CONFIG_v1") @db.VarChar(100)
+  created_at                DateTime @default(now()) @db.Timestamptz
 
   @@index([creator_id, game_type, enabled])
   @@map("creator_game_configs")
@@ -2268,16 +2268,16 @@ model GameCooldownLog {
 }
 
 model RedRoomRewardsBurn {
-  burn_id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id                String   @db.Uuid
-  creator_id             String   @db.Uuid
-  game_type              String   @db.VarChar(20)
-  rrr_points_burned      Int
-  czt_tokens_equivalent  Int
-  correlation_id         String   @unique @db.VarChar(200)
-  reason_code            String   @default("GAME_PLAY") @db.VarChar(40)
-  rule_applied_id        String   @default("RRR_BURN_v1") @db.VarChar(100)
-  burned_at_utc          DateTime @default(now()) @db.Timestamptz
+  burn_id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id               String   @db.Uuid
+  creator_id            String   @db.Uuid
+  game_type             String   @db.VarChar(20)
+  rrr_points_burned     Int
+  czt_tokens_equivalent Int
+  correlation_id        String   @unique @db.VarChar(200)
+  reason_code           String   @default("GAME_PLAY") @db.VarChar(40)
+  rule_applied_id       String   @default("RRR_BURN_v1") @db.VarChar(100)
+  burned_at_utc         DateTime @default(now()) @db.Timestamptz
 
   @@index([user_id, burned_at_utc])
   @@map("redroom_rewards_burns")
@@ -2337,16 +2337,16 @@ model UserRrPointsLedger {
 // truth for what was promised.
 
 model BurnRewardGrant {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id           String    @db.VarChar(200)
-  points_burned     Int
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String    @db.VarChar(200)
+  points_burned  Int
   /// "EXTRA_IMAGES" | "TEMP_INFERNO" | "CUSTOM_TWIN"
-  reward_type       String    @db.VarChar(30)
-  expires_at        DateTime? @db.Timestamptz
-  fulfilled_at      DateTime? @db.Timestamptz
-  correlation_id    String    @unique @db.VarChar(200)
-  reason_code       String    @default("RRR_BURN_REWARD") @db.VarChar(40)
-  created_at        DateTime  @default(now()) @db.Timestamptz
+  reward_type    String    @db.VarChar(30)
+  expires_at     DateTime? @db.Timestamptz
+  fulfilled_at   DateTime? @db.Timestamptz
+  correlation_id String    @unique @db.VarChar(200)
+  reason_code    String    @default("RRR_BURN_REWARD") @db.VarChar(40)
+  created_at     DateTime  @default(now()) @db.Timestamptz
 
   @@index([user_id, reward_type, created_at])
   @@map("burn_reward_grants")
@@ -2359,28 +2359,28 @@ model BurnRewardGrant {
 // ── AI Twin ──────────────────────────────────────────────────────────────────
 
 model AiTwin {
-  twin_id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id        String         @db.Uuid
-  display_name      String         @db.VarChar(120)
-  persona_prompt    String         @db.Text
-  trigger_word      String         @db.VarChar(80)
+  twin_id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id       String    @db.Uuid
+  display_name     String    @db.VarChar(120)
+  persona_prompt   String    @db.Text
+  trigger_word     String    @db.VarChar(80)
   /// "PRIVATE" | "PLATFORM_INTERNAL" | "SUBSCRIBER"
-  visibility        String         @default("PRIVATE") @db.VarChar(20)
+  visibility       String    @default("PRIVATE") @db.VarChar(20)
   /// true = house model (platform-owned, 100% revenue to platform)
-  is_house_model    Boolean        @default(false)
+  is_house_model   Boolean   @default(false)
   /// true = free Spark Twin provisioned on signup (limited to 15 messages/day)
-  is_spark_twin     Boolean        @default(false)
+  is_spark_twin    Boolean   @default(false)
   /// Portal brand this twin belongs to: MAIN | INK_AND_STEEL | LOTUS_BLOOM | DESPERATE_HOUSEWIVES | BARELY_LEGAL | DARK_DESIRES
-  portal            String?        @db.VarChar(30)
+  portal           String?   @db.VarChar(30)
   /// "PENDING_UPLOAD" | "UPLOAD_COMPLETE" | "TRAINING_QUEUED" | "TRAINING_IN_PROGRESS" | "TRAINING_COMPLETE" | "TRAINING_FAILED" | "RETIRED"
-  training_status   String         @default("PENDING_UPLOAD") @db.VarChar(30)
-  lora_weights_url  String?        @db.Text
-  training_error    String?        @db.Text
-  trained_at        DateTime?      @db.Timestamptz
-  correlation_id    String         @unique @db.VarChar(200)
-  reason_code       String         @default("TWIN_CREATE") @db.VarChar(40)
-  created_at        DateTime       @default(now()) @db.Timestamptz
-  updated_at        DateTime       @updatedAt @db.Timestamptz
+  training_status  String    @default("PENDING_UPLOAD") @db.VarChar(30)
+  lora_weights_url String?   @db.Text
+  training_error   String?   @db.Text
+  trained_at       DateTime? @db.Timestamptz
+  correlation_id   String    @unique @db.VarChar(200)
+  reason_code      String    @default("TWIN_CREATE") @db.VarChar(40)
+  created_at       DateTime  @default(now()) @db.Timestamptz
+  updated_at       DateTime  @updatedAt @db.Timestamptz
 
   photos            AiTwinPhoto[]
   voice_clones      VoiceClone[]
@@ -2389,6 +2389,7 @@ model AiTwin {
   video_captures    VideoCapture[]
   memory_banks      MemoryBank[]
   narrative_branches NarrativeBranch[]
+  memory_summaries   MemorySummary[]
 
   @@index([creator_id, training_status])
   @@index([is_house_model, training_status])
@@ -2404,7 +2405,7 @@ model AiTwinPhoto {
   reason_code    String   @default("PHOTO_UPLOAD") @db.VarChar(40)
   created_at     DateTime @default(now()) @db.Timestamptz
 
-  twin           AiTwin   @relation(fields: [twin_id], references: [twin_id])
+  twin AiTwin @relation(fields: [twin_id], references: [twin_id])
 
   @@index([twin_id])
   @@map("ai_twin_photos")
@@ -2428,7 +2429,7 @@ model ImageCache {
   reason_code    String   @default("IMAGE_GEN") @db.VarChar(40)
   generated_at   DateTime @default(now()) @db.Timestamptz
 
-  twin           AiTwin   @relation(fields: [twin_id], references: [twin_id])
+  twin AiTwin @relation(fields: [twin_id], references: [twin_id])
 
   @@index([twin_id, prompt_hash, generated_at])
   @@index([user_id, generated_at])
@@ -2437,7 +2438,7 @@ model ImageCache {
 
 // ── Video Generation / Cache (Unified Vidu + HeyGen) ─────────────────────────
 
-model VideoCache {
+model VideoCacheVidu {
   video_cache_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   twin_id            String   @db.Uuid
   creator_id         String   @db.Uuid
@@ -2469,7 +2470,7 @@ model VideoCache {
   reason_code        String   @default("VIDEO_GEN") @db.VarChar(40)
   generated_at       DateTime @default(now()) @db.Timestamptz
 
-  twin               AiTwin   @relation(fields: [twin_id], references: [twin_id])
+  twin               AiTwin   @relation("VideoCacheViduToAiTwin", fields: [twin_id], references: [twin_id])
 
   @@index([twin_id, prompt_hash, generated_at])
   @@index([twin_id, cache_key, generated_at])
@@ -2481,39 +2482,39 @@ model VideoCache {
 // ── Voice Cloning ─────────────────────────────────────────────────────────────
 
 model VoiceClone {
-  voice_clone_id       String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  twin_id              String              @db.Uuid
-  creator_id           String              @db.Uuid
-  voice_name           String              @db.VarChar(120)
-  description          String?             @db.Text
-  labels_json          String?             @db.Text
-  elevenlabs_voice_id  String?             @db.VarChar(100)
+  voice_clone_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twin_id             String    @db.Uuid
+  creator_id          String    @db.Uuid
+  voice_name          String    @db.VarChar(120)
+  description         String?   @db.Text
+  labels_json         String?   @db.Text
+  elevenlabs_voice_id String?   @db.VarChar(100)
   /// "PENDING_SAMPLES" | "SAMPLES_READY" | "CLONING_IN_PROGRESS" | "CLONE_COMPLETE" | "CLONE_FAILED" | "RETIRED"
-  status               String              @default("PENDING_SAMPLES") @db.VarChar(30)
-  clone_error          String?             @db.Text
-  cloned_at            DateTime?           @db.Timestamptz
-  correlation_id       String              @unique @db.VarChar(200)
-  reason_code          String              @default("VOICE_CLONE_CREATE") @db.VarChar(40)
-  created_at           DateTime            @default(now()) @db.Timestamptz
-  updated_at           DateTime            @updatedAt @db.Timestamptz
+  status              String    @default("PENDING_SAMPLES") @db.VarChar(30)
+  clone_error         String?   @db.Text
+  cloned_at           DateTime? @db.Timestamptz
+  correlation_id      String    @unique @db.VarChar(200)
+  reason_code         String    @default("VOICE_CLONE_CREATE") @db.VarChar(40)
+  created_at          DateTime  @default(now()) @db.Timestamptz
+  updated_at          DateTime  @updatedAt @db.Timestamptz
 
-  twin                 AiTwin              @relation(fields: [twin_id], references: [twin_id])
-  samples              VoiceCloneSample[]
+  twin    AiTwin             @relation(fields: [twin_id], references: [twin_id])
+  samples VoiceCloneSample[]
 
   @@index([twin_id, status])
   @@map("voice_clones")
 }
 
 model VoiceCloneSample {
-  sample_id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  voice_clone_id   String     @db.Uuid
-  storage_key      String     @db.Text
+  sample_id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  voice_clone_id   String   @db.Uuid
+  storage_key      String   @db.Text
   duration_seconds Float
-  correlation_id   String     @unique @db.VarChar(200)
-  reason_code      String     @default("VOICE_SAMPLE_UPLOAD") @db.VarChar(40)
-  created_at       DateTime   @default(now()) @db.Timestamptz
+  correlation_id   String   @unique @db.VarChar(200)
+  reason_code      String   @default("VOICE_SAMPLE_UPLOAD") @db.VarChar(40)
+  created_at       DateTime @default(now()) @db.Timestamptz
 
-  voice_clone      VoiceClone @relation(fields: [voice_clone_id], references: [voice_clone_id])
+  voice_clone VoiceClone @relation(fields: [voice_clone_id], references: [voice_clone_id])
 
   @@index([voice_clone_id])
   @@map("voice_clone_samples")
@@ -2558,52 +2559,55 @@ model VideoCapture {
 // ── Narrative Engine — Persistent Memory Bank ─────────────────────────────────
 
 model MemoryBank {
-  memory_id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  session_id       String   @db.VarChar(200)
-  twin_id          String   @db.Uuid
-  user_id          String   @db.Uuid
+  memory_id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id       String    @db.VarChar(200)
+  twin_id          String    @db.Uuid
+  user_id          String    @db.Uuid
   /// "FACT" | "PREFERENCE" | "EMOTION" | "STORY_BEAT" | "RELATIONSHIP" | "SECRET"
-  memory_type      String   @db.VarChar(20)
-  content          String   @db.Text
+  memory_type      String    @db.VarChar(20)
+  content          String    @db.Text
   /// 0.0–1.0; higher = recalled first in context window
-  importance_score Float    @default(0.5)
+  importance_score Float     @default(0.5)
   /// PHASE 3 ITEM 2: User can pin important memories for RAG retrieval
-  is_pinned        Boolean  @default(false)
+  is_pinned        Boolean   @default(false)
   /// PHASE 4 ITEM 1: Voice chat integration
-  is_voice_message Boolean  @default(false)
-  voice_audio_url  String?  @db.Text
-  voice_transcript String?  @db.Text
+  is_voice_message Boolean   @default(false)
+  voice_audio_url  String?   @db.Text
+  voice_transcript String?   @db.Text
+  /// Message sequence number within the session (for tracking summarization)
+  message_seq      Int?
   expires_at       DateTime? @db.Timestamptz
-  correlation_id   String   @unique @db.VarChar(200)
-  reason_code      String   @default("MEMORY_STORE") @db.VarChar(40)
-  created_at       DateTime @default(now()) @db.Timestamptz
+  correlation_id   String    @unique @db.VarChar(200)
+  reason_code      String    @default("MEMORY_STORE") @db.VarChar(40)
+  created_at       DateTime  @default(now()) @db.Timestamptz
 
-  twin             AiTwin   @relation(fields: [twin_id], references: [twin_id])
+  twin AiTwin @relation(fields: [twin_id], references: [twin_id])
 
   @@index([twin_id, user_id, importance_score(sort: Desc)])
   @@index([twin_id, user_id, expires_at])
   @@index([twin_id, user_id, is_pinned])
+  @@index([session_id, message_seq])
   @@map("memory_banks")
 }
 
 // ── Narrative Engine — Cinematic Branching ────────────────────────────────────
 
 model NarrativeBranch {
-  branch_id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  twin_id            String    @db.Uuid
-  user_id            String    @db.Uuid
-  branch_title       String    @db.VarChar(200)
-  branch_premise     String    @db.Text
-  decision_prompt    String    @db.Text
-  options_json       String    @db.Text
-  resolved           Boolean   @default(false)
-  chosen_option_key  String?   @db.VarChar(10)
-  resolved_at        DateTime? @db.Timestamptz
-  correlation_id     String    @unique @db.VarChar(200)
-  reason_code        String    @default("BRANCH_CREATE") @db.VarChar(40)
-  created_at         DateTime  @default(now()) @db.Timestamptz
+  branch_id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twin_id           String    @db.Uuid
+  user_id           String    @db.Uuid
+  branch_title      String    @db.VarChar(200)
+  branch_premise    String    @db.Text
+  decision_prompt   String    @db.Text
+  options_json      String    @db.Text
+  resolved          Boolean   @default(false)
+  chosen_option_key String?   @db.VarChar(10)
+  resolved_at       DateTime? @db.Timestamptz
+  correlation_id    String    @unique @db.VarChar(200)
+  reason_code       String    @default("BRANCH_CREATE") @db.VarChar(40)
+  created_at        DateTime  @default(now()) @db.Timestamptz
 
-  twin               AiTwin    @relation(fields: [twin_id], references: [twin_id])
+  twin AiTwin @relation(fields: [twin_id], references: [twin_id])
 
   @@index([twin_id, user_id, resolved])
   @@map("narrative_branches")
@@ -2612,16 +2616,16 @@ model NarrativeBranch {
 // ─── Promotion Engine — PROMO-001 ────────────────────────────────────────────
 
 model PromoCode {
-  id               String    @id @default(uuid())
-  code             String    @unique @db.VarChar(50)
+  id               String   @id @default(uuid())
+  code             String   @unique @db.VarChar(50)
   discount_percent Int
-  expires_at       DateTime  @db.Timestamptz
+  expires_at       DateTime @db.Timestamptz
   max_uses         Int
-  used_count       Int       @default(0)
-  correlation_id   String    @unique @db.VarChar(200)
-  reason_code      String    @default("PROMO_CREATED") @db.VarChar(50)
-  created_at       DateTime  @default(now()) @db.Timestamptz
-  updated_at       DateTime  @updatedAt @db.Timestamptz
+  used_count       Int      @default(0)
+  correlation_id   String   @unique @db.VarChar(200)
+  reason_code      String   @default("PROMO_CREATED") @db.VarChar(50)
+  created_at       DateTime @default(now()) @db.Timestamptz
+  updated_at       DateTime @updatedAt @db.Timestamptz
 
   @@map("promo_codes")
 }
@@ -2679,7 +2683,7 @@ model MemoryEntry {
   reason_code      String    @default("MEMORY_RECORD") @db.VarChar(40)
   rule_applied_id  String    @default("CYR-NARR-002") @db.VarChar(100)
 
-  story_beats      StoryBeat[]
+  story_beats StoryBeat[]
 
   @@index([user_id, persona_id, importance_score(sort: Desc)])
   @@index([user_id, persona_id, last_accessed_at])
@@ -2701,8 +2705,8 @@ model StoryBeat {
   reason_code     String        @default("STORY_BEAT") @db.VarChar(40)
   rule_applied_id String        @default("CYR-NARR-002") @db.VarChar(100)
 
-  memory_entry    MemoryEntry?  @relation(fields: [memory_entry_id], references: [id])
-  decisions       BranchDecision[]
+  memory_entry MemoryEntry?     @relation(fields: [memory_entry_id], references: [id])
+  decisions    BranchDecision[]
 
   @@index([user_id, persona_id, beat_type])
   @@index([user_id, persona_id, created_at(sort: Desc)])
@@ -2710,25 +2714,61 @@ model StoryBeat {
 }
 
 model BranchDecision {
-  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id        String     @db.Uuid
-  persona_id     String     @db.Uuid
-  beat_id        String     @db.Uuid
-  decision_text  String     @db.Text
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String   @db.Uuid
+  persona_id      String   @db.Uuid
+  beat_id         String   @db.Uuid
+  decision_text   String   @db.Text
   /// JSON blob: keys are consequence categories, values are outcome descriptions.
   /// Immutable once written — branching history must not be rolled back.
-  consequences   Json
-  created_at     DateTime   @default(now()) @db.Timestamptz
+  consequences    Json
+  created_at      DateTime @default(now()) @db.Timestamptz
   // Canonical audit columns — append-only; no UPDATE/DELETE. Ever.
-  correlation_id String     @db.VarChar(200)
-  reason_code    String     @default("BRANCH_DECISION") @db.VarChar(40)
-  rule_applied_id String    @default("CYR-NARR-002") @db.VarChar(100)
+  correlation_id  String   @db.VarChar(200)
+  reason_code     String   @default("BRANCH_DECISION") @db.VarChar(40)
+  rule_applied_id String   @default("CYR-NARR-002") @db.VarChar(100)
 
-  beat           StoryBeat  @relation(fields: [beat_id], references: [id])
+  beat StoryBeat @relation(fields: [beat_id], references: [id])
 
   @@index([user_id, persona_id, created_at(sort: Desc)])
   @@index([beat_id])
   @@map("branch_decisions")
+}
+
+// ─── Superior Memory System — Auto-Summarization (Medium-Term Layer) ─────────
+// Stores auto-generated summaries of conversation segments (every 20-30 messages).
+// Part of the hierarchical memory architecture:
+//   Short-term: Last N messages from MemoryBank
+//   Medium-term: Auto-summaries (this table)
+//   Long-term: Pinned memories + high-importance MemoryBank entries
+
+model MemorySummary {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id        String   @db.VarChar(200)
+  twin_id           String   @db.Uuid
+  user_id           String   @db.Uuid
+  /// LLM-generated summary of the conversation segment
+  summary_text      String   @db.Text
+  /// Number of messages this summary covers
+  message_count     Int      @default(0)
+  /// Start message sequence number in the session
+  start_message_seq Int
+  /// End message sequence number in the session
+  end_message_seq   Int
+  /// Embedding vector for semantic search (will use pgvector in future)
+  embedding         Json?
+  /// Auto-generated or user-requested summary
+  summary_type      String   @default("AUTO") @db.VarChar(20)
+  created_at        DateTime @default(now()) @db.Timestamptz
+  correlation_id    String   @unique @db.VarChar(200)
+  reason_code       String   @default("MEMORY_SUMMARY") @db.VarChar(40)
+  rule_applied_id   String   @default("MEMORY-HIER-001") @db.VarChar(100)
+
+  twin AiTwin @relation(fields: [twin_id], references: [twin_id])
+
+  @@index([twin_id, user_id, session_id, created_at(sort: Desc)])
+  @@index([session_id, created_at(sort: Desc)])
+  @@map("memory_summaries")
 }
 
 // ─── Safe Synthetic Twin — Celebrity Embedding Store ─────────────────────────
@@ -2740,10 +2780,10 @@ model BranchDecision {
 // which creates the pgvector extension/table and the ivfflat cosine index.
 
 model CelebrityEmbedding {
-  id          String   @id @default(cuid())
+  id          String                     @id @default(cuid())
   name        String
   embedding   Unsupported("vector(512)")
-  lastUpdated DateTime @default(now())
+  lastUpdated DateTime                   @default(now())
   source      String
 
   @@index([name])
@@ -2754,20 +2794,20 @@ model CelebrityEmbedding {
 
 /// Creator payout requests submitted by creators and processed by admins
 model PayoutRequest {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id        String   @db.Uuid
-  amount_czt        Int      // Amount in DreamCoins (CZT) to be paid out
-  amount_usd        Decimal  @db.Decimal(10, 2) // USD equivalent at request time
-  status            String   @default("PENDING") @db.VarChar(20) // PENDING | APPROVED | REJECTED | PAID
-  requested_at      DateTime @default(now()) @db.Timestamptz
-  processed_at      DateTime? @db.Timestamptz
-  processed_by      String?  @db.Uuid // Admin user ID who processed
-  rejection_reason  String?  @db.Text
-  correlation_id    String   @unique @db.VarChar(200)
-  reason_code       String   @default("CREATOR_PAYOUT_REQUEST") @db.VarChar(100)
-  metadata          Json?    // GateGuard checks, approval notes, etc.
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  creator_id       String
+  amount_czt       Int // Amount in DreamCoins (CZT) to be paid out
+  amount_usd       Decimal   @db.Decimal(10, 2) // USD equivalent at request time
+  status           String    @default("PENDING") @db.VarChar(20) // PENDING | APPROVED | REJECTED | PAID
+  requested_at     DateTime  @default(now()) @db.Timestamptz
+  processed_at     DateTime? @db.Timestamptz
+  processed_by     String?   @db.Uuid // Admin user ID who processed
+  rejection_reason String?   @db.Text
+  correlation_id   String    @unique @db.VarChar(200)
+  reason_code      String    @default("CREATOR_PAYOUT_REQUEST") @db.VarChar(100)
+  metadata         Json? // GateGuard checks, approval notes, etc.
 
-  creator           Creator  @relation(fields: [creator_id], references: [id])
+  creator Creator @relation(fields: [creator_id], references: [id])
 
   @@index([creator_id, status])
   @@index([status, requested_at])
