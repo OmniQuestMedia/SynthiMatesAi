@@ -88,10 +88,10 @@ await ledgerService.recordEntry({ ... });
 
 **Threshold Mapping:**
 
-- [0-40): APPROVE
-- [40-70): COOLDOWN
-- [70-90): HARD_DECLINE
-- [90-100]: HUMAN_ESCALATE
+- `0-40`: APPROVE
+- `40-70`: COOLDOWN
+- `70-90`: HARD_DECLINE
+- `90-100`: HUMAN_ESCALATE
 
 ### Invariants
 

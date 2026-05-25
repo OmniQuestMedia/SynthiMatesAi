@@ -2,7 +2,6 @@
 
 > **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
 > Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
-
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
 > Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, and a cinematic narrative engine.
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
@@ -161,10 +160,10 @@ Decision Routing:
 - **Fraud Score (0-100):** New account, device churn, geo mismatch, VPN, chargebacks, disputes, structuring
 - **Welfare Score (0-100):** Velocity, hours-of-day, dwell time, chase loss, self-distress, recent declines
 - **Decision Thresholds:**
-  - [0-40): APPROVE
-  - [40-70): COOLDOWN
-  - [70-90): HARD_DECLINE
-  - [90-100]: HUMAN_ESCALATE
+  - `0-40`: APPROVE
+  - `40-70`: COOLDOWN
+  - `70-90`: HARD_DECLINE
+  - `90-100`: HUMAN_ESCALATE
 
 **Payout Rates:**
 Creator payout rates are determined by heat score with diamond floor guarantee:
