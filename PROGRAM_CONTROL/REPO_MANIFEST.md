@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-shared-account-core-again`
-**Commit:** `1fbc3160c295bb29ec31ab44c6f30feaf34d5a9b`
-**Generated:** 2026-05-25T01:55:00Z
+**Branch:** `claude/implement-superior-memory-system`
+**Commit:** `afe37674225557be5111725ac624d48c79edc681`
+**Generated:** 2026-05-25T02:11:33Z
 
 ## All Files
 
@@ -365,9 +365,11 @@ Auto-generated on every push. Do not edit manually.
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
+- `docs/DEPLOYMENT.md`
 - `docs/DIRECTIVE_TEMPLATE.md`
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- `docs/PHASE5_VALIDATION_REPORT.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
@@ -456,6 +458,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260511000000_studio_affiliation_indexes/migration.sql`
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
+- `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
@@ -488,6 +491,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-analytics.controller.ts`
 - `services/core-api/src/analytics/account-core-analytics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
@@ -582,6 +586,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/membership/membership.module.ts`
 - `services/core-api/src/membership/membership.service.ts`
 - `services/core-api/src/membership/stipend-distribution.job.ts`
+- `services/core-api/src/memory/memory.controller.ts`
 - `services/core-api/src/middleware/benefits.guard.ts`
 - `services/core-api/src/middleware/benefits.middleware.ts`
 - `services/core-api/src/middleware/benefits.module.ts`
@@ -726,6 +731,10 @@ Auto-generated on every push. Do not edit manually.
 - `services/ledger/redbook-rate-card.service.ts`
 - `services/ledger/repository.ts`
 - `services/ledger/types.ts`
+- `services/memory/src/context-memory.service.ts`
+- `services/memory/src/enhanced-context-builder.service.ts`
+- `services/memory/src/pinned-memory.service.ts`
+- `services/memory/src/summarization.service.ts`
 - `services/narrative-engine/src/branching.service.ts`
 - `services/narrative-engine/src/context-builder.service.ts`
 - `services/narrative-engine/src/memory-bank.service.ts`
@@ -791,6 +800,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/circuit-breaker.spec.ts`
 - `tests/integration/compliance-guard.spec.ts`
 - `tests/integration/concierge-session.spec.ts`
+- `tests/integration/context-memory.service.spec.ts`
 - `tests/integration/creator-control-service.spec.ts`
 - `tests/integration/cyrano-layer4-enterprise.spec.ts`
 - `tests/integration/cyrano-narr-002-layer2.spec.ts`
@@ -799,6 +809,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/cyrano-service.spec.ts`
 - `tests/integration/cyrano-session-page.spec.ts`
 - `tests/integration/diamond-concierge-service.spec.ts`
+- `tests/integration/enhanced-context-builder.service.spec.ts`
 - `tests/integration/ffs-sensync-boost.spec.ts`
 - `tests/integration/gamification-cooldown.spec.ts`
 - `tests/integration/gamification-prize-pool.spec.ts`
@@ -811,9 +822,11 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/immutable-audit-service.spec.ts`
 - `tests/integration/integration-hub.spec.ts`
 - `tests/integration/ledger-service.spec.ts`
+- `tests/integration/long-conversation-memory.spec.ts`
 - `tests/integration/nats-circuit-breaker.spec.ts`
 - `tests/integration/nats-sharding.spec.ts`
 - `tests/integration/notification-engine.spec.ts`
+- `tests/integration/pinned-memory.service.spec.ts`
 - `tests/integration/points-purchase-bundles.spec.ts`
 - `tests/integration/purchase-hours-gate.spec.ts`
 - `tests/integration/rbac-service.spec.ts`
@@ -829,6 +842,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/session-topup-page.spec.ts`
 - `tests/integration/stat-holidays.spec.ts`
 - `tests/integration/studio-affiliation.spec.ts`
+- `tests/integration/summarization.service.spec.ts`
 - `tests/integration/three-bucket-spend-guard.spec.ts`
 - `tests/integration/zonebot-service.spec.ts`
 - `tests/jest-uuid-shim.cjs`
