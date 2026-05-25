@@ -1,7 +1,10 @@
 // WO: WO-INIT-001
 // CHORE: Enhanced with Account-Core analytics (Phase 5 Item 2)
 import { Injectable, Controller, Get, Query, Req, Logger } from '@nestjs/common';
-import { AccountCoreAnalyticsService, CreatorAnalytics } from '../analytics/account-core-analytics.service';
+import {
+  AccountCoreAnalyticsService,
+  CreatorAnalytics,
+} from '../analytics/account-core-analytics.service';
 
 export interface DashboardSummary {
   creatorId: string;
@@ -12,24 +15,31 @@ export interface DashboardSummary {
   analytics?: CreatorAnalytics;
 }
 
+interface CreatorDashboardRequest {
+  user?: {
+    id?: string;
+  };
+  headers?: Record<string, string | string[] | undefined>;
+}
+
 @Injectable()
 @Controller('creator/dashboard')
 export class DashboardController {
   private readonly logger = new Logger(DashboardController.name);
 
-  constructor(
-    private readonly analyticsService: AccountCoreAnalyticsService,
-  ) {}
+  constructor(private readonly analyticsService: AccountCoreAnalyticsService) {}
 
   /**
    * Get creator dashboard summary with analytics
    */
   @Get('summary')
   async getSummary(
-    @Req() req: any,
+    @Req() req: CreatorDashboardRequest,
     @Query('days') days: string = '30',
   ): Promise<DashboardSummary> {
-    const creatorId = req.user?.id || req.headers?.['x-user-id'];
+    const headerUserId = req.headers?.['x-user-id'];
+    const creatorId =
+      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
     const daysNum = parseInt(days, 10) || 30;
     const endDate = new Date();
     const startDate = new Date();
@@ -61,11 +71,13 @@ export class DashboardController {
    */
   @Get('analytics')
   async getAnalytics(
-    @Req() req: any,
+    @Req() req: CreatorDashboardRequest,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ): Promise<CreatorAnalytics> {
-    const creatorId = req.user?.id || req.headers?.['x-user-id'];
+    const headerUserId = req.headers?.['x-user-id'];
+    const creatorId =
+      req.user?.id || (Array.isArray(headerUserId) ? headerUserId[0] : headerUserId);
     const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ? new Date(endDate) : new Date();
 
