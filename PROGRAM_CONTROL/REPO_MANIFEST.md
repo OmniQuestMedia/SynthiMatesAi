@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-hybrid-vidu-integration`
-**Commit:** `322565085fbf41d5aae6c4d236d0bd58689f1b63`
-**Generated:** 2026-05-25T02:42:26Z
+**Branch:** `claude/fix-auto-merge-yaml-syntax-error`
+**Commit:** `051abed2e64d77fd8c75c7e5be4174a5d245d596`
+**Generated:** 2026-05-25T02:58:48Z
 
 ## All Files
 
