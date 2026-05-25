@@ -1,338 +1,349 @@
-// CHORE: Account-Core Analytics Service
-// Provides usage metrics and trends for creator dashboards and admin views
-// Phase 5 Item 2: Analytics & Usage Dashboard
+// WO: WO-PHASE5-002
+// Account-Core Analytics Service - DreamCoins, Memberships, Payouts, Synthetic Twins
+import { Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-
-export interface TokenUsageTrend {
+export interface DreamCoinsUsageTrend {
   date: string;
-  purchased: bigint;
-  spent: bigint;
-  membershipAllocated: bigint;
-  bonusAwarded: bigint;
+  purchasedAmount: bigint;
+  spentAmount: bigint;
+  netBalance: bigint;
+  activeUsers: number;
 }
 
 export interface SyntheticTwinVolume {
-  twinId: string;
-  twinName: string;
-  generationCount: number;
-  totalTokensSpent: bigint;
-  imageGenerations: number;
-  voiceGenerations: number;
+  date: string;
+  totalCreated: number;
+  trainingsStarted: number;
+  trainingsCompleted: number;
+  trainingsFailed: number;
+  safeModeTwins: number;
 }
 
-export interface MembershipTierDistribution {
-  tier: string;
-  activeUsers: number;
-  totalRevenueCents: bigint;
+export interface MembershipDistribution {
+  tier: 'GUEST' | 'MEMBER' | 'DIAMOND';
+  activeCount: number;
   percentage: number;
+  totalRevenueCents: bigint;
 }
 
 export interface PayoutSummary {
   totalRequests: number;
-  pendingCount: number;
-  approvedCount: number;
-  declinedCount: number;
+  totalApproved: number;
+  totalDeclined: number;
+  totalEscalated: number;
   totalAmountCents: bigint;
   averageAmountCents: bigint;
+  approvalRate: number;
 }
 
-export interface CreatorAnalytics {
+export interface CreatorDashboardAnalytics {
   creatorId: string;
-  totalEarningsCents: bigint;
-  syntheticTwinUsage: SyntheticTwinVolume[];
-  tokenRevenueByPeriod: TokenUsageTrend[];
-  payoutSummary: PayoutSummary;
+  dreamCoinsEarned: bigint;
+  dreamCoinsBalance: bigint;
+  syntheticTwinsCreated: number;
+  totalPayoutsRequested: number;
+  totalPayoutsApproved: number;
+  pendingPayoutCents: bigint;
+  heatScore: number;
+  membershipTier: string;
 }
 
-export interface AdminAnalytics {
-  platformTokenUsage: TokenUsageTrend[];
-  membershipDistribution: MembershipTierDistribution[];
-  topSyntheticTwins: SyntheticTwinVolume[];
-  payoutQueue: PayoutSummary;
-  totalActiveUsers: number;
-  totalRevenueCents: bigint;
+export interface AdminAnalyticsSummary {
+  dreamCoinsUsage: DreamCoinsUsageTrend[];
+  syntheticTwinVolume: SyntheticTwinVolume[];
+  membershipDistribution: MembershipDistribution[];
+  payoutSummary: PayoutSummary;
+  topCreators: CreatorDashboardAnalytics[];
 }
 
 @Injectable()
 export class AccountCoreAnalyticsService {
-  private readonly logger = new Logger(AccountCoreAnalyticsService.name);
-
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaClient) {}
 
   /**
-   * Get token usage trends over time
-   * @param startDate - Start of date range
-   * @param endDate - End of date range
-   * @param creatorId - Optional filter for specific creator
+   * Get DreamCoins usage trends over time
    */
-  async getTokenUsageTrends(
-    startDate: Date,
-    endDate: Date,
-    creatorId?: string,
-  ): Promise<TokenUsageTrend[]> {
-    this.logger.log(`Fetching token usage trends from ${startDate} to ${endDate}`);
-
-    // Query ledger entries for token operations
-    const entries = await this.prisma.$queryRaw<Array<{
-      date: Date;
-      entry_type: string;
-      net_amount_cents: bigint;
-    }>>`
+  async getDreamCoinsUsageTrends(startDate: Date, endDate: Date): Promise<DreamCoinsUsageTrend[]> {
+    const rawData = await this.prisma.$queryRaw<
+      Array<{
+        date: Date;
+        purchased_amount: bigint;
+        spent_amount: bigint;
+        active_users: bigint;
+      }>
+    >`
       SELECT
         DATE(created_at) as date,
-        entry_type,
-        SUM(net_amount_cents) as net_amount_cents
+        COALESCE(SUM(CASE WHEN entry_type = 'PURCHASE' THEN amount_cents ELSE 0 END), 0) as purchased_amount,
+        COALESCE(SUM(CASE WHEN entry_type = 'SPEND' THEN ABS(amount_cents) ELSE 0 END), 0) as spent_amount,
+        COUNT(DISTINCT user_id) as active_users
       FROM ledger_entries
       WHERE created_at >= ${startDate}
         AND created_at <= ${endDate}
-        ${creatorId ? this.prisma.$queryRaw`AND performer_id = ${creatorId}::uuid` : this.prisma.$queryRaw``}
-      GROUP BY DATE(created_at), entry_type
-      ORDER BY DATE(created_at) ASC
+      GROUP BY DATE(created_at)
+      ORDER BY date DESC
     `;
 
-    // Aggregate by date
-    const trendMap = new Map<string, TokenUsageTrend>();
+    let runningBalance = 0n;
+    return rawData.map((row) => {
+      const purchased = BigInt(row.purchased_amount || 0);
+      const spent = BigInt(row.spent_amount || 0);
+      const netChange = purchased - spent;
+      runningBalance += netChange;
 
-    for (const entry of entries) {
-      const dateKey = entry.date.toISOString().split('T')[0];
-
-      if (!trendMap.has(dateKey)) {
-        trendMap.set(dateKey, {
-          date: dateKey,
-          purchased: 0n,
-          spent: 0n,
-          membershipAllocated: 0n,
-          bonusAwarded: 0n,
-        });
-      }
-
-      const trend = trendMap.get(dateKey)!;
-
-      if (entry.entry_type === 'TOKEN_PURCHASE') {
-        trend.purchased += entry.net_amount_cents;
-      } else if (entry.entry_type === 'TOKEN_SPEND' || entry.entry_type === 'SYNTHETIC_GENERATION') {
-        trend.spent += entry.net_amount_cents;
-      } else if (entry.entry_type === 'MEMBERSHIP_ALLOCATION') {
-        trend.membershipAllocated += entry.net_amount_cents;
-      } else if (entry.entry_type === 'BONUS_AWARD') {
-        trend.bonusAwarded += entry.net_amount_cents;
-      }
-    }
-
-    return Array.from(trendMap.values());
+      return {
+        date: row.date.toISOString().split('T')[0],
+        purchasedAmount: purchased,
+        spentAmount: spent,
+        netBalance: runningBalance,
+        activeUsers: Number(row.active_users),
+      };
+    });
   }
 
   /**
-   * Get synthetic twin generation volume and revenue
-   * @param creatorId - Optional filter for specific creator
-   * @param limit - Maximum number of results
+   * Get synthetic twin generation volume statistics
    */
-  async getSyntheticTwinVolume(
-    creatorId?: string,
-    limit: number = 10,
-  ): Promise<SyntheticTwinVolume[]> {
-    this.logger.log(`Fetching synthetic twin volume metrics`);
-
-    // This is a placeholder - actual implementation would query AiTwin and generation logs
-    // For now, return aggregated data from ledger entries tagged with synthetic generation
-
-    const volumes = await this.prisma.$queryRaw<Array<{
-      twin_id: string;
-      twin_name: string;
-      generation_count: bigint;
-      total_tokens_spent: bigint;
-      image_count: bigint;
-      voice_count: bigint;
-    }>>`
+  async getSyntheticTwinVolume(startDate: Date, endDate: Date): Promise<SyntheticTwinVolume[]> {
+    const rawData = await this.prisma.$queryRaw<
+      Array<{
+        date: Date;
+        total_created: bigint;
+        trainings_started: bigint;
+        trainings_completed: bigint;
+        trainings_failed: bigint;
+        safe_mode_twins: bigint;
+      }>
+    >`
       SELECT
-        metadata->>'twinId' as twin_id,
-        metadata->>'twinName' as twin_name,
-        COUNT(*) as generation_count,
-        SUM(net_amount_cents) as total_tokens_spent,
-        COUNT(*) FILTER (WHERE metadata->>'generationType' = 'IMAGE') as image_count,
-        COUNT(*) FILTER (WHERE metadata->>'generationType' = 'VOICE') as voice_count
-      FROM ledger_entries
-      WHERE entry_type = 'SYNTHETIC_GENERATION'
-        AND metadata->>'twinId' IS NOT NULL
-        ${creatorId ? this.prisma.$queryRaw`AND performer_id = ${creatorId}::uuid` : this.prisma.$queryRaw``}
-      GROUP BY metadata->>'twinId', metadata->>'twinName'
-      ORDER BY generation_count DESC
-      LIMIT ${limit}
+        DATE(created_at) as date,
+        COUNT(*) as total_created,
+        COALESCE(SUM(CASE WHEN training_status IN ('TRAINING_QUEUED', 'TRAINING_COMPLETE', 'TRAINING_FAILED') THEN 1 ELSE 0 END), 0) as trainings_started,
+        COALESCE(SUM(CASE WHEN training_status = 'TRAINING_COMPLETE' THEN 1 ELSE 0 END), 0) as trainings_completed,
+        COALESCE(SUM(CASE WHEN training_status = 'TRAINING_FAILED' THEN 1 ELSE 0 END), 0) as trainings_failed,
+        COALESCE(SUM(CASE WHEN is_safe_synthetic = true THEN 1 ELSE 0 END), 0) as safe_mode_twins
+      FROM "AiTwin"
+      WHERE created_at >= ${startDate}
+        AND created_at <= ${endDate}
+      GROUP BY DATE(created_at)
+      ORDER BY date DESC
     `;
 
-    return volumes.map(v => ({
-      twinId: v.twin_id || 'unknown',
-      twinName: v.twin_name || 'Unknown Twin',
-      generationCount: Number(v.generation_count),
-      totalTokensSpent: v.total_tokens_spent,
-      imageGenerations: Number(v.image_count),
-      voiceGenerations: Number(v.voice_count),
+    return rawData.map((row) => ({
+      date: row.date.toISOString().split('T')[0],
+      totalCreated: Number(row.total_created),
+      trainingsStarted: Number(row.trainings_started),
+      trainingsCompleted: Number(row.trainings_completed),
+      trainingsFailed: Number(row.trainings_failed),
+      safeModeTwins: Number(row.safe_mode_twins),
     }));
   }
 
   /**
    * Get membership tier distribution
    */
-  async getMembershipDistribution(): Promise<MembershipTierDistribution[]> {
-    this.logger.log(`Fetching membership tier distribution`);
-
-    // Query subscription/membership data
-    // Placeholder - would query actual Subscription or Membership model
-    const distribution = await this.prisma.$queryRaw<Array<{
-      tier: string;
-      active_users: bigint;
-      total_revenue_cents: bigint;
-    }>>`
+  async getMembershipDistribution(): Promise<MembershipDistribution[]> {
+    const rawData = await this.prisma.$queryRaw<
+      Array<{
+        tier: string;
+        active_count: bigint;
+        total_revenue_cents: bigint;
+      }>
+    >`
       SELECT
-        metadata->>'membershipTier' as tier,
-        COUNT(DISTINCT user_id) as active_users,
-        SUM(net_amount_cents) as total_revenue_cents
-      FROM ledger_entries
-      WHERE entry_type IN ('MEMBERSHIP_PURCHASE', 'MEMBERSHIP_ALLOCATION')
-        AND metadata->>'membershipTier' IS NOT NULL
-      GROUP BY metadata->>'membershipTier'
-      ORDER BY active_users DESC
+        tier,
+        COUNT(*) as active_count,
+        COALESCE(SUM(price_cents), 0) as total_revenue_cents
+      FROM "MembershipSubscription"
+      WHERE status = 'ACTIVE'
+      GROUP BY tier
     `;
 
-    const total = distribution.reduce((sum, d) => sum + Number(d.active_users), 0);
+    const totalActive = rawData.reduce((sum, row) => sum + Number(row.active_count), 0);
 
-    return distribution.map(d => ({
-      tier: d.tier || 'FREE',
-      activeUsers: Number(d.active_users),
-      totalRevenueCents: d.total_revenue_cents,
-      percentage: total > 0 ? (Number(d.active_users) / total) * 100 : 0,
+    return rawData.map((row) => ({
+      tier: row.tier as 'GUEST' | 'MEMBER' | 'DIAMOND',
+      activeCount: Number(row.active_count),
+      percentage: totalActive > 0 ? (Number(row.active_count) / totalActive) * 100 : 0,
+      totalRevenueCents: BigInt(row.total_revenue_cents),
     }));
   }
 
   /**
    * Get payout request summary
-   * @param creatorId - Optional filter for specific creator
    */
-  async getPayoutSummary(creatorId?: string): Promise<PayoutSummary> {
-    this.logger.log(`Fetching payout summary`);
-
-    const result = await this.prisma.$queryRaw<Array<{
-      total_requests: bigint;
-      pending_count: bigint;
-      approved_count: bigint;
-      declined_count: bigint;
-      total_amount_cents: bigint;
-    }>>`
+  async getPayoutSummary(startDate: Date, endDate: Date): Promise<PayoutSummary> {
+    const rawData = await this.prisma.$queryRaw<
+      Array<{
+        total_requests: bigint;
+        total_amount_cents: bigint;
+      }>
+    >`
       SELECT
         COUNT(*) as total_requests,
-        COUNT(*) FILTER (WHERE status = 'PENDING') as pending_count,
-        COUNT(*) FILTER (WHERE status = 'COMPLETED') as approved_count,
-        COUNT(*) FILTER (WHERE status = 'FAILED') as declined_count,
-        SUM(net_amount_cents) as total_amount_cents
+        COALESCE(SUM(ABS(amount_cents)), 0) as total_amount_cents
       FROM ledger_entries
-      WHERE entry_type = 'CREATOR_PAYOUT'
-        ${creatorId ? this.prisma.$queryRaw`AND performer_id = ${creatorId}::uuid` : this.prisma.$queryRaw``}
+      WHERE entry_type = 'PAYOUT_DEBIT'
+        AND created_at >= ${startDate}
+        AND created_at <= ${endDate}
     `;
 
-    const data = result[0] || {
-      total_requests: 0n,
-      pending_count: 0n,
-      approved_count: 0n,
-      declined_count: 0n,
-      total_amount_cents: 0n,
-    };
+    // Get GateGuard decision counts
+    const decisionCounts = await this.prisma.$queryRaw<
+      Array<{
+        decision: string;
+        count: bigint;
+      }>
+    >`
+      SELECT
+        metadata->>'decision' as decision,
+        COUNT(*) as count
+      FROM immutable_audit_event
+      WHERE event_type = 'GATEGUARD_DECISION'
+        AND metadata->>'action' = 'PAYOUT'
+        AND timestamp >= ${startDate}
+        AND timestamp <= ${endDate}
+      GROUP BY metadata->>'decision'
+    `;
 
-    const totalRequests = Number(data.total_requests);
+    const totalRequests = decisionCounts.reduce((sum, row) => sum + Number(row.count), 0);
+    const approved = decisionCounts.find((r) => r.decision === 'APPROVE')?.count || 0n;
+    const declined = decisionCounts.find((r) => r.decision === 'HARD_DECLINE')?.count || 0n;
+    const escalated = decisionCounts.find((r) => r.decision === 'HUMAN_ESCALATE')?.count || 0n;
+
+    const totalAmount = BigInt(rawData[0]?.total_amount_cents || 0);
+    const averageAmount = totalRequests > 0 ? totalAmount / BigInt(totalRequests) : 0n;
 
     return {
       totalRequests,
-      pendingCount: Number(data.pending_count),
-      approvedCount: Number(data.approved_count),
-      declinedCount: Number(data.declined_count),
-      totalAmountCents: data.total_amount_cents,
-      averageAmountCents: totalRequests > 0 ? data.total_amount_cents / BigInt(totalRequests) : 0n,
+      totalApproved: Number(approved),
+      totalDeclined: Number(declined),
+      totalEscalated: Number(escalated),
+      totalAmountCents: totalAmount,
+      averageAmountCents: averageAmount,
+      approvalRate: totalRequests > 0 ? (Number(approved) / totalRequests) * 100 : 0,
     };
   }
 
   /**
-   * Get comprehensive analytics for a creator
+   * Get creator-specific dashboard analytics
    */
-  async getCreatorAnalytics(
-    creatorId: string,
-    startDate: Date,
-    endDate: Date,
-  ): Promise<CreatorAnalytics> {
-    this.logger.log(`Fetching analytics for creator ${creatorId}`);
-
-    const [syntheticTwinUsage, tokenRevenueByPeriod, payoutSummary] = await Promise.all([
-      this.getSyntheticTwinVolume(creatorId, 20),
-      this.getTokenUsageTrends(startDate, endDate, creatorId),
-      this.getPayoutSummary(creatorId),
-    ]);
-
-    // Calculate total earnings from ledger
-    const earningsResult = await this.prisma.$queryRaw<Array<{
-      total_earnings: bigint;
-    }>>`
-      SELECT
-        SUM(performer_amount_cents) as total_earnings
+  async getCreatorDashboardAnalytics(creatorId: string): Promise<CreatorDashboardAnalytics> {
+    // Get DreamCoins earned (total credits)
+    const earnedData = await this.prisma.$queryRaw<Array<{ total: bigint }>>`
+      SELECT COALESCE(SUM(amount_cents), 0) as total
       FROM ledger_entries
-      WHERE performer_id = ${creatorId}::uuid
-        AND entry_type IN ('SYNTHETIC_GENERATION', 'CREATOR_REVENUE_SHARE')
+      WHERE user_id = ${creatorId}::uuid
+        AND amount_cents > 0
+        AND bucket = 'PROMOTIONAL_BONUS'
     `;
 
-    const totalEarningsCents = earningsResult[0]?.total_earnings || 0n;
+    // Get current DreamCoins balance
+    const balanceData = await this.prisma.$queryRaw<Array<{ balance: bigint }>>`
+      SELECT COALESCE(SUM(amount_cents), 0) as balance
+      FROM ledger_entries
+      WHERE user_id = ${creatorId}::uuid
+    `;
+
+    // Get synthetic twins created
+    const twinData = await this.prisma.$queryRaw<Array<{ count: bigint }>>`
+      SELECT COUNT(*) as count
+      FROM "AiTwin"
+      WHERE creator_id = ${creatorId}::uuid
+    `;
+
+    // Get payout statistics
+    const payoutData = await this.prisma.$queryRaw<
+      Array<{
+        total_requested: bigint;
+        total_approved: bigint;
+        pending_amount: bigint;
+      }>
+    >`
+      SELECT
+        COUNT(*) as total_requested,
+        COALESCE(SUM(CASE WHEN metadata->>'status' = 'APPROVED' THEN 1 ELSE 0 END), 0) as total_approved,
+        COALESCE(SUM(CASE WHEN metadata->>'status' = 'ESCALATED' THEN ABS(amount_cents) ELSE 0 END), 0) as pending_amount
+      FROM ledger_entries
+      WHERE user_id = ${creatorId}::uuid
+        AND entry_type = 'PAYOUT_DEBIT'
+    `;
+
+    // Get membership tier
+    const membershipData = await this.prisma.$queryRaw<Array<{ tier: string }>>`
+      SELECT tier
+      FROM "MembershipSubscription"
+      WHERE user_id = ${creatorId}::uuid
+        AND status = 'ACTIVE'
+      ORDER BY created_at DESC
+      LIMIT 1
+    `;
+
+    // TODO: Get creator profile and integrate with FFS score service for heat score
 
     return {
       creatorId,
-      totalEarningsCents,
-      syntheticTwinUsage,
-      tokenRevenueByPeriod,
-      payoutSummary,
+      dreamCoinsEarned: BigInt(earnedData[0]?.total || 0),
+      dreamCoinsBalance: BigInt(balanceData[0]?.balance || 0),
+      syntheticTwinsCreated: Number(twinData[0]?.count || 0),
+      totalPayoutsRequested: Number(payoutData[0]?.total_requested || 0),
+      totalPayoutsApproved: Number(payoutData[0]?.total_approved || 0),
+      pendingPayoutCents: BigInt(payoutData[0]?.pending_amount || 0),
+      heatScore: 0, // TODO: Integrate with FFS score service
+      membershipTier: membershipData[0]?.tier || 'GUEST',
     };
   }
 
   /**
-   * Get platform-wide admin analytics
+   * Get top creators by earnings
    */
-  async getAdminAnalytics(
-    startDate: Date,
-    endDate: Date,
-  ): Promise<AdminAnalytics> {
-    this.logger.log(`Fetching platform-wide admin analytics`);
-
-    const [
-      platformTokenUsage,
-      membershipDistribution,
-      topSyntheticTwins,
-      payoutQueue,
-    ] = await Promise.all([
-      this.getTokenUsageTrends(startDate, endDate),
-      this.getMembershipDistribution(),
-      this.getSyntheticTwinVolume(undefined, 20),
-      this.getPayoutSummary(),
-    ]);
-
-    // Calculate total active users and revenue
-    const statsResult = await this.prisma.$queryRaw<Array<{
-      active_users: bigint;
-      total_revenue: bigint;
-    }>>`
+  async getTopCreators(limit: number = 10): Promise<CreatorDashboardAnalytics[]> {
+    const topCreatorIds = await this.prisma.$queryRaw<
+      Array<{ user_id: string; total_earned: bigint }>
+    >`
       SELECT
-        COUNT(DISTINCT user_id) as active_users,
-        SUM(gross_amount_cents) as total_revenue
+        user_id,
+        SUM(amount_cents) as total_earned
       FROM ledger_entries
-      WHERE created_at >= ${startDate}
-        AND created_at <= ${endDate}
-        AND entry_type IN ('TOKEN_PURCHASE', 'MEMBERSHIP_PURCHASE')
+      WHERE amount_cents > 0
+        AND bucket = 'PROMOTIONAL_BONUS'
+      GROUP BY user_id
+      ORDER BY total_earned DESC
+      LIMIT ${limit}
     `;
 
-    const stats = statsResult[0] || { active_users: 0n, total_revenue: 0n };
+    const analytics = await Promise.all(
+      topCreatorIds.map((row) => this.getCreatorDashboardAnalytics(row.user_id)),
+    );
+
+    return analytics;
+  }
+
+  /**
+   * Get comprehensive admin analytics summary
+   */
+  async getAdminAnalyticsSummary(startDate: Date, endDate: Date): Promise<AdminAnalyticsSummary> {
+    const [
+      dreamCoinsUsage,
+      syntheticTwinVolume,
+      membershipDistribution,
+      payoutSummary,
+      topCreators,
+    ] = await Promise.all([
+      this.getDreamCoinsUsageTrends(startDate, endDate),
+      this.getSyntheticTwinVolume(startDate, endDate),
+      this.getMembershipDistribution(),
+      this.getPayoutSummary(startDate, endDate),
+      this.getTopCreators(10),
+    ]);
 
     return {
-      platformTokenUsage,
+      dreamCoinsUsage,
+      syntheticTwinVolume,
       membershipDistribution,
-      topSyntheticTwins,
-      payoutQueue,
-      totalActiveUsers: Number(stats.active_users),
-      totalRevenueCents: stats.total_revenue,
+      payoutSummary,
+      topCreators,
     };
   }
 }

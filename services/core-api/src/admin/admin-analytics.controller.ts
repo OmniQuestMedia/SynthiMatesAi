@@ -2,15 +2,16 @@
 // Provides platform-wide analytics and monitoring for administrators
 
 import { Controller, Get, Query, Logger } from '@nestjs/common';
-import { AccountCoreAnalyticsService, AdminAnalytics } from '../analytics/account-core-analytics.service';
+import {
+  AccountCoreAnalyticsService,
+  AdminAnalytics,
+} from '../analytics/account-core-analytics.service';
 
 @Controller('admin/analytics')
 export class AdminAnalyticsController {
   private readonly logger = new Logger(AdminAnalyticsController.name);
 
-  constructor(
-    private readonly analyticsService: AccountCoreAnalyticsService,
-  ) {}
+  constructor(private readonly analyticsService: AccountCoreAnalyticsService) {}
 
   /**
    * Get platform-wide admin analytics
@@ -32,10 +33,7 @@ export class AdminAnalyticsController {
    * Get token usage trends
    */
   @Get('token-usage')
-  async getTokenUsage(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ) {
+  async getTokenUsage(@Query('startDate') startDate: string, @Query('endDate') endDate: string) {
     const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ? new Date(endDate) : new Date();
 
@@ -58,9 +56,7 @@ export class AdminAnalyticsController {
    * Get top synthetic twins by usage
    */
   @Get('top-synthetic-twins')
-  async getTopSyntheticTwins(
-    @Query('limit') limit: string = '20',
-  ) {
+  async getTopSyntheticTwins(@Query('limit') limit: string = '20') {
     const limitNum = parseInt(limit, 10) || 20;
 
     this.logger.log(`Fetching top ${limitNum} synthetic twins`);

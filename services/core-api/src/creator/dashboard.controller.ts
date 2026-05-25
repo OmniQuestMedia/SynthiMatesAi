@@ -20,6 +20,13 @@ export interface DashboardSummary {
   analytics?: CreatorAnalytics;
 }
 
+interface CreatorDashboardRequest {
+  user?: {
+    id?: string;
+  };
+  headers?: Record<string, string | string[] | undefined>;
+}
+
 @Injectable()
 @Controller('creator/dashboard')
 export class DashboardController {
