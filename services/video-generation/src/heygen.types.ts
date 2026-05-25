@@ -36,8 +36,9 @@ export interface HeyGenApiResponse {
   message?: string;
 }
 
-// Token costs for video generation
+// Token costs for video generation (CZT/DreamCoins)
+// 8s: 40-80 tokens (default/premium), 16s: 100-150 tokens (default/premium)
 export const VIDEO_COSTS: Record<VideoDuration, number> = {
-  8: 60, // 8-second clips: 40-80 DreamCoins (using 60 as baseline)
-  16: 125, // 16-second clips: 100-150 DreamCoins (using 125 as baseline)
+  8: 60, // 8-second clips: 60 DreamCoins (mid-range 40-80)
+  16: 125, // 16-second clips: 125 DreamCoins (mid-range 100-150)
 };

@@ -158,7 +158,7 @@ export function SafeSyntheticWizard() {
 
   const STEPS: WizardStep[] = ['upload', 'settings', 'generating', 'complete'];
 
-  const videoCost = videoDuration === 8 ? '60' : '120';
+  const videoCost = videoDuration === 8 ? '60' : '125';
 
   return (
     <div
@@ -247,9 +247,10 @@ export function SafeSyntheticWizard() {
 
           {/* Video Generation Section */}
           <div style={{ marginTop: 24, borderTop: '2px solid #eee', paddingTop: 24 }}>
-            <h3>🎬 Generate Reference-to-Video (Vidu)</h3>
+            <h3>🎬 Generate Talking Video (HeyGen)</h3>
             <p style={{ color: '#666', fontSize: 14 }}>
-              Create an animated video using your synthetic twin image and Vidu Reference-to-Video.
+              Create an AI talking-head video using your synthetic twin image and HeyGen. We capture
+              all generation data for continuous model improvement.
             </p>
 
             {!showVideoOptions && !videoResult && (
@@ -302,7 +303,7 @@ export function SafeSyntheticWizard() {
                         checked={videoDuration === 16}
                         onChange={() => setVideoDuration(16)}
                       />
-                      16 seconds (120 DreamCoins)
+                      16 seconds (125 DreamCoins)
                     </label>
                   </div>
                 </label>
