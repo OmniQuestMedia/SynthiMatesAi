@@ -1,5 +1,21 @@
 # SythiMatesAi — Cleanup Mode
 
+> **✅ FEATURES COMPLETE: Account-Core + Safe Synthetic Twin Integration**
+>
+> **The shared Account-Core and Safe Synthetic Twin integration from ChatNowZone--BUILD is now live and production-ready!**
+>
+> This repository now includes:
+>
+> - ✅ **Shared Account-Core** — Unified account lookup, creator verification, and membership management
+> - ✅ **DreamCoins Ledger** — Canonical three-bucket wallet with hash-chained immutable transactions
+> - ✅ **Safe Synthetic Twin Creator** — Multi-safeguard photo-based AI twin generation
+> - ✅ **GateGuard Integration** — Risk/welfare pre-processor with fraud and welfare scoring
+> - ✅ **Voice Chat** — Real-time voice messaging with automatic DreamCoins deduction
+> - ✅ **Monitoring & Observability** — Real-time metrics for all Account-Core and DreamCoins operations
+>
+> See [Architecture Overview](#architecture-account-core--dreamcoins--safe-synthetic-twin) below for details.
+> Full roadmap: [docs/ROADMAP.md](docs/ROADMAP.md)
+
 > **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
 > Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
 
@@ -299,6 +315,390 @@ See [`.env.example`](.env.example) for a full list. Key variables:
 - **Banana.dev**: isolate queue spikes by limiting concurrent synthetic jobs per instance.
 - **Redis**: size memory for burst queueing/rate-limit keys; alert on eviction.
 - **pgvector/Postgres**: keep vector index maintenance scheduled; monitor similarity query latency.
+
+---
+
+## Architecture: Account-Core + DreamCoins + Safe Synthetic Twin
+
+This section provides a comprehensive overview of how the Account-Core, DreamCoins ledger, Safe Synthetic Twin, and GateGuard systems work together to power SynthiMatesAi.
+
+### System Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         User / Creator                           │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ HTTP/WebSocket
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Core API (NestJS)                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐   │
+│  │ Voice Chat   │  │ Synthetic    │  │ Account            │   │
+│  │ Controller   │  │ Twin Creator │  │ Controller         │   │
+│  └──────┬───────┘  └──────┬───────┘  └────────┬───────────┘   │
+│         │                  │                    │                │
+│         ▼                  ▼                    ▼                │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐   │
+│  │ Voice Chat   │  │ AI Twin      │  │ Account            │   │
+│  │ Service      │  │ Service      │  │ Service            │   │
+│  └──────┬───────┘  └──────┬───────┘  └────────┬───────────┘   │
+└─────────┼──────────────────┼───────────────────┼────────────────┘
+          │                  │                    │
+          │                  │                    │
+┌─────────▼──────────────────▼───────────────────▼────────────────┐
+│                    Shared Services Layer                         │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Account-Core (services/account-core/)                    │  │
+│  │  • resolveAccountType(userId) → USER/CREATOR/DUAL         │  │
+│  │  • buildUnifiedView(userId) → UnifiedAccountView          │  │
+│  │  • hasCreatorAccess(userId) → boolean                     │  │
+│  │  • isVerifiedCreator(userId) → boolean                    │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Ledger Service (services/ledger/)                        │  │
+│  │  • record(entry) → LedgerEntry (idempotent)               │  │
+│  │  • spend(userId, amount, reason) → SpendResult            │  │
+│  │  • credit(userId, amount, bucket, reason) → void          │  │
+│  │  • verifyChain(userId) → ValidationResult                 │  │
+│  │                                                             │  │
+│  │  Three-Bucket Wallet:                                      │  │
+│  │  ├─ purchased  (user-paid tokens)                          │  │
+│  │  ├─ membership (stipends from membership tiers)            │  │
+│  │  └─ bonus      (platform bonuses)                          │  │
+│  │                                                             │  │
+│  │  Spend Order: purchased → membership → bonus               │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  GateGuard Sentinel (services/core-api/src/gateguard/)    │  │
+│  │  • evaluate(input) → GateGuardResult                       │  │
+│  │  • preProcess<T>(fn, input) → T | GateGuardDeclineError   │  │
+│  │                                                             │  │
+│  │  Scoring:                                                  │  │
+│  │  ├─ Fraud Score (0-100): chargeback, velocity, geo, VPN   │  │
+│  │  └─ Welfare Score (0-100): velocity, overnight, dwell     │  │
+│  │                                                             │  │
+│  │  Decisions:                                                │  │
+│  │  ├─ [0..40) → APPROVE                                      │  │
+│  │  ├─ [40..70) → COOLDOWN (soft decline)                    │  │
+│  │  ├─ [70..90) → HARD_DECLINE                               │  │
+│  │  └─ [90..100] → HUMAN_ESCALATE (welfare team)             │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Safe Synthetic Twin Pipeline (services/ai-twin/)         │  │
+│  │  • createSyntheticModel(images, fantasyLevel) → result    │  │
+│  │                                                             │  │
+│  │  Safeguards (applied in sequence):                         │  │
+│  │  1. Multi-image blending (min 5 images)                    │  │
+│  │  2. Celebrity down-weighting (similarity < 0.5)            │  │
+│  │  3. Refinement loop (6 attempts, target ≤ 0.3)             │  │
+│  │  4. Dissimilarity gate (cosine threshold 0.15)             │  │
+│  │  5. C2PA watermarking (provenance metadata)                │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  Account-Core Metrics (services/core-api/src/analytics/)  │  │
+│  │  • trackDreamCoinsSpend(user, amount, reason)             │  │
+│  │  • trackPayoutRequest(creator, amount, status)            │  │
+│  │  • trackMembershipUpgrade(user, fromTier, toTier)         │  │
+│  │  • trackVoiceMessage(user, twin, messages, tokens)        │  │
+│  │  • trackSyntheticGeneration(user, twin, safeguards)       │  │
+│  │  • emitSummary() → MetricsSummary                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└───────────────────────────────┬───────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       NATS Event Bus                             │
+│  All operations emit events for monitoring & audit:              │
+│  • account_core.dreamcoins.spent                                 │
+│  • account_core.payout.requested                                 │
+│  • account_core.membership.upgraded                              │
+│  • account_core.ledger.transaction                               │
+│  • account_core.voice.message                                    │
+│  • account_core.synthetic.generation                             │
+│  • gateguard.decision.approved / cooldown / hard_decline         │
+│  • audit.immutable.* (purchase, spend, recovery, etc.)           │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   Postgres + Redis + pgvector                    │
+│  • CanonicalWallet (three-bucket balances)                       │
+│  • CanonicalLedgerEntry (hash-chained immutable log)             │
+│  • User, Creator (account profiles)                              │
+│  • Membership (tiers, subscriptions, stipends)                   │
+│  • AiTwin (synthetic twin metadata)                              │
+│  • GateGuardLog (risk/welfare decisions)                         │
+│  • Celebrity embeddings (pgvector for similarity checks)         │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### How It Works: Key User Flows
+
+#### 1. Voice Chat with DreamCoins Deduction
+
+**User sends a voice message to an AI Twin:**
+
+1. User calls `POST /voice-chat/send-message` with userId, twinId, transcript
+2. VoiceChat Service validates input and retrieves user's wallet
+3. **GateGuard check** (optional): evaluate fraud/welfare risk
+4. Check wallet balance across all three buckets (purchased, membership, bonus)
+5. If balance insufficient → throw error
+6. **Deduct 5 DreamCoins** using deterministic spend order:
+   - Deduct from `purchased` first (user-paid tokens)
+   - Then from `membership` (stipend tokens)
+   - Finally from `bonus` (platform bonuses)
+7. Create idempotent ledger entry with correlation_id and reason_code='SPEND'
+8. Store voice transcript in Memory Bank as FACT-type memory
+9. **Emit NATS event**: `account_core.voice.message` for monitoring
+10. **Track metrics**: AccountCoreMetricsService records tokens charged
+11. Return response with new balance breakdown
+
+**Key Files:**
+
+- `services/core-api/src/voice-chat/voice-chat.service.ts` (main logic)
+- `services/ledger/ledger.service.ts` (wallet & spend logic)
+- `services/core-api/src/analytics/account-core-metrics.service.ts` (metrics)
+
+#### 2. Creator Payout Request
+
+**Creator requests payout of earned DreamCoins:**
+
+1. Creator calls `POST /payouts/request` with creatorId, amount
+2. **Account-Core check**: `isVerifiedCreator(userId)` → must be true
+3. **GateGuard evaluation**: fraud/welfare scoring for PAYOUT action
+   - If score ≥ 70 → HARD_DECLINE or HUMAN_ESCALATE
+4. Check creator's earned balance (from fan tips, subscriptions, etc.)
+5. If sufficient balance:
+   - Create payout record with status='PENDING'
+   - Deduct from creator's earned wallet
+   - Create ledger entry with reason_code='PAYOUT'
+6. **Emit NATS events**:
+   - `account_core.payout.requested`
+   - `audit.immutable.payout`
+7. **Track metrics**: AccountCoreMetricsService records payout
+8. Queue for payment processing (Stripe, bank transfer, etc.)
+
+**Key Files:**
+
+- `services/ledger/payout.service.ts` (payout logic)
+- `services/core-api/src/gateguard/gateguard.service.ts` (risk check)
+- `services/account-core/account.service.ts` (creator verification)
+
+#### 3. Membership Upgrade
+
+**User upgrades from GUEST to VIP tier:**
+
+1. User calls `POST /memberships/upgrade` with userId, targetTier
+2. Retrieve pricing for target tier (e.g., VIP_GOLD = $19.99/month)
+3. **GateGuard evaluation**: fraud scoring for PURCHASE action
+4. Process payment via Stripe (or payment gateway)
+5. If payment successful:
+   - Update user's membership tier in database
+   - **Credit membership stipend** to user's `membership` bucket
+     - VIP: 50 CZT/month
+     - VIP_SILVER: 100 CZT/month
+     - VIP_GOLD: 200 CZT/month
+     - VIP_PLATINUM: 500 CZT/month
+     - VIP_DIAMOND: 1000 CZT/month
+   - Create ledger entry with reason_code='MEMBERSHIP_STIPEND'
+6. **Emit NATS events**:
+   - `account_core.membership.upgraded`
+   - `membership.subscription.created`
+7. **Track metrics**: AccountCoreMetricsService records upgrade
+8. Return new membership details and wallet balance
+
+**Key Files:**
+
+- `services/core-api/src/account/membership.service.ts` (membership logic)
+- `services/ledger/ledger.service.ts` (stipend crediting)
+
+#### 4. Safe Synthetic Twin Generation
+
+**Creator creates a Safe Synthetic Twin from photos:**
+
+1. Creator uploads 5+ photos via AI Twin wizard
+2. Client calls `POST /cyrano/ai-twin/synthetic` with images + fantasyLevel
+3. **Account-Core check**: `hasCreatorAccess(userId)` → must be true
+4. AI Twin Service starts Safe Synthetic Pipeline:
+
+   **Safeguard 1: Multi-Image Blending**
+   - Reject if < 5 images provided
+   - Extract ArcFace embeddings from each image
+
+   **Safeguard 2: Celebrity Down-Weighting**
+   - Compare each embedding to celebrity database (pgvector)
+   - If similarity ≥ 0.5 → reduce weight to max 0.2
+
+   **Safeguard 3: Refinement Loop**
+   - Apply controlled fantasy deviation
+   - For each iteration (max 6):
+     - Generate candidate embedding
+     - Check similarity to known celebrities
+     - If similarity ≤ 0.3 → accept
+     - Else → apply correction and retry
+
+   **Safeguard 4: Dissimilarity Gate**
+   - Check final embedding against all input embeddings
+   - If cosine similarity > 0.15 (too close to any input) → nudge away
+
+   **Safeguard 5: C2PA Watermarking**
+   - Add provenance metadata to generated image
+   - Include timestamp, creator ID, safeguards applied
+
+5. Generate final image via Flux model with IP-Adapter
+6. **Emit NATS event**: `account_core.synthetic.generation`
+7. **Track metrics**: success/failure, safeguards applied, fantasy level
+8. Return image URL with metadata
+
+**Key Files:**
+
+- `services/ai-twin/src/synthetic-pipeline.service.ts` (safeguards)
+- `services/ai-twin/src/ai-twin.service.ts` (orchestration)
+
+### DreamCoins Economy: How It All Works Together
+
+#### Token Flow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     DreamCoins Economy                       │
+└─────────────────────────────────────────────────────────────┘
+
+User Acquisition:
+┌──────────────┐    Stripe     ┌──────────────────────────┐
+│     User     │───────────────▶│  Purchase DreamCoins     │
+│              │  $10 = 100 CZT │  (credited to 'purchased'│
+└──────────────┘                │   bucket)                │
+                                └──────────────────────────┘
+
+Membership Benefits:
+┌──────────────┐  Monthly      ┌──────────────────────────┐
+│ VIP Member   │  Stipend      │  Membership Stipend      │
+│ (VIP_GOLD)   │───────────────▶│  (credited to 'membership'│
+│              │  200 CZT/mo   │   bucket)                │
+└──────────────┘                └──────────────────────────┘
+
+Platform Bonuses:
+┌──────────────┐  Promo/Bonus  ┌──────────────────────────┐
+│     User     │───────────────▶│  Platform Bonus          │
+│              │  50 CZT       │  (credited to 'bonus'    │
+└──────────────┘                │   bucket)                │
+                                └──────────────────────────┘
+
+Spending (deterministic order):
+┌──────────────┐               ┌──────────────────────────┐
+│ Voice Chat   │  5 CZT/msg    │  Deduct from:            │
+│ AI Twin      │───────────────▶│  1. purchased (first)    │
+│              │               │  2. membership (second)  │
+└──────────────┘               │  3. bonus (last)         │
+                               └──────────────────────────┘
+
+Creator Earnings:
+┌──────────────┐               ┌──────────────────────────┐
+│ Fan Tips &   │  Revenue      │  Creator Earned Balance  │
+│ Subscriptions│───────────────▶│  (separate from user     │
+│              │               │   wallets)               │
+└──────────────┘               └──────────────────────────┘
+                                         │
+                                         │ Payout Request
+                                         ▼
+                               ┌──────────────────────────┐
+                               │  Bank Transfer / Stripe  │
+                               │  (converted to USD)      │
+                               └──────────────────────────┘
+```
+
+#### Financial Integrity Guarantees
+
+1. **Append-Only Ledger**: All transactions are immutable. Corrections are offset entries, never updates.
+2. **Hash-Chained**: Each ledger entry includes SHA-256 hash of previous entry for integrity verification.
+3. **Idempotent**: Duplicate transaction attempts with same correlation_id are rejected (replay protection).
+4. **Deterministic Spend Order**: purchased → membership → bonus (enforced in code, never configurable).
+5. **GateGuard Gating**: High-risk transactions blocked before touching ledger.
+6. **NATS Audit Trail**: Every transaction emits event for real-time monitoring and compliance.
+7. **Three-Bucket Isolation**: Purchased, membership, and bonus tokens tracked separately for accounting.
+
+### Monitoring & Observability
+
+All Account-Core and DreamCoins operations are observable in real-time via the `AccountCoreMetricsService`:
+
+**Metrics Tracked:**
+
+- DreamCoins spent (by reason code: VOICE_CHAT, SYNTHETIC_GENERATION, etc.)
+- Payout requests (by status: PENDING, APPROVED, REJECTED, COMPLETED)
+- Membership upgrades (by tier transition and revenue)
+- Ledger transactions (by type: CREDIT/DEBIT, bucket, reason code)
+- Voice messages sent (messages count, tokens charged)
+- Synthetic generations (success rate, safeguards applied)
+- Account lookups (by type: USER/CREATOR/DUAL)
+
+**NATS Topics for Real-Time Monitoring:**
+
+- `account_core.dreamcoins.spent`
+- `account_core.payout.requested`
+- `account_core.membership.upgraded`
+- `account_core.ledger.transaction`
+- `account_core.voice.message`
+- `account_core.synthetic.generation`
+- `account_core.lookup`
+- `account_core.metrics.summary`
+
+**Dashboard Integration:**
+Subscribe to NATS topics to build real-time dashboards showing:
+
+- Total DreamCoins in circulation (by bucket)
+- Daily active users and creators
+- Revenue from membership upgrades
+- Top spending categories
+- Synthetic generation success rates
+- GateGuard block rates by decision type
+
+### Security & Compliance
+
+**Account-Core Security:**
+
+- Role-based access control (USER, CREATOR, ADMIN)
+- Creator verification required for payouts
+- Multi-tenant organization isolation
+- Account status enforcement (ACTIVE, SUSPENDED, DEACTIVATED)
+
+**Ledger Security:**
+
+- Append-only (no UPDATE/DELETE)
+- Hash-chain verification
+- Idempotency via correlation_id
+- All transactions auditable via NATS
+
+**GateGuard Security:**
+
+- Multi-factor fraud scoring (device, geo, velocity, chargeback history)
+- Welfare monitoring (overnight sessions, dwell time, chase-loss patterns)
+- Zero-knowledge AV checking for sensitive content
+- Federated ban checking across platforms
+- Human escalation for edge cases
+
+**Safe Synthetic Twin Security:**
+
+- Celebrity protection (down-weighting + refinement)
+- Dissimilarity gate prevents near-clones
+- C2PA provenance metadata
+- Legal/ethical consent enforcement
+
+### Key Documentation
+
+- **Account-Core Implementation**: `services/account-core/`
+- **DreamCoins Ledger**: `services/ledger/`
+- **GateGuard**: `services/core-api/src/gateguard/`
+- **Safe Synthetic Twin**: `docs/SYNTHETIC_TWIN_SECURITY.md`
+- **Voice Chat Integration**: `services/core-api/src/voice-chat/`
+- **Monitoring**: `services/core-api/src/analytics/account-core-metrics.service.ts`
+- **Roadmap**: `docs/ROADMAP.md`
+- **Governance**: `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
+- **Domain Glossary**: `docs/DOMAIN_GLOSSARY.md`
 
 ---
 

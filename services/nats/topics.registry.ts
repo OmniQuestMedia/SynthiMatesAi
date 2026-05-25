@@ -357,6 +357,16 @@ export const NATS_TOPICS = {
   // ── Benefit Usage (BENEFITS-001) ─────────────────────────────────────────
   BENEFIT_LIMIT_REACHED: 'benefit.limit.reached',
   BENEFIT_USAGE_INCREMENTED: 'benefit.usage.incremented',
+
+  // ── Account-Core & DreamCoins Monitoring (Phase 7 Item 1) ───────────────
+  ACCOUNT_CORE_DREAMCOINS_SPENT: 'account_core.dreamcoins.spent',
+  ACCOUNT_CORE_PAYOUT_REQUESTED: 'account_core.payout.requested',
+  ACCOUNT_CORE_MEMBERSHIP_UPGRADED: 'account_core.membership.upgraded',
+  ACCOUNT_CORE_LEDGER_TRANSACTION: 'account_core.ledger.transaction',
+  ACCOUNT_CORE_VOICE_MESSAGE: 'account_core.voice.message',
+  ACCOUNT_CORE_SYNTHETIC_GENERATION: 'account_core.synthetic.generation',
+  ACCOUNT_CORE_LOOKUP: 'account_core.lookup',
+  ACCOUNT_CORE_METRICS_SUMMARY: 'account_core.metrics.summary',
 } as const;
 
 export type NatsTopic = (typeof NATS_TOPICS)[keyof typeof NATS_TOPICS];

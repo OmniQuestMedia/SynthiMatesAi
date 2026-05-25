@@ -7,7 +7,10 @@ import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AccountPurchaseService } from './account-purchase.service';
 import { MembershipPurchaseService } from './membership-purchase.service';
 import type { PurchaseTokensRequest, PurchaseTokensResponse } from './account-purchase.service';
-import type { PurchaseMembershipRequest, PurchaseMembershipResponse } from './membership-purchase.service';
+import type {
+  PurchaseMembershipRequest,
+  PurchaseMembershipResponse,
+} from './membership-purchase.service';
 
 @Controller('account')
 export class AccountController {
@@ -35,7 +38,9 @@ export class AccountController {
    */
   @Post('purchase-membership')
   @HttpCode(HttpStatus.OK)
-  async purchaseMembership(@Body() request: PurchaseMembershipRequest): Promise<PurchaseMembershipResponse> {
+  async purchaseMembership(
+    @Body() request: PurchaseMembershipRequest,
+  ): Promise<PurchaseMembershipResponse> {
     return this.membershipPurchaseService.purchaseMembership(request);
   }
 }

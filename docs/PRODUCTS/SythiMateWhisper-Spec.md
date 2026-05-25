@@ -28,11 +28,11 @@ Both use identical engine. Differentiation via onboarding, default templates, fe
 
 ## 3. Product Differentiation
 
-| Feature | SythiMateWhisper™ | CyranoWhisper |
-|---------|-------------------|---------------|
-| Default Rating | 18+/XXX | G/14+ |
-| G/14+ Mode | Paid add-on | Included |
-| XXX Mode | Included | Paid upgrade |
+| Feature           | SythiMateWhisper™                      | CyranoWhisper                                     |
+| ----------------- | -------------------------------------- | ------------------------------------------------- |
+| Default Rating    | 18+/XXX                                | G/14+                                             |
+| G/14+ Mode        | Paid add-on                            | Included                                          |
+| XXX Mode          | Included                               | Paid upgrade                                      |
 | Primary Use Cases | Adult content creators, live broadcast | Dates, acting, public speaking, language coaching |
 
 ## 4. Technical Architecture
@@ -45,11 +45,13 @@ Follow existing multi-portal pattern:
 - `apps/portals/cyrano-whisper/` (new)
 
 Reuse:
+
 - services/core-api, cyrano/, narrative-engine/, ai-twin/, voice-cloning/
 - Shared UI components
 - Safety, ledger, gateguard
 
 New/Extended:
+
 - Whisper-specific UI (Virtual Pickle, teleprompter)
 - Broadcast overlay extension (feeds chat to AI Twin)
 - Intelligent Auto-Advance logic
