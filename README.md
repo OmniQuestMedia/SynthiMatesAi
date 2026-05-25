@@ -1,15 +1,71 @@
-# SythiMatesAi — Cleanup Mode
-
-> **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
-> Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
+# SythiMatesAi — Creator-First AI Companions
 
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
-> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, and a cinematic narrative engine.
+> **Creators earn from their AI twins. Fans get safer, higher-quality experiences.**
+> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, reference-to-video, and a cinematic narrative engine.
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
 
 **Package manager:** Yarn (canonical for all OQMInc repos — do not use npm or pnpm).
 
 ---
+
+## 🌟 Why Choose SynthiMatesAi Over Candy.AI?
+
+### For Creators
+
+✅ **Earn 30-50% revenue share** from every image and video generation using your AI twin
+✅ **Real-time earnings dashboard** with transparent ledger and instant payout requests
+✅ **Safe Synthetic Twin technology** protects you from unauthorized deepfakes
+✅ **Full control** over AI twin visibility and monetization settings
+
+### For Fans
+
+✅ **Higher quality** photorealistic images and videos (Flux LoRA + Reference-to-Video)
+✅ **Better safety** with celebrity detection and transformative generation safeguards
+✅ **Video generation** from character images (not available on most competitors)
+✅ **Transparent pricing** with DreamCoins token system
+
+### Technical Advantages
+
+✅ **Append-only financial ledger** for complete transaction transparency
+✅ **Three-bucket wallet system** (purchased, membership, bonus tokens)
+✅ **GateGuard risk assessment** for creator payouts and user transactions
+✅ **Persistent memory** across all character interactions
+✅ **Voice cloning** with ElevenLabs for natural conversations
+
+---
+
+## 🎯 For Creators: Build Your AI Twin & Earn
+
+### How Creator Earnings Work
+
+1. **Train Your AI Twin** — Upload 5+ photos → Safe Synthetic Mode generates transformative character
+2. **Enable AI for Fans** — Toggle AI Synthetic Twin generation on your creator dashboard
+3. **Earn Automatically** — Get 40% of DreamCoins spent on:
+   - Image generations (50 DreamCoins × 40% = 20 tokens per image)
+   - Video generations (60-80 DreamCoins × 40% = 24-32 tokens per video)
+4. **Track & Withdraw** — View real-time earnings, request payouts via GateGuard-approved workflow
+
+### Creator Dashboard Features
+
+📊 **Real-Time Earnings** — See exactly how much you're earning from image & video generations
+🎭 **Active AI Twins** — Monitor all your trained AI twins and their usage stats
+💰 **Payout Requests** — Request payouts instantly (processed via GateGuard risk assessment)
+📈 **Generation Analytics** — Track how many images and videos fans generate with your twins
+
+### Revenue Share Breakdown
+
+| Service          | Cost to Fan   | Creator Earns (40%) | Platform Fee (60%) |
+| ---------------- | ------------- | ------------------- | ------------------ |
+| Image Generation | 50 DreamCoins | 20 DreamCoins       | 30 DreamCoins      |
+| Video (5s)       | 60 DreamCoins | 24 DreamCoins       | 36 DreamCoins      |
+| Video (10s)      | 85 DreamCoins | 34 DreamCoins       | 51 DreamCoins      |
+
+**Earnings accumulate in your bonus token bucket and can be withdrawn via payout requests.**
+
+---
+
+## 🎮 For Fans: Premium AI Companions
 
 ## Architecture: One Engine → Multiple Portals (Active)
 
@@ -302,6 +358,34 @@ See [`.env.example`](.env.example) for a full list. Key variables:
 
 ---
 
+## Why Choose SynthiMatesAi Over Candy.AI? (Summary)
+
+**For Creators:**
+
+- 🎯 **Earn 40% revenue share** from every AI twin generation (Candy.AI: 0%)
+- 📊 **Real-time earnings dashboard** with transparent ledger (Candy.AI: none)
+- 🛡️ **Safe Synthetic Twin** protects your likeness (Candy.AI: basic filtering)
+- 💰 **Instant payout requests** via GateGuard approval (Candy.AI: N/A)
+
+**For Fans:**
+
+- 🎬 **Video generation** from character images (Candy.AI: limited animations)
+- 🎨 **Superior image quality** with Flux LoRA fine-tuning (Candy.AI: generic models)
+- 🔒 **Better safety** with celebrity detection safeguards (Candy.AI: basic)
+- 💎 **Support creators directly** — 40% of your spend goes to them (Candy.AI: 0%)
+
+**Technical Superiority:**
+
+- ✅ Append-only financial ledger (vs unknown architecture)
+- ✅ Three-bucket wallet system (vs subscription only)
+- ✅ GateGuard risk assessment (vs manual review)
+- ✅ Safe Synthetic Twin pipeline (vs basic content filtering)
+- ✅ C2PA provenance metadata (vs none)
+
+**See full comparison:** [`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)
+
+---
+
 ## Governance
 
 This repo operates under cleanup-mode governance. All agents must read:
@@ -310,6 +394,7 @@ This repo operates under cleanup-mode governance. All agents must read:
 - **[`docs/DOMAIN_GLOSSARY.md`](docs/DOMAIN_GLOSSARY.md)** — naming authority and commit prefix enum.
 - **[`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md)** — sovereign infrastructure & security policy (rule_applied_id: OQMI_INFRA_v1.0). Binding on all repos, environments, agents, and infrastructure.
 - **[`PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md`](PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md)** — current cleanup-cycle report-back for this repo.
+- **[`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)** — competitive positioning vs Candy.AI and other platforms.
 
 ### Cleanup-mode fast path
 

@@ -20,6 +20,8 @@ import { PrismaService } from '../prisma.service';
 class CreateSyntheticDto {
   fantasyLevel?: string | string[];
   userId: string; // PHASE 2 ITEM 4: Required for wallet deduction
+  twinId?: string; // PHASE 6 ITEM 1: Optional twin_id to track which AI twin generated this
+  creatorId?: string; // PHASE 6 ITEM 1: Optional creator_id for revenue share
 }
 
 type UploadedImageFile = {
@@ -29,6 +31,9 @@ type UploadedImageFile = {
 
 // PHASE 2 ITEM 4: Safe Synthetic Twin pricing (in DreamCoins/CZT)
 const SYNTHETIC_GENERATION_COST = 50; // 50 DreamCoins per generation
+
+// PHASE 6 ITEM 1: Creator revenue share from synthetic twin generations
+const CREATOR_REVENUE_SHARE_PERCENT = 40; // 40% of tokens go to creator (30-50% range)
 
 @Controller('cyrano/ai-twin')
 export class AiTwinSyntheticController {
@@ -76,7 +81,9 @@ export class AiTwinSyntheticController {
       ? Math.min(1.0, Math.max(0.0, parsedFantasyLevel))
       : 0.25;
 
-    this.logger.log(`Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}, userId=${body.userId}`);
+    this.logger.log(
+      `Synthetic request: ${files.length} images, fantasyLevel=${fantasyLevel}, userId=${body.userId}`,
+    );
 
     // PHASE 2 ITEM 4: Check user wallet balance and deduct cost
     const wallet = await this.prisma.canonicalWallet.findUnique({
@@ -168,6 +175,71 @@ export class AiTwinSyntheticController {
       new_balance: totalTokens - SYNTHETIC_GENERATION_COST,
       correlation_id: correlationId,
     });
+
+    // PHASE 6 ITEM 1: Credit creator with revenue share if creatorId is provided
+    if (body.creatorId) {
+      const creatorShareTokens = Math.floor(
+        SYNTHETIC_GENERATION_COST * (CREATOR_REVENUE_SHARE_PERCENT / 100),
+      );
+
+      // Find or create creator wallet
+      let creatorWallet = await this.prisma.canonicalWallet.findUnique({
+        where: { user_id: body.creatorId },
+      });
+
+      if (!creatorWallet) {
+        // Create wallet if it doesn't exist
+        creatorWallet = await this.prisma.canonicalWallet.create({
+          data: {
+            user_id: body.creatorId,
+            user_type: 'creator',
+            organization_id: 'OQMInc',
+            tenant_id: 'default',
+            purchased_tokens: 0,
+            membership_tokens: 0,
+            bonus_tokens: 0,
+          },
+        });
+      }
+
+      // Credit creator's bonus bucket with earnings
+      await this.prisma.canonicalWallet.update({
+        where: { id: creatorWallet.id },
+        data: {
+          bonus_tokens: { increment: creatorShareTokens },
+        },
+      });
+
+      // Create ledger entry for creator revenue share
+      const creatorCorrelationId = `creator-earnings-${correlationId}`;
+      await this.prisma.canonicalLedgerEntry.create({
+        data: {
+          wallet_id: creatorWallet.id,
+          correlation_id: creatorCorrelationId,
+          reason_code: 'CREATOR_EARNINGS_SYNTHETIC',
+          amount: creatorShareTokens, // positive = credit
+          bucket: 'bonus',
+          token_type: 'CZT',
+          hash_prev: null,
+          hash_current: `hash-${creatorCorrelationId}`,
+          metadata: {
+            source_user_id: body.userId,
+            twin_id: body.twinId,
+            total_cost: SYNTHETIC_GENERATION_COST,
+            revenue_share_percent: CREATOR_REVENUE_SHARE_PERCENT,
+            fantasy_level: fantasyLevel,
+            transaction_type: 'synthetic_generation',
+          },
+        },
+      });
+
+      this.logger.log(`Credited ${creatorShareTokens} DreamCoins to creator ${body.creatorId}`, {
+        creatorId: body.creatorId,
+        revenue_share_percent: CREATOR_REVENUE_SHARE_PERCENT,
+        tokens_earned: creatorShareTokens,
+        correlation_id: creatorCorrelationId,
+      });
+    }
 
     let analyticsOutcome: 'success' | 'failure' = 'failure';
     try {

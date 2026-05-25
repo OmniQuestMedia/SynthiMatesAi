@@ -2433,6 +2433,26 @@ model ImageCache {
   @@map("image_caches")
 }
 
+// ── Video Generation / Cache (PHASE 6 ITEM 2) ────────────────────────────────
+
+model VideoCache {
+  video_cache_id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twin_id              String   @db.Uuid
+  creator_id           String   @db.Uuid
+  user_id              String   @db.Uuid
+  reference_image_url  String   @db.Text
+  reference_image_hash String   @db.VarChar(64)
+  storage_url          String   @db.Text
+  duration_seconds     Int      @default(5)
+  correlation_id       String   @unique @db.VarChar(200)
+  reason_code          String   @default("VIDEO_GEN") @db.VarChar(40)
+  generated_at         DateTime @default(now()) @db.Timestamptz
+
+  @@index([twin_id, reference_image_hash, generated_at])
+  @@index([user_id, generated_at])
+  @@map("video_caches")
+}
+
 // ── Voice Cloning ─────────────────────────────────────────────────────────────
 
 model VoiceClone {
