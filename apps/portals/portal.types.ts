@@ -8,7 +8,9 @@ export type Portal =
   | 'LOTUS_BLOOM'
   | 'DESPERATE_HOUSEWIVES'
   | 'BARELY_LEGAL'
-  | 'DARK_DESIRES';
+  | 'DARK_DESIRES'
+  | 'SYNTHIMATE_WHISPER'
+  | 'CYRANO_WHISPER';
 
 export interface CharacterPack {
   name: string;
@@ -26,4 +28,13 @@ export interface PortalConfig {
     primaryColor: string;
     accentColor: string;
   };
+  /** Whisper-specific feature flags */
+  whisperFeatures?: {
+    virtualPickle: boolean;
+    autoAdvance: boolean;
+    broadcastOverlay: boolean;
+    teleprompterMode: boolean;
+  };
+  /** Default rating for content (18+ for adult, G/14+ for mainstream) */
+  defaultRating?: 'G' | '14+' | '18+' | 'XXX';
 }
