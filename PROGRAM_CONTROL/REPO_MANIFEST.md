@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/add-voice-chat-integration`
-**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
-**Generated:** 2026-05-24T22:55:16Z
+**Branch:** `claude/fix-issues-103-to-113`
+**Commit:** `f2a52c7b4a115e0b117346611cd71346a3eb4904`
+**Generated:** 2026-05-25T00:44:58Z
 
 ## All Files
 
@@ -361,6 +361,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
 - `docker-compose.yml`
+- `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
 - `docs/AUDIT_CERTIFICATION_V1.md`
 - `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
@@ -482,10 +483,12 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/account/account.controller.ts`
 - `services/core-api/src/account/account.module.ts`
 - `services/core-api/src/account/membership-purchase.service.ts`
+- `services/core-api/src/admin/admin-analytics.controller.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-analytics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
 - `services/core-api/src/app.module.ts`
