@@ -2382,10 +2382,12 @@ model AiTwin {
   created_at       DateTime  @default(now()) @db.Timestamptz
   updated_at       DateTime  @updatedAt @db.Timestamptz
 
-  photos             AiTwinPhoto[]
-  voice_clones       VoiceClone[]
-  image_caches       ImageCache[]
-  memory_banks       MemoryBank[]
+  photos            AiTwinPhoto[]
+  voice_clones      VoiceClone[]
+  image_caches      ImageCache[]
+  video_caches      VideoCache[]
+  video_captures    VideoCapture[]
+  memory_banks      MemoryBank[]
   narrative_branches NarrativeBranch[]
   memory_summaries   MemorySummary[]
 
@@ -2434,6 +2436,44 @@ model ImageCache {
   @@map("image_caches")
 }
 
+// ── Video Generation / Cache ──────────────────────────────────────────────────
+
+model VideoCache {
+  video_cache_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  twin_id            String   @db.Uuid
+  creator_id         String   @db.Uuid
+  user_id            String   @db.Uuid
+  prompt_hash        String?  @db.VarChar(64)
+  prompt_used        String   @db.Text
+  /// Provider: "vidu" | "heygen"
+  provider           String   @db.VarChar(30)
+  /// Model/version used: "vidu-1.0" | "vidu-1.5" | "heygen"
+  model              String   @db.VarChar(30)
+  storage_url        String?  @db.Text
+  video_url          String?  @db.Text
+  thumbnail_url      String?  @db.Text
+  duration_seconds   Int
+  resolution         String?  @db.VarChar(10)
+  /// Reference image used for video generation
+  reference_image_id String?  @db.Uuid
+  /// Vidu tier: "premium" | "enterprise"
+  vidu_tier          String?  @db.VarChar(20)
+  /// HeyGen's internal video ID
+  heygen_video_id    String?  @db.VarChar(100)
+  /// Tier for HeyGen: "business" | "enterprise"
+  tier               String?  @db.VarChar(20)
+  correlation_id     String   @unique @db.VarChar(200)
+  reason_code        String   @default("VIDEO_GEN") @db.VarChar(40)
+  generated_at       DateTime @default(now()) @db.Timestamptz
+
+  twin               AiTwin   @relation(fields: [twin_id], references: [twin_id])
+
+  @@index([twin_id, prompt_hash, generated_at])
+  @@index([user_id, generated_at])
+  @@index([provider, generated_at])
+  @@map("video_caches")
+}
+
 // ── Voice Cloning ─────────────────────────────────────────────────────────────
 
 model VoiceClone {
@@ -2473,6 +2513,41 @@ model VoiceCloneSample {
 
   @@index([voice_clone_id])
   @@map("voice_clone_samples")
+}
+
+// ── Video Capture (HeyGen Learning) ───────────────────────────────────────────
+
+model VideoCapture {
+  capture_id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  video_cache_id       String   @db.Uuid
+  twin_id              String   @db.Uuid
+  creator_id           String   @db.Uuid
+  user_id              String   @db.Uuid
+  /// Input synthetic image URL used for video generation
+  input_image_url      String   @db.Text
+  /// Prompt/text used for the talking video
+  prompt               String   @db.Text
+  /// HeyGen video URL
+  video_url            String   @db.Text
+  /// Duration in seconds (8 or 16)
+  duration_seconds     Int
+  /// DreamCoins spent on this generation
+  tokens_spent         Int
+  /// Provider used
+  provider             String   @default("heygen") @db.VarChar(30)
+  /// Tier used
+  tier                 String   @db.VarChar(20)
+  /// Training data flag - true if captured for internal model training
+  captured_for_training Boolean @default(true)
+  correlation_id       String   @unique @db.VarChar(200)
+  reason_code          String   @default("VIDEO_CAPTURE_LEARNING") @db.VarChar(40)
+  captured_at          DateTime @default(now()) @db.Timestamptz
+
+  twin                 AiTwin   @relation(fields: [twin_id], references: [twin_id])
+
+  @@index([twin_id, captured_at])
+  @@index([captured_for_training, captured_at])
+  @@map("video_captures")
 }
 
 // ── Narrative Engine — Persistent Memory Bank ─────────────────────────────────

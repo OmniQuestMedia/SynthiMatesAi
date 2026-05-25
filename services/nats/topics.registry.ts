@@ -357,6 +357,10 @@ export const NATS_TOPICS = {
   // ── Benefit Usage (BENEFITS-001) ─────────────────────────────────────────
   BENEFIT_LIMIT_REACHED: 'benefit.limit.reached',
   BENEFIT_USAGE_INCREMENTED: 'benefit.usage.incremented',
+
+  // ── Video Generation (Hybrid Vidu Reference-to-Video) ────────────────────
+  VIDEO_GENERATED: 'cyrano.video.generated',
+  VIDEO_FAILED: 'cyrano.video.failed',
 } as const;
 
 export type NatsTopic = (typeof NATS_TOPICS)[keyof typeof NATS_TOPICS];
