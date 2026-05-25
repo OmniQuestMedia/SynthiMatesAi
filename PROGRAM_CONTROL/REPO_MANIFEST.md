@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/hygiene-sweep-stale-branches`
-**Commit:** `d526daec2c7897a19b519d5912d905c7cdbebf18`
-**Generated:** 2026-05-25T10:50:58Z
+**Branch:** `main`
+**Commit:** `ca32632c31f39278368e20ccd9e44d39c0b404e9`
+**Generated:** 2026-05-25T11:27:48Z
 
 ## All Files
 
@@ -45,6 +45,7 @@ Auto-generated on every push. Do not edit manually.
 - `CONTRIBUTING.md`
 - `DECISIONS.md`
 - `HANDOFF.md`
+- `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
@@ -319,6 +320,10 @@ Auto-generated on every push. Do not edit manually.
 - `apps/portals/barely-legal/package.json`
 - `apps/portals/barely-legal/page.tsx`
 - `apps/portals/barely-legal/portal.config.ts`
+- `apps/portals/cyrano-whisper/app/page.tsx`
+- `apps/portals/cyrano-whisper/next.config.mjs`
+- `apps/portals/cyrano-whisper/package.json`
+- `apps/portals/cyrano-whisper/portal.config.ts`
 - `apps/portals/dark-desires/.gitkeep`
 - `apps/portals/dark-desires/app/page.tsx`
 - `apps/portals/dark-desires/next.config.mjs`
@@ -350,11 +355,18 @@ Auto-generated on every push. Do not edit manually.
 - `apps/portals/main/page.tsx`
 - `apps/portals/main/portal.config.ts`
 - `apps/portals/portal.types.ts`
+- `apps/portals/synthimate-whisper/app/page.tsx`
+- `apps/portals/synthimate-whisper/next.config.mjs`
+- `apps/portals/synthimate-whisper/package.json`
+- `apps/portals/synthimate-whisper/portal.config.ts`
 - `apps/shared-ui/components/.gitkeep`
 - `apps/shared-ui/components/AITwinCard.tsx`
+- `apps/shared-ui/components/AutoAdvanceIndicator.tsx`
+- `apps/shared-ui/components/BroadcastOverlayIndicator.tsx`
 - `apps/shared-ui/components/HeroSection.tsx`
 - `apps/shared-ui/components/PortalSwitcher.tsx`
 - `apps/shared-ui/components/TierBadge.tsx`
+- `apps/shared-ui/components/WhisperPanel.tsx`
 - `apps/shared-ui/lib/.gitkeep`
 - `apps/shared-ui/lib/api.ts`
 - `apps/shared-ui/lib/portal-seo.ts`
@@ -695,6 +707,8 @@ Auto-generated on every push. Do not edit manually.
 - `services/cyrano/src/memory-retrieval.service.ts`
 - `services/cyrano/src/persona.manager.ts`
 - `services/cyrano/src/session-memory.store.ts`
+- `services/cyrano/src/whisper-auto-advance.service.ts`
+- `services/cyrano/src/whisper-prompt.service.ts`
 - `services/diamond-concierge/src/diamond-concierge.module.ts`
 - `services/diamond-concierge/src/diamond.service.ts`
 - `services/ffs/ASSUMPTIONS.md`
