@@ -22,6 +22,8 @@ import { CyranoService } from './cyrano.service';
 import { CyranoTranslationService } from './cyrano-translation.service';
 import { PersonaManager } from './persona.manager';
 import { SessionMemoryStore } from './session-memory.store';
+import { WhisperAutoAdvanceService } from './whisper-auto-advance.service';
+import { WhisperPromptService } from './whisper-prompt.service';
 
 @Module({
   imports: [NatsModule],
@@ -44,6 +46,9 @@ import { SessionMemoryStore } from './session-memory.store';
     // Phase 4 — Beta Analytics (Issue #16)
     CyranoBetaRegistryService,
     CyranoBetaAnalyticsService,
+    // Whisper services (SythiMateWhisper™ + CyranoWhisper)
+    WhisperAutoAdvanceService,
+    WhisperPromptService,
   ],
   exports: [
     SessionMemoryStore,
@@ -60,6 +65,8 @@ import { SessionMemoryStore } from './session-memory.store';
     CyranoTranslationService,
     CyranoBetaRegistryService,
     CyranoBetaAnalyticsService,
+    WhisperAutoAdvanceService,
+    WhisperPromptService,
   ],
 })
 export class CyranoModule {}
