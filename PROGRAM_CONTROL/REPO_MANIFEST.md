@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/implement-phase-7-final-cleanup`
-**Commit:** `06f7675be0c7f3371642e5b0ca41ad9d49f4d42e`
-**Generated:** 2026-05-25T02:14:40Z
+**Branch:** `claude/implement-phase-6-shared-account-core`
+**Commit:** `8246d121471b421a30cfdf2b88ddf0cac6543ad4`
+**Generated:** 2026-05-25T02:16:37Z
 
 ## All Files
 
@@ -46,6 +46,7 @@ Auto-generated on every push. Do not edit manually.
 - `DECISIONS.md`
 - `HANDOFF.md`
 - `OQMI_SYSTEM_STATE.md`
+- `PHASE6_COMPLETION_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
@@ -793,6 +794,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/e2e/full-token-purchase-flow.spec.ts`
 - `tests/e2e/high-heat-cyrano-payout-flow.spec.ts`
 - `tests/e2e/phase3-flow.spec.ts`
+- `tests/e2e/phase6-complete-validation.spec.ts`
 - `tests/e2e/rbac-step-up-enforcement.spec.ts`
 - `tests/e2e/subscription-flow.spec.ts`
 - `tests/e2e/ui-presenters.spec.ts`
