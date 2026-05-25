@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/issue-implement-cyrano-layer-1-whisper`
-**Commit:** `1788aa02a115eba251924b12f23fd9dc1ddf814f`
-**Generated:** 2026-05-25T11:14:13Z
+**Branch:** `copilot/sub-pr-140`
+**Commit:** `2ccb16dccacf01968b14e850e7d9fe38fac6d07f`
+**Generated:** 2026-05-25T11:28:50Z
 
 ## All Files
 
@@ -46,6 +46,7 @@ Auto-generated on every push. Do not edit manually.
 - `DECISIONS.md`
 - `HANDOFF.md`
 - `HYGIENE_SWEEP_REPORT.md`
+- `MASTER_PROJECT_FOLDER.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
 - `PHASE7_COMPLETION_SUMMARY.md`
