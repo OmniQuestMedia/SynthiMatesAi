@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `claude/implement-phase-6-shared-account-core`
-**Commit:** `37a538fc287faf41ce0811c4afcfb114adf003cd`
-**Generated:** 2026-05-25T00:45:30Z
+**Commit:** `8246d121471b421a30cfdf2b88ddf0cac6543ad4`
+**Generated:** 2026-05-25T02:16:37Z
 
 ## All Files
 
@@ -488,10 +488,14 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/account/account.controller.ts`
 - `services/core-api/src/account/account.module.ts`
 - `services/core-api/src/account/membership-purchase.service.ts`
+- `services/core-api/src/admin/admin-analytics.controller.ts`
 - `services/core-api/src/admin/admin-house-model.controller.ts`
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-analytics.controller.ts`
+- `services/core-api/src/analytics/account-core-analytics.service.ts`
+- `services/core-api/src/analytics/account-core-metrics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
 - `services/core-api/src/app.module.ts`
@@ -536,6 +540,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/cyrano/cyrano-auth.types.ts`
 - `services/core-api/src/cyrano/cyrano-memory.controller.ts`
 - `services/core-api/src/cyrano/cyrano-session-image.controller.ts`
+- `services/core-api/src/cyrano/video-generation.controller.ts`
 - `services/core-api/src/db.ts`
 - `services/core-api/src/dfsp/account-recovery-hold.service.ts`
 - `services/core-api/src/dfsp/checkout-confirmation.service.ts`
@@ -772,6 +777,14 @@ Auto-generated on every push. Do not edit manually.
 - `services/studio-affiliation/src/affiliation-number.generator.ts`
 - `services/studio-affiliation/src/studio-affiliation.module.ts`
 - `services/studio-affiliation/src/studio.service.ts`
+- `services/video-generation/src/heygen.service.ts`
+- `services/video-generation/src/heygen.types.ts`
+- `services/video-generation/src/hybrid-video.service.ts`
+- `services/video-generation/src/video.controller.ts`
+- `services/video-generation/src/video.module.ts`
+- `services/video-generation/src/video.service.ts`
+- `services/video-generation/src/video.types.ts`
+- `services/video-generation/src/vidu.service.ts`
 - `services/voice-cloning/src/voice.controller.ts`
 - `services/voice-cloning/src/voice.module.ts`
 - `services/voice-cloning/src/voice.service.ts`
