@@ -1,10 +1,12 @@
 // apps/cyrano-standalone/components/AITwinCreator/SafeSyntheticWizard.tsx
 // Safe Synthetic Twin creation wizard (4 steps: upload → settings → generating → complete).
-// Enhanced with video generation capability (HeyGen Phase)
+// Enhanced with video generation capability (Vidu Reference-to-Video hybrid integration)
 
 'use client';
 
 import React, { useState, useCallback } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_CYRANO_API_URL ?? 'http://localhost:3000';
 
 type WizardStep = 'upload' | 'settings' | 'generating' | 'complete';
 
@@ -64,7 +66,7 @@ export function SafeSyntheticWizard() {
       files.forEach((f) => form.append('images', f));
       form.append('fantasyLevel', String(fantasyLevel));
 
-      const res = await fetch('/api/cyrano/ai-twin/synthetic', {
+      const res = await fetch(`${API_BASE}/cyrano/ai-twin/synthetic`, {
         method: 'POST',
         body: form,
       });
@@ -87,7 +89,7 @@ export function SafeSyntheticWizard() {
 
   const handleGenerateVideo = useCallback(async () => {
     if (!videoPrompt.trim()) {
-      setVideoError('Please enter a prompt for the talking video.');
+      setVideoError('Please enter a prompt for the video generation.');
       return;
     }
 
@@ -95,22 +97,20 @@ export function SafeSyntheticWizard() {
     setGeneratingVideo(true);
 
     try {
-      const form = new FormData();
-
-      // Re-use the same images from synthetic twin generation
-      files.forEach((f) => form.append('images', f));
-
-      // Add video-specific parameters
-      form.append('userId', 'demo-user-id'); // TODO: Get from auth context
-      form.append('twinId', 'demo-twin-id'); // TODO: Get from twin context
-      form.append('creatorId', 'demo-creator-id'); // TODO: Get from creator context
-      form.append('prompt', videoPrompt);
-      form.append('durationSeconds', String(videoDuration));
-      form.append('fantasyLevel', String(fantasyLevel));
-
-      const res = await fetch('/api/cyrano/ai-twin/video', {
+      // Call the backend video generation endpoint
+      // Backend expects: twin_id, creator_id, user_id, prompt, duration_seconds, resolution, fantasy_level
+      const res = await fetch(`${API_BASE}/cyrano/videos/generate`, {
         method: 'POST',
-        body: form,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          twin_id: 'demo-twin-id', // TODO: Get from twin context
+          creator_id: 'demo-creator-id', // TODO: Get from creator context
+          user_id: 'demo-user-id', // TODO: Get from auth context
+          prompt: videoPrompt,
+          duration_seconds: videoDuration,
+          resolution: '1080p',
+          fantasy_level: fantasyLevel,
+        }),
       });
 
       if (!res.ok) {
@@ -120,27 +120,45 @@ export function SafeSyntheticWizard() {
         throw new Error(body.message ?? `Server error ${res.status}`);
       }
 
+      // Backend returns GenerateVideoResponse type
       const data = (await res.json()) as {
-        success: boolean;
-        video: VideoResult;
-        cost: {
-          dreamCoins: number;
-          remainingBalance: { total: number };
+        video_cache_id: string;
+        twin_id: string;
+        storage_url: string;
+        thumbnail_url?: string;
+        prompt_used: string;
+        duration_seconds: number;
+        resolution: string;
+        model: string;
+        vidu_tier: 'premium' | 'enterprise';
+        tokens_charged: number;
+        generated_at_utc: string;
+        from_cache: boolean;
+        safeguards_metadata: {
+          fantasyLevel: number;
+          inputCount: number;
+          safeguards: string[];
         };
       };
 
-      setVideoResult(data.video);
+      setVideoResult({
+        url: data.storage_url,
+        cacheId: data.video_cache_id,
+        syntheticImageUrl: result?.imageUrl ?? '',
+        durationSeconds: data.duration_seconds,
+        captureId: data.video_cache_id, // Using cache ID as capture ID for now
+      });
       setShowVideoOptions(false);
     } catch (err) {
       setVideoError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setGeneratingVideo(false);
     }
-  }, [files, fantasyLevel, videoPrompt, videoDuration]);
+  }, [result, fantasyLevel, videoPrompt, videoDuration]);
 
   const STEPS: WizardStep[] = ['upload', 'settings', 'generating', 'complete'];
 
-  const videoCost = videoDuration === 8 ? '40-80' : '100-150';
+  const videoCost = videoDuration === 8 ? '60' : '120';
 
   return (
     <div
@@ -229,9 +247,9 @@ export function SafeSyntheticWizard() {
 
           {/* Video Generation Section */}
           <div style={{ marginTop: 24, borderTop: '2px solid #eee', paddingTop: 24 }}>
-            <h3>🎬 Generate Talking Video (HeyGen)</h3>
+            <h3>🎬 Generate Reference-to-Video (Vidu)</h3>
             <p style={{ color: '#666', fontSize: 14 }}>
-              Create a lip-synced talking-head video using your synthetic twin image.
+              Create an animated video using your synthetic twin image and Vidu Reference-to-Video.
             </p>
 
             {!showVideoOptions && !videoResult && (
@@ -276,7 +294,7 @@ export function SafeSyntheticWizard() {
                         checked={videoDuration === 8}
                         onChange={() => setVideoDuration(8)}
                       />
-                      8 seconds (40-80 DreamCoins)
+                      8 seconds (60 DreamCoins)
                     </label>
                     <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                       <input
@@ -284,7 +302,7 @@ export function SafeSyntheticWizard() {
                         checked={videoDuration === 16}
                         onChange={() => setVideoDuration(16)}
                       />
-                      16 seconds Premium (100-150 DreamCoins)
+                      16 seconds (120 DreamCoins)
                     </label>
                   </div>
                 </label>
