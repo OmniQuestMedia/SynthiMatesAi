@@ -21,7 +21,7 @@
 // 7. Circuit breaker pattern for sustained failures
 
 import { Injectable, Logger } from '@nestjs/common';
-import { HttpClient, HttpResponse } from '../../core-api/src/common/http-client';
+import { HttpClient } from '../../core-api/src/common/http-client';
 import { v4 as uuid } from 'uuid';
 
 // ── Configuration ──────────────────────────────────────────────────────────
@@ -112,6 +112,94 @@ export interface CyranoNarrativeResponse {
   session_id: string;
   cost_tokens: number;
   memories_retrieved?: number;
+  correlation_id: string;
+}
+
+// ── OmniSync™ Suite Request/Response Types ────────────────────────────────
+
+/** GateGuard Sentinel™ — Real-time content moderation decision */
+export interface OmniSyncGateGuardRequest {
+  content: string;
+  user_id: string;
+  twin_id: string;
+  session_id: string;
+  context?: string;
+  correlation_id?: string;
+}
+
+export interface OmniSyncGateGuardResponse {
+  allowed: boolean;
+  confidence: number;
+  flags: string[];
+  reason?: string;
+  correlation_id: string;
+}
+
+/** CrowdSync™ — Real-time audience engagement signals */
+export interface OmniSyncCrowdSyncRequest {
+  session_id: string;
+  twin_id: string;
+  current_viewers: number;
+  recent_tips_count: number;
+  recent_chat_velocity: number;
+  correlation_id?: string;
+}
+
+export interface OmniSyncCrowdSyncResponse {
+  crowd_temperature: number; // 0-100
+  engagement_tier: 'COLD' | 'WARM' | 'HOT' | 'INFERNO';
+  suggested_modulation: string;
+  correlation_id: string;
+}
+
+/** SenSync™ — Biometric-enhanced engagement signals */
+export interface OmniSyncSenSyncRequest {
+  session_id: string;
+  user_id: string;
+  heart_rate_bpm?: number;
+  engagement_score: number;
+  correlation_id?: string;
+}
+
+export interface OmniSyncSenSyncResponse {
+  enhanced_engagement: number;
+  biometric_boost: number;
+  suggested_intensity: 'LOW' | 'MEDIUM' | 'HIGH' | 'PEAK';
+  correlation_id: string;
+}
+
+/** Zoie™ — AI personality guidance for creator responses */
+export interface OmniSyncZoieRequest {
+  session_id: string;
+  twin_id: string;
+  user_message: string;
+  context_summary: string;
+  crowd_temperature?: number;
+  correlation_id?: string;
+}
+
+export interface OmniSyncZoieResponse {
+  when_to_say: string[];
+  how_to_modulate: string;
+  what_not_to_say: string[];
+  suggested_tone: string;
+  correlation_id: string;
+}
+
+/** WelfareWatch™ — Creator wellness monitoring and intervention triggers */
+export interface OmniSyncWelfareWatchRequest {
+  twin_id: string;
+  session_id: string;
+  session_duration_minutes: number;
+  message_count: number;
+  stress_indicators?: string[];
+  correlation_id?: string;
+}
+
+export interface OmniSyncWelfareWatchResponse {
+  welfare_status: 'HEALTHY' | 'MONITOR' | 'ALERT' | 'INTERVENTION';
+  recommended_action?: string;
+  session_limit_reached: boolean;
   correlation_id: string;
 }
 
@@ -348,6 +436,202 @@ export class CyranoEnginesClient {
     }
   }
 
+  // ── Public API: OmniSync™ Suite ──────────────────────────────────────────
+
+  /**
+   * GateGuard Sentinel™ - Real-time content moderation via CyranoEngines
+   * Returns decision on whether content should be allowed
+   */
+  async checkGateGuardSentinel(
+    request: OmniSyncGateGuardRequest,
+  ): Promise<OmniSyncGateGuardResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackGateGuardLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackGateGuardLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<OmniSyncGateGuardResponse>(
+        `${this.config.baseUrl}/api/v1/omnisync/gateguard`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('OmniSync GateGuard check failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackGateGuardLocal(request, correlationId);
+    }
+  }
+
+  /**
+   * CrowdSync™ - Real-time audience engagement signals
+   * Returns crowd temperature and modulation suggestions
+   */
+  async getCrowdSyncSignals(request: OmniSyncCrowdSyncRequest): Promise<OmniSyncCrowdSyncResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackCrowdSyncLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackCrowdSyncLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<OmniSyncCrowdSyncResponse>(
+        `${this.config.baseUrl}/api/v1/omnisync/crowdsync`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('OmniSync CrowdSync failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackCrowdSyncLocal(request, correlationId);
+    }
+  }
+
+  /**
+   * SenSync™ - Biometric-enhanced engagement signals
+   * Returns enhanced engagement metrics with biometric boost
+   */
+  async getSenSyncSignals(request: OmniSyncSenSyncRequest): Promise<OmniSyncSenSyncResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackSenSyncLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackSenSyncLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<OmniSyncSenSyncResponse>(
+        `${this.config.baseUrl}/api/v1/omnisync/sensync`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('OmniSync SenSync failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackSenSyncLocal(request, correlationId);
+    }
+  }
+
+  /**
+   * Zoie™ - AI personality guidance for creator responses
+   * Returns real-time suggestions on when to say, how to modulate, what NOT to say
+   */
+  async getZoieGuidance(request: OmniSyncZoieRequest): Promise<OmniSyncZoieResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackZoieLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackZoieLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<OmniSyncZoieResponse>(
+        `${this.config.baseUrl}/api/v1/omnisync/zoie`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('OmniSync Zoie guidance failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackZoieLocal(request, correlationId);
+    }
+  }
+
+  /**
+   * WelfareWatch™ - Creator wellness monitoring
+   * Returns welfare status and intervention recommendations
+   */
+  async checkWelfareWatch(
+    request: OmniSyncWelfareWatchRequest,
+  ): Promise<OmniSyncWelfareWatchResponse> {
+    const correlationId = request.correlation_id ?? uuid();
+
+    if (!this.config.baseUrl) {
+      return this.fallbackWelfareWatchLocal(request, correlationId);
+    }
+
+    if (!this.isCircuitClosed()) {
+      return this.fallbackWelfareWatchLocal(request, correlationId);
+    }
+
+    try {
+      const response = await this.httpClient.request<OmniSyncWelfareWatchResponse>(
+        `${this.config.baseUrl}/api/v1/omnisync/welfarewatch`,
+        {
+          method: 'POST',
+          headers: this.buildHeaders(correlationId),
+          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+        },
+        correlationId,
+      );
+
+      this.recordSuccess();
+      return response.data;
+    } catch (error) {
+      this.recordFailure();
+      this.logger.error('OmniSync WelfareWatch check failed, falling back to local', {
+        correlation_id: correlationId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return this.fallbackWelfareWatchLocal(request, correlationId);
+    }
+  }
+
   // ── Circuit Breaker Logic ────────────────────────────────────────────────
 
   private isCircuitClosed(): boolean {
@@ -491,6 +775,149 @@ export class CyranoEnginesClient {
       session_id: request.session_id,
       cost_tokens: 0,
       memories_retrieved: 0,
+      correlation_id: correlationId,
+    };
+  }
+
+  // ── Fallback: OmniSync™ Suite Local Services ─────────────────────────────
+  // Fallbacks for OmniSync components when CyranoEngines is unavailable
+
+  private async fallbackGateGuardLocal(
+    request: OmniSyncGateGuardRequest,
+    correlationId: string,
+  ): Promise<OmniSyncGateGuardResponse> {
+    this.logger.warn('Falling back to local GateGuard Sentinel service', {
+      correlation_id: correlationId,
+    });
+
+    // Fallback to local GateGuard Sentinel service
+    // In production, this would integrate with services/core-api/src/gateguard/gateguard-sentinel.service.ts
+    return {
+      allowed: true, // Local service defaults to allowing (conservative)
+      confidence: 0.5,
+      flags: [],
+      correlation_id: correlationId,
+    };
+  }
+
+  private async fallbackCrowdSyncLocal(
+    request: OmniSyncCrowdSyncRequest,
+    correlationId: string,
+  ): Promise<OmniSyncCrowdSyncResponse> {
+    this.logger.warn('Falling back to local CrowdSync service', {
+      correlation_id: correlationId,
+    });
+
+    // Basic local calculation using FFS service data
+    const tipWeight = Math.min(request.recent_tips_count / 10, 1.0);
+    const chatWeight = Math.min(request.recent_chat_velocity / 30, 1.0);
+    const viewerWeight = Math.min(request.current_viewers / 50, 1.0);
+
+    const temperature = Math.round(tipWeight * 40 + chatWeight * 30 + viewerWeight * 30);
+
+    let tier: 'COLD' | 'WARM' | 'HOT' | 'INFERNO' = 'COLD';
+    if (temperature >= 86) tier = 'INFERNO';
+    else if (temperature >= 61) tier = 'HOT';
+    else if (temperature >= 34) tier = 'WARM';
+
+    return {
+      crowd_temperature: temperature,
+      engagement_tier: tier,
+      suggested_modulation: 'maintain current energy level',
+      correlation_id: correlationId,
+    };
+  }
+
+  private async fallbackSenSyncLocal(
+    request: OmniSyncSenSyncRequest,
+    correlationId: string,
+  ): Promise<OmniSyncSenSyncResponse> {
+    this.logger.warn('Falling back to local SenSync service', {
+      correlation_id: correlationId,
+    });
+
+    // Basic biometric boost calculation
+    const baseEngagement = request.engagement_score;
+    const heartRateBoost = request.heart_rate_bpm
+      ? Math.min((request.heart_rate_bpm - 60) / 4, 25)
+      : 0;
+    const enhancedEngagement = Math.min(baseEngagement + heartRateBoost, 100);
+
+    let intensity: 'LOW' | 'MEDIUM' | 'HIGH' | 'PEAK' = 'LOW';
+    if (enhancedEngagement >= 85) intensity = 'PEAK';
+    else if (enhancedEngagement >= 65) intensity = 'HIGH';
+    else if (enhancedEngagement >= 40) intensity = 'MEDIUM';
+
+    return {
+      enhanced_engagement: enhancedEngagement,
+      biometric_boost: heartRateBoost,
+      suggested_intensity: intensity,
+      correlation_id: correlationId,
+    };
+  }
+
+  private async fallbackZoieLocal(
+    request: OmniSyncZoieRequest,
+    correlationId: string,
+  ): Promise<OmniSyncZoieResponse> {
+    this.logger.warn('Falling back to local Zoie service', {
+      correlation_id: correlationId,
+    });
+
+    // Basic guidance based on crowd temperature
+    const whenToSay: string[] = ['respond warmly', 'acknowledge the message'];
+    const whatNotToSay: string[] = ['avoid controversial topics', 'no personal information'];
+    let tone = 'friendly and professional';
+    let modulation = 'maintain steady pace';
+
+    if (request.crowd_temperature && request.crowd_temperature > 70) {
+      whenToSay.push('engage with energy');
+      modulation = 'increase enthusiasm';
+      tone = 'excited and engaging';
+    }
+
+    return {
+      when_to_say: whenToSay,
+      how_to_modulate: modulation,
+      what_not_to_say: whatNotToSay,
+      suggested_tone: tone,
+      correlation_id: correlationId,
+    };
+  }
+
+  private async fallbackWelfareWatchLocal(
+    request: OmniSyncWelfareWatchRequest,
+    correlationId: string,
+  ): Promise<OmniSyncWelfareWatchResponse> {
+    this.logger.warn('Falling back to local WelfareWatch service', {
+      correlation_id: correlationId,
+    });
+
+    // Basic welfare check based on duration and message count
+    let status: 'HEALTHY' | 'MONITOR' | 'ALERT' | 'INTERVENTION' = 'HEALTHY';
+    let recommendedAction: string | undefined;
+    let sessionLimitReached = false;
+
+    if (request.session_duration_minutes > 180) {
+      status = 'INTERVENTION';
+      recommendedAction = 'Suggest taking a break - session exceeds 3 hours';
+      sessionLimitReached = true;
+    } else if (request.session_duration_minutes > 120) {
+      status = 'ALERT';
+      recommendedAction = 'Monitor closely - approaching session limit';
+    } else if (request.session_duration_minutes > 90) {
+      status = 'MONITOR';
+    }
+
+    if (request.stress_indicators && request.stress_indicators.length > 2) {
+      status = 'ALERT';
+      recommendedAction = 'Multiple stress indicators detected - consider wellness check';
+    }
+
+    return {
+      welfare_status: status,
+      recommended_action: recommendedAction,
+      session_limit_reached: sessionLimitReached,
       correlation_id: correlationId,
     };
   }

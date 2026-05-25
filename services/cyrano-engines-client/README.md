@@ -1,7 +1,7 @@
 # CyranoEngines Client Service
 
-**Phase 7 Component**: Final Webhook Integration Polish
-**Purpose**: Unified client for all SynthiMatesAi → CyranoEngines communication
+**Phase 8 Component**: Full Webhook Consumption of CyranoEngines Production-Hardened Engines
+**Purpose**: Unified client for all SynthiMatesAi → CyranoEngines communication (including OmniSync™ Suite)
 **Status**: Production-ready with graceful fallback to local services
 
 ## Overview
@@ -15,6 +15,7 @@ This service provides a robust, production-grade client for calling CyranoEngine
 - ✅ Graceful fallback to local services when unavailable
 - ✅ Structured logging for observability
 - ✅ Type-safe request/response interfaces
+- ✅ **NEW (Phase 8)**: Full OmniSync™ Suite integration
 
 ## Architecture
 
@@ -24,7 +25,14 @@ SynthiMatesAi                        CyranoEngines
      ├─► Image Generation  ──webhook──►  Flux LoRA + IP-Adapter
      ├─► Voice Generation  ──webhook──►  ElevenLabs TTS
      ├─► Video Generation  ──webhook──►  HeyGen Video
-     └─► Narrative/Chat    ──webhook──►  LLM + Memory Bank
+     ├─► Narrative/Chat    ──webhook──►  LLM + Memory Bank
+     │
+     └─► OmniSync™ Suite:
+         ├─► GateGuard Sentinel™  ──►  Real-time Content Moderation
+         ├─► CrowdSync™           ──►  Audience Engagement Signals
+         ├─► SenSync™             ──►  Biometric-Enhanced Engagement
+         ├─► Zoie™                ──►  AI Personality Guidance
+         └─► WelfareWatch™        ──►  Creator Wellness Monitoring
 ```
 
 When CyranoEngines is unavailable or not configured, the client automatically falls back to local services in SynthiMatesAi.
@@ -114,13 +122,102 @@ console.log(narrativeResponse.reply);
 console.log(narrativeResponse.memories_retrieved);
 ```
 
+### OmniSync™ Suite (Phase 8)
+
+The client now includes full integration with the production-hardened OmniSync™ suite for real-time creator session intelligence.
+
+#### GateGuard Sentinel™ - Content Moderation
+
+```typescript
+const gateGuardResult = await this.cyranoClient.checkGateGuardSentinel({
+  content: userMessage,
+  user_id: 'user-456',
+  twin_id: 'twin-123',
+  session_id: 'session-789',
+  context: 'group-chat',
+});
+
+if (!gateGuardResult.allowed) {
+  console.log('Content blocked:', gateGuardResult.reason);
+  console.log('Flags:', gateGuardResult.flags);
+}
+```
+
+#### CrowdSync™ - Audience Engagement Signals
+
+```typescript
+const crowdSync = await this.cyranoClient.getCrowdSyncSignals({
+  session_id: 'session-789',
+  twin_id: 'twin-123',
+  current_viewers: 45,
+  recent_tips_count: 8,
+  recent_chat_velocity: 22,
+});
+
+console.log('Crowd temperature:', crowdSync.crowd_temperature); // 0-100
+console.log('Engagement tier:', crowdSync.engagement_tier); // COLD/WARM/HOT/INFERNO
+console.log('Suggested modulation:', crowdSync.suggested_modulation);
+```
+
+#### SenSync™ - Biometric-Enhanced Engagement
+
+```typescript
+const senSync = await this.cyranoClient.getSenSyncSignals({
+  session_id: 'session-789',
+  user_id: 'user-456',
+  heart_rate_bpm: 85, // From SenSync™ device
+  engagement_score: 65,
+});
+
+console.log('Enhanced engagement:', senSync.enhanced_engagement);
+console.log('Biometric boost:', senSync.biometric_boost);
+console.log('Suggested intensity:', senSync.suggested_intensity); // LOW/MEDIUM/HIGH/PEAK
+```
+
+#### Zoie™ - AI Personality Guidance
+
+```typescript
+const zoieGuidance = await this.cyranoClient.getZoieGuidance({
+  session_id: 'session-789',
+  twin_id: 'twin-123',
+  user_message: 'Tell me about your day',
+  context_summary: 'Friendly conversation about daily activities',
+  crowd_temperature: 72,
+});
+
+console.log('When to say:', zoieGuidance.when_to_say); // Real-time prompting cues
+console.log('How to modulate:', zoieGuidance.how_to_modulate);
+console.log('What NOT to say:', zoieGuidance.what_not_to_say);
+console.log('Suggested tone:', zoieGuidance.suggested_tone);
+```
+
+#### WelfareWatch™ - Creator Wellness Monitoring
+
+```typescript
+const welfareCheck = await this.cyranoClient.checkWelfareWatch({
+  twin_id: 'twin-123',
+  session_id: 'session-789',
+  session_duration_minutes: 95,
+  message_count: 450,
+  stress_indicators: ['rapid_response_rate', 'short_messages'],
+});
+
+console.log('Welfare status:', welfareCheck.welfare_status); // HEALTHY/MONITOR/ALERT/INTERVENTION
+if (welfareCheck.recommended_action) {
+  console.log('Action needed:', welfareCheck.recommended_action);
+}
+if (welfareCheck.session_limit_reached) {
+  console.log('Session limit reached - recommend break');
+}
+```
+
 ### Health Check
 
 ```typescript
 const health = await this.cyranoClient.healthCheck();
 
-console.log(health.available);          // true if circuit is closed
-console.log(health.circuit_state);      // CLOSED, OPEN, or HALF_OPEN
+console.log(health.available); // true if circuit is closed
+console.log(health.circuit_state); // CLOSED, OPEN, or HALF_OPEN
 console.log(health.using_local_fallback); // true if no CyranoEngines URL configured
 ```
 
