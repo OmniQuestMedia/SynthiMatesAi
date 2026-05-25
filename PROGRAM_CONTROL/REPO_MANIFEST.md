@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/add-voice-chat-integration`
-**Commit:** `5102b0592c2c4ce6f0fe7fb2b543ebd9a6e08f13`
-**Generated:** 2026-05-24T22:55:16Z
+**Branch:** `claude/implement-phase-7-final-cleanup`
+**Commit:** `c9517b62a271824ab068e6e61df8e9b3f6e1d12c`
+**Generated:** 2026-05-25T00:45:17Z
 
 ## All Files
 
@@ -370,6 +370,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
+- `docs/ROADMAP.md`
 - `docs/ROADMAP_MANIFEST.md`
 - `docs/RRR_CEO_DECISIONS_FINAL_2026-04-17.md`
 - `docs/SYNTHETIC_TWIN_SECURITY.md`
@@ -486,6 +487,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/admin/admin-payout.controller.ts`
 - `services/core-api/src/admin/admin-synthetic-curator.controller.ts`
 - `services/core-api/src/admin/admin.module.ts`
+- `services/core-api/src/analytics/account-core-metrics.service.ts`
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
 - `services/core-api/src/app.module.ts`
