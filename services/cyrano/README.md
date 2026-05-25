@@ -1,7 +1,8 @@
 # Cyrano™ — Enterprise Whisper Copilot
 
 > **Status: Phase 4 (Polish & Launch) — Translation Layer + Beta Program active.**
-> Built on the ChatNow.Zone Canonical Corpus v10. Governed by [OQMI Coding Doctrine v2.0](../../PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md).
+> Built on the SynthiMatesAi Business Plan v3.1 and Canonical Corpus v11. Governed by [OQMI Coding Doctrine v2.0](../../PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md).
+> **OmniSync Integration:** Full SenSync™ biometric hooks integrated for real-time BPM-driven suggestion weighting.
 
 **Service prefix:** `CYR:`  
 **Domain:** Creator coaching / AI suggestion layer  
