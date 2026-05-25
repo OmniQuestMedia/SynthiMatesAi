@@ -3,7 +3,13 @@
 // IMPACT: Enables creators to view and request payouts with risk scoring and approval workflow
 // CORRELATION_ID: PHASE2-ITEM1-CREATOR-PAYOUT-WORKFLOW
 
-import { Injectable, Logger, BadRequestException, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { GateGuardService } from '../gateguard/gateguard.service';
 import { NotificationEngine } from '../../../notification/src/notification.service';
@@ -160,19 +166,21 @@ export class CreatorPayoutService {
       });
 
       // Send notification to admin/compliance team
-      await this.notificationEngine.send({
-        user_id: creatorId,
-        channel: 'EMAIL',
-        template: 'STUDIO_ACTIVATION_CONFIRMED', // Reusing existing template - would add PAYOUT_ESCALATION in production
-        payload: {
-          creator_id: creatorId,
-          amount_cents: amountCents.toString(),
-          escalation_reason: 'GATEGUARD_HUMAN_ESCALATION',
-        },
-        correlation_id: idempotencyKey,
-      }).catch(err => {
-        this.logger.error('Failed to send escalation notification', err);
-      });
+      await this.notificationEngine
+        .send({
+          user_id: creatorId,
+          channel: 'EMAIL',
+          template: 'STUDIO_ACTIVATION_CONFIRMED', // Reusing existing template - would add PAYOUT_ESCALATION in production
+          payload: {
+            creator_id: creatorId,
+            amount_cents: amountCents.toString(),
+            escalation_reason: 'GATEGUARD_HUMAN_ESCALATION',
+          },
+          correlation_id: idempotencyKey,
+        })
+        .catch((err) => {
+          this.logger.error('Failed to send escalation notification', err);
+        });
 
       return {
         success: false,
@@ -183,9 +191,7 @@ export class CreatorPayoutService {
     }
 
     if (gateGuardResult.decision === 'COOLDOWN') {
-      throw new ForbiddenException(
-        'Payout temporarily restricted. Please try again later.',
-      );
+      throw new ForbiddenException('Payout temporarily restricted. Please try again later.');
     }
 
     // APPROVED - proceed with payout
@@ -226,22 +232,24 @@ export class CreatorPayoutService {
     });
 
     // PHASE 2 ITEM 1: Send confirmation notification to creator
-    await this.notificationEngine.send({
-      user_id: creatorId,
-      channel: 'EMAIL',
-      template: 'EXPIRATION_PROCESSED', // Reusing existing template - would add PAYOUT_CONFIRMED in production
-      payload: {
-        creator_id: creatorId,
-        payout_id: ledgerEntry.id,
-        amount_cents: amountCents.toString(),
-        tokens_debited: tokensToDebit,
-        new_balance: wallet.bonus_tokens - tokensToDebit,
-      },
-      correlation_id: idempotencyKey,
-    }).catch(err => {
-      // Log but don't fail the request if notification fails
-      this.logger.error('Failed to send payout confirmation notification', err);
-    });
+    await this.notificationEngine
+      .send({
+        user_id: creatorId,
+        channel: 'EMAIL',
+        template: 'EXPIRATION_PROCESSED', // Reusing existing template - would add PAYOUT_CONFIRMED in production
+        payload: {
+          creator_id: creatorId,
+          payout_id: ledgerEntry.id,
+          amount_cents: amountCents.toString(),
+          tokens_debited: tokensToDebit,
+          new_balance: wallet.bonus_tokens - tokensToDebit,
+        },
+        correlation_id: idempotencyKey,
+      })
+      .catch((err) => {
+        // Log but don't fail the request if notification fails
+        this.logger.error('Failed to send payout confirmation notification', err);
+      });
 
     return {
       success: true,

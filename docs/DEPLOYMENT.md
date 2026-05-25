@@ -1,681 +1,685 @@
-# Deployment Guide — SynthiMatesAi
+# Deployment Guide — Account-Core + Safe Synthetic Twin
 
+**Status:** Production Ready ✅
 **Last Updated:** 2026-05-25
-**Rule Applied:** OQMI_GOVERNANCE v1.0
-
-This document covers deployment procedures, environment requirements, and operational considerations for the SynthiMatesAi platform with Shared Account-Core features.
+**Version:** Phase 6 Complete
 
 ---
 
-## Table of Contents
+## Overview
 
-1. [Infrastructure Requirements](#infrastructure-requirements)
-2. [Environment Variables](#environment-variables)
-3. [Pre-Deployment Checklist](#pre-deployment-checklist)
-4. [Deployment Steps](#deployment-steps)
-5. [Account-Core Feature Deployment](#account-core-feature-deployment)
-6. [Post-Deployment Verification](#post-deployment-verification)
-7. [Rollback Procedures](#rollback-procedures)
-8. [Monitoring & Alerts](#monitoring--alerts)
+This guide covers deployment of the Account-Core + Safe Synthetic Twin integration in SynthiMatesAi. The system includes:
 
----
-
-## Infrastructure Requirements
-
-### Minimum Requirements
-
-**Compute:**
-
-- Node.js: **22.x** (required — specified in `package.json` engines)
-- CPU: 4 cores (recommended 8+ for production)
-- Memory: 8GB RAM (recommended 16GB+ for production)
-- Storage: 100GB SSD (recommended 500GB+ for production)
-
-**Database:**
-
-- PostgreSQL: **16.x** with **pgvector** extension
-- Connection pool: 20-50 connections per instance
-- Storage: 100GB minimum, auto-scaling recommended
-- Backups: Automated daily snapshots with 30-day retention
-
-**Cache & Queue:**
-
-- Redis: **7.x**
-- Memory: 2GB minimum (recommended 8GB+ for production)
-- Persistence: AOF enabled for durability
-
-**Message Bus:**
-
-- NATS.io: **2.x**
-- Cluster size: 3 nodes minimum for production
-- JetStream enabled for persistent streams
-
-**Dependency Manager:**
-
-- **Yarn** (canonical for all OQMInc repos)
-- Version: 1.22+ (specified in `package.json` engines)
-- **DO NOT use npm or pnpm** — Yarn is the canonical package manager
-
-### External Services
-
-**Required:**
-
-- ElevenLabs API (voice cloning)
-- Banana.dev API (Flux LoRA training)
-- Stripe (payments)
-- Email service (SendGrid, Mailgun, or AWS SES)
-
-**Optional:**
-
-- News API (curator celebrity ingestion)
-- C2PA signing service (provenance metadata)
-- CDN (Cloudflare, AWS CloudFront)
+1. **DreamCoins (CZT) Financial System** — Three-bucket wallet, append-only ledger
+2. **Membership Tiers** — Six-tier subscription system with bonus tokens
+3. **GateGuard Sentinel™** — Financial integrity protection
+4. **Safe Synthetic Twin Creator** — 5-layer AI generation safeguards
+5. **Creator Payout System** — Performance-based payouts with Flicker n'Flame Scoring
 
 ---
 
-## Environment Variables
+## Prerequisites
 
-### Core Configuration
+### Required Infrastructure
+
+- **Postgres 16** with pgvector extension
+- **Redis 7+** for caching and rate limiting
+- **NATS.io** for real-time event fabric
+- **Node.js 22** (LTS)
+- **Yarn 1.22+** (canonical package manager)
+
+### Required Environment Variables
+
+Create a `.env` file based on `.env.example`:
 
 ```bash
 # Database
-DATABASE_URL=postgresql://chatnow_app:PASSWORD@db-host:5432/chatnow
+DATABASE_URL=postgresql://user:password@host:5432/database
 
 # Redis
-REDIS_URL=redis://redis-host:6379
+REDIS_URL=redis://localhost:6379
 
 # NATS
-NATS_URL=nats://nats-host:4222
+NATS_URL=nats://localhost:4222
 
-# Node Environment
+# AI Services
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+BANANA_API_KEY=your_banana_api_key
+BANANA_MODEL_KEY_FLUX_PRO=your_flux_pro_model_key
+
+# Safe Synthetic Pipeline
+SYNTHETIC_GENERATION_ENDPOINT=https://your-synthetic-endpoint.com
+NEWS_API_KEY=your_news_api_key  # Optional, for curator ingestion
+
+# Application
 NODE_ENV=production
 PORT=3000
 ```
 
-### Account-Core Features
-
-```bash
-# Membership System
-ENABLE_MEMBERSHIPS=true
-MEMBERSHIP_STIPEND_ENABLED=true
-MEMBERSHIP_GUEST_LIMIT_IMAGES=10
-MEMBERSHIP_MEMBER_LIMIT_IMAGES=100
-MEMBERSHIP_DIAMOND_LIMIT_IMAGES=-1  # Unlimited
-
-# Payout System
-ENABLE_CREATOR_PAYOUTS=true
-GATEGUARD_PAYOUT_ENABLED=true
-MIN_PAYOUT_AMOUNT_CENTS=5000        # $50 minimum
-MAX_PAYOUT_AMOUNT_CENTS=1000000     # $10,000 maximum
-
-# Wallet System
-ENABLE_EXPIRATION_SAFETY_NET=true
-WALLET_THREE_BUCKET_ENABLED=true
-PROMOTIONAL_BONUS_EXPIRY_DAYS=90
-MEMBERSHIP_ALLOCATION_EXPIRES_WITH_MEMBERSHIP=true
-SAFETY_NET_RECOVERY_FEE_PERCENT=20
-
-# Synthetic Twins
-ENABLE_SYNTHETIC_TWINS=true
-SAFE_SYNTHETIC_MODE_REQUIRED=true
-MIN_REFERENCE_IMAGES=5
-MAX_REFINEMENT_ATTEMPTS=6
-CELEBRITY_SIMILARITY_THRESHOLD=0.75
-
-# Analytics
-ENABLE_CREATOR_ANALYTICS=true
-ENABLE_ADMIN_ANALYTICS=true
-```
-
-### Security & Compliance
-
-```bash
-# GateGuard Risk Engine
-GATEGUARD_ENABLED=true
-GATEGUARD_FRAUD_THRESHOLD_APPROVE=40
-GATEGUARD_FRAUD_THRESHOLD_COOLDOWN=70
-GATEGUARD_FRAUD_THRESHOLD_DECLINE=90
-
-# Audit & Compliance
-ENABLE_HASH_CHAIN_VERIFICATION=true
-WORM_EXPORT_ENABLED=true
-AUDIT_CHAIN_VERIFICATION_SCHEDULE="0 2 * * *"  # Daily at 2 AM
-WORM_EXPORT_SCHEDULE="0 3 1 * *"               # Monthly on 1st at 3 AM
-
-# Rate Limiting
-SYNTHETIC_GENERATION_RATE_LIMIT=10
-SYNTHETIC_GENERATION_RATE_WINDOW_MS=3600000    # 1 hour
-PAYOUT_REQUEST_RATE_LIMIT=5
-PAYOUT_REQUEST_RATE_WINDOW_MS=86400000        # 24 hours
-```
-
-### External API Keys
-
-```bash
-# Voice Cloning
-ELEVENLABS_API_KEY=sk_...
-
-# Image Generation & Training
-BANANA_API_KEY=...
-BANANA_MODEL_KEY_FLUX_PRO=...
-
-# Payments
-STRIPE_SECRET_KEY=sk_live_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-
-# Email
-SENDGRID_API_KEY=SG...
-NOTIFICATION_FROM_EMAIL=noreply@omniquestmedia.com
-
-# Optional Services
-NEWS_API_KEY=...                               # For curator celebrity ingestion
-C2PA_SIGNING_ENDPOINT=https://c2pa.example.com
-```
-
 ---
 
-## Pre-Deployment Checklist
+## Deployment Flow
 
-### Code Quality
+### Step 1: Infrastructure Setup
 
-- [ ] All tests passing (`yarn test`)
-- [ ] Linting clean (`yarn lint:ci`)
-- [ ] TypeScript checks pass (`yarn typecheck && yarn typecheck:api`)
-- [ ] Prisma schema validated (`yarn prisma validate`)
-- [ ] Ship-gate verifier passes (`yarn ship-gate`)
-
-### Database Migrations
-
-- [ ] Review pending migrations (`yarn prisma migrate status`)
-- [ ] Test migrations on staging database
-- [ ] Backup production database before migration
-- [ ] Run migrations (`yarn prisma migrate deploy`)
-- [ ] Verify pgvector extension installed (`CREATE EXTENSION IF NOT EXISTS vector;`)
-
-### Environment Configuration
-
-- [ ] All required environment variables set
-- [ ] External API keys valid and tested
-- [ ] Database connection tested
-- [ ] Redis connection tested
-- [ ] NATS connection tested
-
-### Security Review
-
-- [ ] No secrets committed to repository
-- [ ] All `.env` files excluded from version control
-- [ ] GateGuard thresholds reviewed and approved
-- [ ] Rate limiting configured appropriately
-- [ ] Database credentials rotated
-
-### Compliance
-
-- [ ] Audit chain verification scheduled
-- [ ] WORM exports configured
-- [ ] Backup retention policy reviewed
-- [ ] Privacy policy updated (if new features added)
-- [ ] Terms of service updated (if needed)
-
----
-
-## Deployment Steps
-
-### 1. Pre-Deployment Backup
+#### Postgres with pgvector
 
 ```bash
-# Backup database
-pg_dump -h db-host -U chatnow_app chatnow > backup-$(date +%Y%m%d-%H%M%S).sql
+# Docker Compose (recommended)
+docker-compose up postgres -d
 
-# Backup Redis (if using persistence)
-redis-cli --rdb dump-$(date +%Y%m%d-%H%M%S).rdb
+# OR manual setup
+docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=secure_password \
+  -e POSTGRES_USER=chatnow_app \
+  -e POSTGRES_DB=chatnow \
+  -p 127.0.0.1:5432:5432 \
+  pgvector/pgvector:pg16
+
+# Enable pgvector extension
+psql -h localhost -U chatnow_app -d chatnow -c "CREATE EXTENSION IF NOT EXISTS vector;"
 ```
 
-### 2. Update Codebase
+#### Redis
 
 ```bash
-# Pull latest code
-git fetch origin
-git checkout main
-git pull origin main
+# Docker Compose
+docker-compose up redis -d
 
-# Install dependencies with frozen lockfile
+# OR manual setup
+docker run -d \
+  --name redis \
+  -p 127.0.0.1:6379:6379 \
+  redis:7-alpine
+```
+
+#### NATS
+
+```bash
+# Docker Compose
+docker-compose up nats -d
+
+# OR manual setup
+docker run -d \
+  --name nats \
+  -p 127.0.0.1:4222:4222 \
+  -p 127.0.0.1:8222:8222 \
+  nats:latest
+```
+
+### Step 2: Application Deployment
+
+#### Install Dependencies
+
+```bash
 yarn install --frozen-lockfile
 ```
 
-### 3. Database Migrations
+**Important:** Use `--frozen-lockfile` to ensure exact dependency versions from `yarn.lock`.
+
+#### Database Migration
 
 ```bash
-# Generate Prisma client
+# Generate Prisma Client
 yarn prisma:generate
 
-# Apply migrations (production)
-yarn prisma migrate deploy
-
-# Enable pgvector extension (if not already enabled)
-psql -h db-host -U chatnow_app -d chatnow -c "CREATE EXTENSION IF NOT EXISTS vector;"
-
-# Verify schema
+# Validate schema
 yarn prisma validate
+
+# Push schema to database (production-safe, no data loss)
+yarn prisma:push
+
+# OR run migrations (recommended for production)
+yarn prisma migrate deploy
 ```
 
-### 4. Build Application
+#### Seed Database (Optional for initial setup)
 
 ```bash
-# Typecheck
-yarn typecheck
-yarn typecheck:api
+# Seeds house models and membership fixtures
+yarn prisma db seed
+```
 
+#### Build Application
+
+```bash
 # Build core-api
 yarn tsc --project services/core-api/tsconfig.json
 
 # Build cyrano-standalone
 yarn --cwd apps/cyrano-standalone build
 
-# Build portals (if deploying)
-yarn --cwd apps/portals/main build
-yarn --cwd apps/portals/ink-and-steel build
-# ... repeat for other portals
+# Build all portals
+for portal in main ink-and-steel lotus-bloom desperate-housewives barely-legal dark-desires; do
+  yarn --cwd apps/portals/$portal build
+done
 ```
 
-### 5. Start Services
+### Step 3: Pre-Deployment Validation
 
-**Using Docker Compose:**
+#### Run CI Checks Locally
 
 ```bash
+# Lint
+yarn lint:ci
+
+# Typecheck
+yarn typecheck
+yarn typecheck:api
+yarn --cwd apps/cyrano-standalone typecheck
+
+# Tests
+yarn test
+
+# Ship-gate verifier
+yarn ship-gate
+```
+
+All checks must pass before deploying to production.
+
+### Step 4: Start Services
+
+#### Development Mode
+
+```bash
+# Start infrastructure
+docker-compose up db redis nats -d
+
+# Start core API
+yarn workspace core-api dev
+
+# Start cyrano-standalone (in separate terminal)
+cd apps/cyrano-standalone && yarn dev
+
+# Start portals (in separate terminals)
+cd apps/portals/main && yarn dev
+```
+
+#### Production Mode
+
+```bash
+# Start all services with Docker Compose
 docker-compose up -d
+
+# OR start individually
+yarn workspace core-api start  # Production mode
 ```
 
-**Manual Start (recommended for production with process manager):**
+**Service Ports:**
 
-```bash
-# Start core-api (use PM2 or similar)
-pm2 start yarn --name core-api -- workspace core-api dev
+- Core API: `http://localhost:3000`
+- Cyrano Standalone: `http://localhost:3100`
+- Portal — Main: `http://localhost:3001`
+- Portal — Ink & Steel: `http://localhost:3002`
+- Portal — Lotus Bloom: `http://localhost:3003`
+- Portal — Desperate Housewives: `http://localhost:3004`
+- Portal — Barely Legal: `http://localhost:3005`
+- Portal — Dark Desires: `http://localhost:3006`
 
-# Start cyrano-standalone
-pm2 start yarn --name cyrano-ui -- --cwd apps/cyrano-standalone start
+---
 
-# Start portals
-pm2 start yarn --name portal-main -- --cwd apps/portals/main start
-# ... repeat for other portals
+## Production Configuration
+
+### Network Isolation
+
+**Critical:** Postgres and Redis must NEVER be exposed on public interfaces.
+
+**docker-compose.yml:**
+
+```yaml
+postgres:
+  ports:
+    - '127.0.0.1:5432:5432' # ✅ Localhost only
+
+redis:
+  ports:
+    - '127.0.0.1:6379:6379' # ✅ Localhost only
 ```
 
-### 6. Verify Services
+**Production firewall rules:**
+
+- Allow only application servers to access Postgres:5432
+- Allow only application servers to access Redis:6379
+- Expose only API gateway (reverse proxy) on public interface
+
+### Secret Management
+
+**Never commit secrets to repository.**
+
+**Options:**
+
+1. **Environment Variables** — `.env` file (development only)
+2. **AWS Secrets Manager** — Production recommended
+3. **Kubernetes Secrets** — For K8s deployments
+4. **HashiCorp Vault** — Enterprise option
+
+**Example (AWS Secrets Manager):**
 
 ```bash
-# Check service health
+# Retrieve secrets at runtime
+DATABASE_URL=$(aws secretsmanager get-secret-value \
+  --secret-id prod/synthimates/database-url \
+  --query SecretString \
+  --output text)
+```
+
+### Rate Limiting
+
+Rate limits are configured in controller decorators:
+
+```typescript
+@Throttle(10, 60)  // 10 requests per 60 seconds
+```
+
+**Production adjustment:**
+
+- Monitor API usage patterns
+- Adjust limits in `services/ai-twin/src/ai-twin.controller.ts`
+- Consider Redis-backed rate limiting for distributed deployments
+
+### Scaling Considerations
+
+#### Banana.dev Workloads
+
+- Limit concurrent synthetic generation jobs
+- Configure queue workers for training jobs
+- Monitor API quota and rate limits
+
+#### Redis
+
+- Size memory for burst queueing/rate-limit keys
+- Enable persistence (RDB or AOF) for critical cache
+- Alert on eviction events
+
+#### pgvector/Postgres
+
+- Schedule regular VACUUM ANALYZE on vector tables
+- Monitor similarity query latency
+- Index maintenance for ArcFace embeddings
+
+---
+
+## Deployment Validation
+
+### Health Checks
+
+#### Core API
+
+```bash
 curl http://localhost:3000/health
-curl http://localhost:3100/
-
-# Check database connection
-psql -h db-host -U chatnow_app -d chatnow -c "SELECT 1;"
-
-# Check Redis connection
-redis-cli ping
-
-# Check NATS connection
-nats-top
+# Expected: {"status": "ok"}
 ```
 
----
+#### Database Connection
 
-## Account-Core Feature Deployment
+```bash
+curl http://localhost:3000/api/health/db
+# Expected: {"database": "connected"}
+```
 
-### DreamCoins Wallet System
+#### NATS Connection
 
-**First-Time Setup:**
-
-1. Ensure ledger schema applied (`init-ledger.sql`)
-2. Verify three-bucket wallet enabled (`WALLET_THREE_BUCKET_ENABLED=true`)
-3. Test token purchase flow on staging
-4. Verify expiration safety net offers appear 7 days before expiry
-
-**Migration Notes:**
-
-- If migrating from single-bucket to three-bucket, run migration script to redistribute tokens
-- Hash chain must be initialized with genesis hash for new installations
-
-### Membership Tiers
-
-**First-Time Setup:**
-
-1. Configure tier benefits in environment variables
-2. Set up monthly stipend distribution job (cron or scheduler)
-3. Test subscription creation and cancellation flows
-4. Verify grace period behavior on cancellation
-
-**Migration Notes:**
-
-- Existing subscriptions retain their benefits
-- Upgrade/downgrade logic applies at next billing cycle
-
-### Creator Payout System
-
-**First-Time Setup:**
-
-1. Configure GateGuard thresholds (`GATEGUARD_FRAUD_THRESHOLD_*`)
-2. Set minimum/maximum payout amounts
-3. Test payout request flow (APPROVE, COOLDOWN, HARD_DECLINE, HUMAN_ESCALATE)
-4. Configure compliance team notifications for escalations
-
-**Migration Notes:**
-
-- Existing creator balances preserved
-- Payout rates apply to new requests only
-
-### Synthetic Twin Generation
-
-**First-Time Setup:**
-
-1. Verify pgvector extension installed
-2. Populate celebrity database via curator (`POST /admin/ai-twin/curator/trigger`)
-3. Configure synthetic generation rate limits
-4. Test safe synthetic mode with 5+ images
-
-**Migration Notes:**
-
-- Existing twins unaffected
-- New twins must use safe synthetic mode if `SAFE_SYNTHETIC_MODE_REQUIRED=true`
-
-### Analytics Dashboard
-
-**First-Time Setup:**
-
-1. Enable creator and admin analytics features
-2. Verify analytics queries perform well (add indexes if needed)
-3. Test creator dashboard endpoint
-4. Test admin summary endpoint
-
-**Migration Notes:**
-
-- Analytics compute on-demand from ledger and audit tables
-- No separate analytics database required
-
----
-
-## Post-Deployment Verification
+```bash
+curl http://localhost:3000/api/health/nats
+# Expected: {"nats": "connected"}
+```
 
 ### Smoke Tests
 
+#### Token Purchase Flow
+
 ```bash
-# 1. Health check
-curl http://localhost:3000/health
-
-# 2. Test synthetic endpoint (non-PII smoke test)
-curl -X POST http://localhost:3000/api/ai-twin/test-synthetic
-
-# 3. Test wallet balance endpoint
-curl http://localhost:3000/api/wallet/balance/TEST_USER_ID
-
-# 4. Test membership endpoint
-curl http://localhost:3000/api/membership/tiers
-
-# 5. Test analytics endpoint
-curl http://localhost:3000/api/analytics/dreamcoins/usage?startDate=2026-05-01&endDate=2026-05-31
+# Test token purchase (requires auth)
+curl -X POST http://localhost:3000/api/account/purchase-tokens \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"amount_tokens": 100, "correlation_id": "smoke-test-001"}'
 ```
 
-### Feature Verification
-
-- [ ] DreamCoins purchase flow works end-to-end
-- [ ] Three-bucket wallet spend order correct (PROMOTIONAL_BONUS → MEMBERSHIP_ALLOCATION → PURCHASED)
-- [ ] Membership subscription creation works
-- [ ] Creator payout request routes through GateGuard
-- [ ] Synthetic twin generation completes successfully
-- [ ] Analytics endpoints return data
-
-### Monitoring Verification
-
-- [ ] Application logs flowing to monitoring system
-- [ ] Error tracking configured (Sentry, Rollbar, etc.)
-- [ ] Performance metrics collecting (response times, throughput)
-- [ ] Database query performance monitored
-- [ ] NATS event publishing working
-
-### Security Verification
-
-- [ ] Hash chain verification job running
-- [ ] WORM export job scheduled
-- [ ] GateGuard decisions logging correctly
-- [ ] Audit events writing to `immutable_audit_event` table
-- [ ] No secrets in logs or error messages
-
----
-
-## Rollback Procedures
-
-### Application Rollback
+#### Safe Synthetic Generation
 
 ```bash
-# Stop current services
-pm2 stop all
-
-# Revert to previous release
-git checkout <PREVIOUS_TAG>
-
-# Reinstall dependencies
-yarn install --frozen-lockfile
-
-# Rebuild
-yarn typecheck && yarn typecheck:api
-yarn tsc --project services/core-api/tsconfig.json
-
-# Restart services
-pm2 restart all
-```
-
-### Database Rollback
-
-**WARNING:** Database rollbacks are destructive. Only perform if absolutely necessary.
-
-```bash
-# Restore from backup (PostgreSQL)
-psql -h db-host -U chatnow_app -d chatnow < backup-YYYYMMDD-HHMMSS.sql
-
-# Verify restoration
-psql -h db-host -U chatnow_app -d chatnow -c "SELECT COUNT(*) FROM ledger_entries;"
-```
-
-**Note:** Ledger entries follow append-only semantics. If rollback required, consider creating offset entries instead of full database restore.
-
-### Feature Flag Rollback
-
-For immediate feature disable without code rollback:
-
-```bash
-# Disable memberships
-ENABLE_MEMBERSHIPS=false
-
-# Disable creator payouts
-ENABLE_CREATOR_PAYOUTS=false
-
-# Disable synthetic twins
-ENABLE_SYNTHETIC_TWINS=false
-
-# Restart services
-pm2 restart all
+# Test synthetic generation endpoint (controller-level)
+yarn jest services/core-api/src/cyrano/ai-twin-synthetic.controller.spec.ts --runInBand
 ```
 
 ---
 
-## Monitoring & Alerts
-
-### Key Metrics to Monitor
-
-**Application Health:**
-
-- Response time (p50, p95, p99)
-- Error rate (4xx, 5xx)
-- Request throughput
-- Active connections
-
-**Database:**
-
-- Connection pool utilization
-- Query performance (slow query log)
-- Table sizes (ledger_entries, immutable_audit_event)
-- Replication lag (if using replicas)
-
-**Account-Core Features:**
-
-- DreamCoins purchase volume
-- Token spend rate
-- Payout request volume
-- Payout approval rate
-- GateGuard decision distribution (APPROVE vs DECLINE vs ESCALATE)
-- Synthetic twin generation success rate
-- Membership tier distribution
-
-### Alert Thresholds
-
-**Critical Alerts (PagerDuty / 24/7 on-call):**
-
-- Application down (health check fails)
-- Database connection errors
-- Hash chain verification failure
-- Error rate > 5%
-- Response time p99 > 5 seconds
-
-**Warning Alerts (Email / Slack):**
-
-- High payout escalation rate (> 10%)
-- Synthetic twin generation failure rate > 5%
-- GateGuard HARD_DECLINE rate > 20%
-- Database query latency p95 > 1 second
-- Redis memory usage > 80%
-
-**Informational Alerts (Dashboard / Slack):**
-
-- Daily DreamCoins volume report
-- Daily payout summary
-- Weekly top creators report
-- Monthly WORM export completion
-
-### Dashboards
-
-**Operational Dashboard:**
-
-- Application health (uptime, response times, error rates)
-- Infrastructure metrics (CPU, memory, disk, network)
-- Database performance
-- Cache hit rates
-
-**Business Metrics Dashboard:**
-
-- DreamCoins purchase/spend trends
-- Membership tier distribution
-- Creator payout volume
-- Synthetic twin generation volume
-- Top creators by earnings
-
-**Security Dashboard:**
-
-- GateGuard decision distribution
-- Welfare score trends
-- Audit event volume
-- Hash chain verification status
-- Failed login attempts
-
----
-
-## CI/CD Pipeline
+## CI/CD Integration
 
 ### GitHub Actions Workflow
 
-The CI workflow (`.github/workflows/ci.yml`) runs on every push and PR:
+**File:** `.github/workflows/ci.yml`
 
 **Jobs:**
 
-1. **Restricted Paths Gate** - Fail-closed on ledger/consent/PII changes
-2. **Validate SQL Schema** - Apply ledger schema to live PostgreSQL
-3. **Validate Repository Structure** - Check required files exist
-4. **Workspace Quality** - Lint, typecheck, test, build
-5. **Ship-Gate Verifier** - Verify L0 invariants
+1. **Restricted Paths Gate** — Blocks ledger/consent/PII changes
+2. **Validate Schema** — Applies schema to live Postgres
+3. **Validate Structure** — Checks required files exist
+4. **Workspace Quality** — Lint, typecheck, format, test
+5. **Ship-Gate Verifier** — Validates L0 invariants
 
-**Node.js Version:** 22.x (specified in workflow and `package.json` engines)
-**Cache:** Yarn cache enabled with `yarn.lock` as cache key
-**Frozen Lockfile:** All installs use `--frozen-lockfile` for reproducibility
+**Requirements:**
 
-### Auto-Merge Policy
+- Node.js 22
+- Frozen lockfile (`yarn install --frozen-lockfile`)
+- Postgres with pgvector
+- All tests pass
+- Zero lint/typecheck errors
 
-**Cleanup-Mode Fast Path:**
+### Auto-Merge
 
-- Non-financial PRs auto-merge on green/gray once CI + ship-gate satisfied
-- Human review reserved for:
-  - Governance doc edits
-  - Financial/ledger changes (FIZ-scoped)
-  - Compliance changes
+**Workflow:** `.github/workflows/auto-merge.yml`
 
-**FIZ-Scoped Changes:**
-All changes to:
+**Conditions:**
 
-- `services/ledger/`
-- `finance/`
-- Any code touching `balance`, `payout`, `escrow`, `ledger_entry` columns
+- CI green
+- Ship-gate passed
+- Non-FIZ changes (fast path)
+- No restricted paths touched
 
-Require:
+**FIZ changes require manual review.**
 
+---
+
+## Monitoring & Observability
+
+### Key Metrics to Monitor
+
+#### Financial Metrics
+
+- **GateGuard Decisions:**
+  - APPROVE rate
+  - COOLDOWN rate
+  - HARD_DECLINE rate
+  - HUMAN_ESCALATE rate
+
+- **Ledger Health:**
+  - Hash-chain integrity checks
+  - Duplicate correlation_id attempts
+  - Wallet balance discrepancies
+
+- **Payout Processing:**
+  - Payout request volume
+  - Approval latency
+  - Estimated vs. actual payout values
+
+#### AI Generation Metrics
+
+- **Synthetic Generation:**
+  - Generation success rate
+  - Safeguard failures (celebrity similarity, dissimilarity gate)
+  - C2PA watermarking coverage
+
+- **Training Jobs:**
+  - LoRA training success rate
+  - Training queue depth
+  - Training duration (p50, p95, p99)
+
+#### System Health
+
+- **API Performance:**
+  - Request latency (p50, p95, p99)
+  - Error rate
+  - Rate limit hits
+
+- **Database:**
+  - Connection pool utilization
+  - Query latency
+  - Replication lag (if applicable)
+
+- **NATS:**
+  - Message throughput
+  - Queue depth
+  - Consumer lag
+
+### Logging
+
+**Key Log Events:**
+
+- GateGuard decisions (append-only)
+- Ledger entries (immutable)
+- Payout requests and approvals
+- Synthetic generation safeguard results
+- Training job lifecycle
+
+**Log Levels:**
+
+- `ERROR` — Critical failures requiring immediate attention
+- `WARN` — Degraded performance or unusual patterns
+- `INFO` — Normal operations (GateGuard approvals, payouts)
+- `DEBUG` — Detailed diagnostics (development only)
+
+### Alerting
+
+**Critical Alerts:**
+
+- Database connection failures
+- Redis connection failures
+- NATS connection failures
+- GateGuard HUMAN_ESCALATE rate > 5%
+- Hash-chain integrity violations
+- Duplicate correlation_id attempts
+
+**Warning Alerts:**
+
+- GateGuard HARD_DECLINE rate > 10%
+- Synthetic generation failure rate > 5%
+- Payout approval latency > 1 hour
+- Training queue depth > 50 jobs
+
+---
+
+## Rollback Procedure
+
+### Database Rollback
+
+**Migrations:**
+
+```bash
+# Rollback last migration
+yarn prisma migrate resolve --rolled-back <migration_name>
+
+# Verify schema
+yarn prisma validate
 ```
-FIZ: <subject>
-REASON: <why>
-IMPACT: <financial surface affected>
-CORRELATION_ID: <idempotency key>
+
+**Ledger Corrections:**
+
+- No UPDATE/DELETE allowed
+- Use offset entries for corrections
+- Document reason in ledger metadata
+
+### Application Rollback
+
+**Docker Compose:**
+
+```bash
+# Stop current version
+docker-compose down
+
+# Switch to previous image tag
+docker-compose up -d --force-recreate
 ```
 
-### Deployment Environments
+**Kubernetes:**
 
-**Development:**
+```bash
+# Rollback deployment
+kubectl rollout undo deployment/core-api
 
-- Branch: `develop`
-- Auto-deploy: On merge to develop
-- Database: Shared dev instance
-- External APIs: Sandbox/test keys
+# Verify rollback
+kubectl rollout status deployment/core-api
+```
 
-**Staging:**
+---
 
-- Branch: `staging`
-- Auto-deploy: On merge to staging
-- Database: Staging instance (production-like data)
-- External APIs: Sandbox/test keys
+## Security Checklist
 
-**Production:**
+- [ ] All secrets in environment variables or secret manager
+- [ ] Postgres and Redis bound to localhost only
+- [ ] GateGuard enabled on all financial endpoints
+- [ ] C2PA watermarking active on synthetic generation
+- [ ] Rate limiting configured and tested
+- [ ] HTTPS/TLS enabled on all public endpoints
+- [ ] CORS configured for allowed origins only
+- [ ] Authentication and authorization enforced
+- [ ] NATS authentication enabled
+- [ ] Database connection pool limits configured
+- [ ] Log sensitive data redaction enabled
 
-- Branch: `main`
-- Deploy: Manual approval after CI green
-- Database: Production instance
-- External APIs: Live keys
+---
+
+## Curator Cron Jobs (Optional)
+
+### Purpose
+
+Celebrity/news embedding ingestion for Safe Synthetic safeguards.
+
+### Setup
+
+**GitHub Actions Cron:**
+
+```yaml
+# .github/workflows/curator-sync.yml
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+```
+
+**Kubernetes CronJob:**
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: curator-sync
+spec:
+  schedule: '0 */6 * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: curator-sync
+              image: synthimates/core-api:latest
+              command: ['curl', '-X', 'POST', 'http://core-api:3000/admin/ai-twin/curator/trigger']
+```
+
+**Manual Trigger:**
+
+```bash
+curl -X POST http://localhost:3000/admin/ai-twin/curator/trigger \
+  -H "Authorization: Bearer $ADMIN_TOKEN"
+```
+
+### Requirements
+
+- `NEWS_API_KEY` configured in environment
+- Admin authentication token
+- Sufficient Banana.dev API quota
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### Database Migration Failures
+
+**Symptom:** `yarn prisma migrate deploy` fails
+
+**Solutions:**
+
+1. Check database connection: `psql $DATABASE_URL -c "SELECT 1"`
+2. Verify pgvector extension: `psql $DATABASE_URL -c "CREATE EXTENSION IF NOT EXISTS vector;"`
+3. Check migration history: `yarn prisma migrate status`
+
+#### GateGuard Always Returns HARD_DECLINE
+
+**Symptom:** All transactions blocked
+
+**Solutions:**
+
+1. Check GateGuard thresholds in `services/core-api/src/gateguard/welfare-guardian.scorer.ts`
+2. Verify fraud/welfare score calculations
+3. Check for missing welfare signals in input
+
+#### Synthetic Generation Fails
+
+**Symptom:** 500 error on `/cyrano/ai-twin/synthetic`
+
+**Solutions:**
+
+1. Verify `SYNTHETIC_GENERATION_ENDPOINT` is reachable
+2. Check Banana.dev API key and quota
+3. Validate image uploads (5-20 images, 10MB max, image/\* MIME)
+4. Check curator database (ArcFace embeddings)
+
+#### Payout Requests Stuck in PENDING
+
+**Symptom:** Payouts not processing
+
+**Solutions:**
+
+1. Verify admin approval workflow is running
+2. Check GateGuard logs for HUMAN_ESCALATE decisions
+3. Verify bonus_tokens balance is sufficient
+4. Check payout service logs for errors
+
+---
+
+## Post-Deployment Checklist
+
+- [ ] All services started successfully
+- [ ] Health checks passing
+- [ ] Database migrations applied
+- [ ] pgvector extension enabled
+- [ ] Smoke tests passed
+- [ ] Rate limiting tested
+- [ ] GateGuard evaluations working
+- [ ] Synthetic generation tested
+- [ ] Payout flow tested
+- [ ] Monitoring dashboards configured
+- [ ] Alerts configured and tested
+- [ ] Logs streaming to aggregator
+- [ ] Backup and disaster recovery tested
+- [ ] Documentation updated
 
 ---
 
 ## Support & Escalation
 
-**Deployment Issues:**
+### Documentation References
 
-- Engineering Team: engineering@omniquestmedia.com
-- On-Call: PagerDuty escalation
+- **Architecture:** `docs/ARCHITECTURE_OVERVIEW.md`
+- **Security:** `docs/ACCOUNT_CORE_SECURITY.md`
+- **Synthetic Security:** `docs/SYNTHETIC_TWIN_SECURITY.md`
+- **Membership Policy:** `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- **Domain Glossary:** `docs/DOMAIN_GLOSSARY.md`
+- **Governance:** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
 
-**Security Incidents:**
+### Escalation Path
 
-- Security Team: security@omniquestmedia.com
-- Incident Hotline: [Redacted - internal only]
-
-**Compliance Questions:**
-
-- Compliance Team: compliance@omniquestmedia.com
-
----
-
-## Governance References
-
-This deployment guide follows:
-
-- **OQMI_GOVERNANCE.md** - OQMInc governance invariants
-- **OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md** - Infrastructure security policy
-- **DOMAIN_GLOSSARY.md** - Naming authority and commit prefixes
-- **ACCOUNT_CORE_SECURITY.md** - Account-core security architecture
-
-**Last Reviewed:** 2026-05-25
-**Next Review Due:** 2026-08-25
-**Document Owner:** OmniQuest Media Inc. DevOps Team
+1. **Level 1** — Check documentation and logs
+2. **Level 2** — Review GitHub Issues and PRs
+3. **Level 3** — Contact development team
+4. **Level 4** — Escalate to CEO (Kevin B. Hartley) for governance/FIZ issues
 
 ---
 
-_rule_applied_id: DEPLOYMENT_GUIDE_v1.0_
+## Version History
+
+| Version | Date       | Changes                                                 |
+| ------- | ---------- | ------------------------------------------------------- |
+| Phase 6 | 2026-05-25 | Account-Core + Safe Synthetic Twin integration complete |
+| Phase 5 | 2026-05-20 | Voice chat integration with DreamCoins                  |
+| Phase 4 | 2026-05-15 | Membership tiers and GateGuard                          |
+| Phase 3 | 2026-05-10 | Safe Synthetic Twin safeguards                          |
+| Phase 2 | 2026-05-05 | Three-bucket wallet and ledger                          |
+| Phase 1 | 2026-05-01 | Initial Account-Core integration                        |
+
+---
+
+_[rule_applied_id: DEPLOYMENT_GUIDE_v1.0]_

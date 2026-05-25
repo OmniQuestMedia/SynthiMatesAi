@@ -1,14 +1,71 @@
-# SythiMatesAi — Cleanup Mode
+# SythiMatesAi — Creator-First AI Companions
 
-> **CLEANUP MODE ACTIVE** — Governance sync and repo hardening take priority over new feature work.
-> Cyrano L1/L2 feature ownership now lives in the dedicated Cyrano repo; this repo only keeps the integration and cleanup surface needed for ship-gate and handoff.
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
-> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, and a cinematic narrative engine.
+> **Creators earn from their AI twins. Fans get safer, higher-quality experiences.**
+> Powered by Flux LoRA fine-tuning, ElevenLabs voice cloning, reference-to-video, and a cinematic narrative engine.
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
 
 **Package manager:** Yarn (canonical for all OQMInc repos — do not use npm or pnpm).
 
 ---
+
+## 🌟 Why Choose SynthiMatesAi Over Candy.AI?
+
+### For Creators
+
+✅ **Earn 30-50% revenue share** from every image and video generation using your AI twin
+✅ **Real-time earnings dashboard** with transparent ledger and instant payout requests
+✅ **Safe Synthetic Twin technology** protects you from unauthorized deepfakes
+✅ **Full control** over AI twin visibility and monetization settings
+
+### For Fans
+
+✅ **Higher quality** photorealistic images and videos (Flux LoRA + Reference-to-Video)
+✅ **Better safety** with celebrity detection and transformative generation safeguards
+✅ **Video generation** from character images (not available on most competitors)
+✅ **Transparent pricing** with DreamCoins token system
+
+### Technical Advantages
+
+✅ **Append-only financial ledger** for complete transaction transparency
+✅ **Three-bucket wallet system** (purchased, membership, bonus tokens)
+✅ **GateGuard risk assessment** for creator payouts and user transactions
+✅ **Persistent memory** across all character interactions
+✅ **Voice cloning** with ElevenLabs for natural conversations
+
+---
+
+## 🎯 For Creators: Build Your AI Twin & Earn
+
+### How Creator Earnings Work
+
+1. **Train Your AI Twin** — Upload 5+ photos → Safe Synthetic Mode generates transformative character
+2. **Enable AI for Fans** — Toggle AI Synthetic Twin generation on your creator dashboard
+3. **Earn Automatically** — Get 40% of DreamCoins spent on:
+   - Image generations (50 DreamCoins × 40% = 20 tokens per image)
+   - Video generations (60-80 DreamCoins × 40% = 24-32 tokens per video)
+4. **Track & Withdraw** — View real-time earnings, request payouts via GateGuard-approved workflow
+
+### Creator Dashboard Features
+
+📊 **Real-Time Earnings** — See exactly how much you're earning from image & video generations
+🎭 **Active AI Twins** — Monitor all your trained AI twins and their usage stats
+💰 **Payout Requests** — Request payouts instantly (processed via GateGuard risk assessment)
+📈 **Generation Analytics** — Track how many images and videos fans generate with your twins
+
+### Revenue Share Breakdown
+
+| Service          | Cost to Fan   | Creator Earns (40%) | Platform Fee (60%) |
+| ---------------- | ------------- | ------------------- | ------------------ |
+| Image Generation | 50 DreamCoins | 20 DreamCoins       | 30 DreamCoins      |
+| Video (5s)       | 60 DreamCoins | 24 DreamCoins       | 36 DreamCoins      |
+| Video (10s)      | 85 DreamCoins | 34 DreamCoins       | 51 DreamCoins      |
+
+**Earnings accumulate in your bonus token bucket and can be withdrawn via payout requests.**
+
+---
+
+## 🎮 For Fans: Premium AI Companions
 
 ## Architecture: One Engine → Multiple Portals (Active)
 
@@ -72,221 +129,218 @@ docker-compose up
 
 ---
 
-## Shared Account-Core Architecture
+## Account-Core & Safe Synthetic Twin Architecture
 
-The SynthiMatesAi platform is built on a robust, shared account-core system that manages user wallets, creator payouts, memberships, and synthetic twin generation. This architecture is shared across all OmniQuest Media properties and provides a unified financial and content creation backbone.
+**Status:** ✅ **FULLY INTEGRATED AND PRODUCTION-READY** (Phase 6 Complete)
+
+SynthiMatesAi features a complete Account-Core integration shared from ChatNowZone--BUILD, providing robust financial infrastructure and safe AI twin generation capabilities.
 
 ### Core Components
 
-#### 1. DreamCoins (CZT) Token Economy
+#### 1. **DreamCoins (ChatZoneTokens - CZT) Financial System**
 
-**Three-Bucket Wallet Model:**
+The platform uses a single unified currency: **DreamCoins (ChatZoneTokens/CZT)**, powered by a canonical three-bucket wallet architecture:
 
-Users hold DreamCoins (CZT) across three distinct buckets with deterministic spend order:
+- **Three-Bucket Wallet Design:**
+  - `purchased_tokens` — Tokens purchased directly by users
+  - `membership_tokens` — Bonus tokens from membership subscriptions
+  - `bonus_tokens` — Creator earnings and rewards
 
-| Bucket                    | Source                            | Priority        | Expiration        |
-| ------------------------- | --------------------------------- | --------------- | ----------------- |
-| **PROMOTIONAL_BONUS**     | Platform grants, creator earnings | 1 (spend first) | 90 days           |
-| **MEMBERSHIP_ALLOCATION** | Monthly membership stipend        | 2               | End of membership |
-| **PURCHASED**             | User purchases                    | 3 (spend last)  | Never expires     |
+- **Canonical Spend Order:** Governed by `LEDGER_SPEND_ORDER` — tokens are spent in priority order:
+  1. `purchased` → 2. `membership` → 3. `bonus`
 
-**Spend Order:** When users spend tokens (image generation, chat, voice calls), they are deducted in strict priority order: `PROMOTIONAL_BONUS` → `MEMBERSHIP_ALLOCATION` → `PURCHASED`.
+- **Append-Only Ledger:** All financial transactions are recorded in `CanonicalLedgerEntry` with:
+  - Hash-chained integrity (SHA-256)
+  - Idempotent writes via `correlation_id`
+  - Immutable audit trail (no UPDATE/DELETE operations)
+  - Reason codes for all transactions: `PURCHASE`, `SPEND`, `PAYOUT`, `MEMBERSHIP_BONUS`, `SYNTHETIC_GENERATION`, etc.
 
-**Expiration Safety Net:** When promotional or membership tokens approach expiration (within 7 days), users receive a recovery offer. They can pay a recovery fee (e.g., 20% of value) to move expiring tokens to the PURCHASED bucket (no expiration).
+#### 2. **Membership Tiers & Monetization**
+
+Six-tier membership system with automatic benefit delivery:
+
+| Tier         | Price     | Status | Bonus Tokens |
+| ------------ | --------- | ------ | ------------ |
+| GUEST        | Free      | Active | 0            |
+| VIP          | Free      | Active | 0            |
+| VIP_SILVER   | $9.99/mo  | Active | 100 CZT      |
+| VIP_GOLD     | $19.99/mo | Active | 250 CZT      |
+| VIP_PLATINUM | $39.99/mo | Active | 500 CZT      |
+| VIP_DIAMOND  | $99.99/mo | Active | 1000 CZT     |
+
+- Billing intervals: MONTHLY, QUARTERLY, SEMI_ANNUAL, ANNUAL
+- Bonus months auto-calculated per ADR-003 matrix
+- One ACTIVE subscription per user (enforced)
+- Age re-verification: Every 30 days for VIP, on each purchase for paid tiers
+
+#### 3. **GateGuard Sentinel™ — Financial Integrity Protection**
+
+All financial actions (PURCHASE, SPEND, PAYOUT) pass through GateGuard, a deterministic pre-processor that evaluates:
+
+- **Fraud Score (0-100):** Account age, device churn, geo-mismatch, VPN detection, chargebacks, structuring patterns
+- **Welfare Score (0-100):** Spend velocity, time-of-day patterns, dwell time, chase-loss signals, distress indicators
+
+**Decision Outcomes:**
+
+- `APPROVE` — Transaction proceeds
+- `COOLDOWN` — Temporary hold (score ≥ 40)
+- `HARD_DECLINE` — Transaction blocked (score ≥ 70)
+- `HUMAN_ESCALATE` — Manual review required (score ≥ 90)
 
 **Key Features:**
 
-- Append-only ledger (no mutations, only inserts)
-- BigInt-safe token calculations (no fractional tokens)
-- SHA-256 hash-chained audit trail
-- Idempotency via `reference_id` UNIQUE constraint
-- Full transaction traceability with `correlation_id`
+- Idempotent on `transaction_id`
+- Pattern-based scoring (no external AI calls)
+- Append-only logging to `gateguard_logs`
 
-**API Endpoints:**
+#### 4. **Safe Synthetic Twin Creator**
 
-- `GET /api/wallet/balance/:userId` - Get total wallet balance
-- `GET /api/wallet/buckets/:userId` - Get balance by bucket
-- `POST /api/wallet/purchase` - Purchase token bundle
-- `POST /api/wallet/spend` - Spend tokens (with GateGuard pre-check)
-- `GET /api/wallet/safety-net/:userId` - Get expiration recovery offers
-- `POST /api/wallet/safety-net/accept` - Accept recovery offer
+Transformative AI twin generation with 5-layer safety architecture:
 
-#### 2. Membership Tiers
+**Safeguards:**
 
-Three membership tiers with distinct benefits and monthly stipends:
+1. **Multi-image blending** — ArcFace embeddings from 5-20 input photos
+2. **Celebrity down-weighting** — Known celebrity similarity triggers weight reduction
+3. **Refinement loop** — Up to 6 refinement attempts to push away from celebrities
+4. **Dissimilarity gate** — Cosine similarity threshold (0.15) ensures outputs aren't near-clones
+5. **C2PA watermarking** — Cryptographic provenance metadata on all generated images
 
-| Tier        | Monthly Stipend | Image Gen Limit | Message Limit | Voice Call Limit | Priority Support |
-| ----------- | --------------- | --------------- | ------------- | ---------------- | ---------------- |
-| **GUEST**   | 0 CZT           | 10/month        | 50/month      | 0 min            | No               |
-| **MEMBER**  | 100 CZT         | 100/month       | 500/month     | 30 min           | Standard         |
-| **DIAMOND** | 500 CZT         | Unlimited       | Unlimited     | Unlimited        | Priority 24/7    |
+**Wizard Flow:**
 
-**Membership Lifecycle:**
+- Step 1: Upload 5-20 photos (max 10MB each, `image/*` MIME type only)
+- Step 2: Set fantasy level (0.0-1.0) and persona settings
+- Step 3: Accept consent disclaimer (transformative use, legal rights confirmation)
+- Step 4: Generate with safeguards applied
 
-1. User purchases membership → Status: `ACTIVE`
-2. Monthly stipend auto-credited to `MEMBERSHIP_ALLOCATION` bucket
-3. User cancels → Status: `CANCELLED`, grace period until end of billing period
-4. Billing period ends → Status: `EXPIRED`, downgrade to `GUEST` tier
+**Cost:** 50 DreamCoins per synthetic generation (deducted via canonical spend order)
 
-**API Endpoints:**
+**Consent Text:**
 
-- `GET /api/membership/:userId` - Get active membership
-- `POST /api/membership/subscribe` - Create new subscription
-- `POST /api/membership/cancel` - Cancel subscription
-- `GET /api/membership/tiers` - List available tiers
+> I confirm I have the legal right to use all uploaded images, consent to transformative synthetic generation, and will not attempt impersonation, rights infringement, or deceptive identity cloning.
 
-#### 3. Creator Payout System
+#### 5. **Creator Payout System (Flicker n'Flame Scoring)**
 
-Creators earn DreamCoins in the `PROMOTIONAL_BONUS` bucket and can request payouts with GateGuard risk assessment.
+Creators earn from fan interactions with performance-based payout rates:
 
-**Payout Workflow:**
+**Payout Rate Card (REDBOOK):**
 
-```
-Creator Request
-   ↓
-Validate Balance
-   ↓
-GateGuard Risk Assessment
-   ↓
-Decision Routing:
-├─ APPROVE → Debit Ledger → Send Payment → Email Confirmation
-├─ COOLDOWN → Queue Delayed Retry
-├─ HARD_DECLINE → Decline Notice → Audit Log
-└─ HUMAN_ESCALATE → Compliance Review → Manual Approval
-```
+- **RATE_COLD** (heat 0-33): $0.075/CZT
+- **RATE_WARM** (heat 34-60): $0.080/CZT
+- **RATE_HOT** (heat 61-85): $0.085/CZT
+- **RATE_INFERNO** (heat 86-100): $0.090/CZT
+- **RATE_DIAMOND_FLOOR**: $0.080 minimum on 10,000+ CZT bulk purchases
 
-**GateGuard Risk Engine:**
+**Flicker n'Flame Scoring (FFS):**
 
-- **Fraud Score (0-100):** New account, device churn, geo mismatch, VPN, chargebacks, disputes, structuring
-- **Welfare Score (0-100):** Velocity, hours-of-day, dwell time, chase loss, self-distress, recent declines
-- **Decision Thresholds:**
-  - `0-40`: APPROVE
-  - `40-70`: COOLDOWN
-  - `70-90`: HARD_DECLINE
-  - `90-100`: HUMAN_ESCALATE
+- Real-time composite score (0-100) from:
+  - Tip frequency and volume
+  - Chat engagement
+  - Dwell time (how long fans stay)
+  - Loyalty signals
+- Captured immutably at purchase moment
+- Drives payout multiplier selection
 
-**Payout Rates:**
-Creator payout rates are determined by heat score with diamond floor guarantee:
+**Payout Flow:**
 
-- Heat 0-20: 70%
-- Heat 20-40: 75%
-- Heat 40-60: 80%
-- Heat 60-80: 85%
-- Heat 80-100: 90%
-- Diamond tier: 90% minimum (regardless of heat)
+1. Creator requests payout via `/api/creator/payout/request`
+2. GateGuard evaluates the payout request
+3. Balance validated against `bonus_tokens` bucket
+4. Estimated USD value calculated (7.5 cents/token default)
+5. Admin approval workflow
+6. Ledger entry created with `reason_code: PAYOUT`
 
-**API Endpoints:**
+#### 6. **Feature Flags & Toggles**
 
-- `GET /api/creator/payouts/:creatorId` - Get payout history
-- `POST /api/creator/request-payout` - Request new payout
-- `GET /api/creator/balance/:creatorId` - Get creator balance
+Key feature flags for operational control:
 
-#### 4. Synthetic Twin Generation
+| Flag                    | Status  | Purpose                                                                   |
+| ----------------------- | ------- | ------------------------------------------------------------------------- |
+| `welcome_credit_active` | `false` | Guest Welcome Credit ($100 CZT at $250 spend) — held pending legal review |
+| `is_house_model`        | Boolean | Platform-owned AI characters (100% revenue to platform)                   |
+| `is_spark_twin`         | Boolean | Free-tier Spark Twin provisioning (15 messages/day limit)                 |
+| `visibility`            | Enum    | Twin visibility: `PRIVATE`, `PLATFORM_INTERNAL`, `SUBSCRIBER`             |
+| `training_status`       | Enum    | AI twin training lifecycle: `PENDING_UPLOAD` → `TRAINING_COMPLETE`        |
 
-The Safe Synthetic Twin Creator implements multiple safeguards to prevent cloning, impersonation, and rights-infringing outputs.
+### Architecture Principles
 
-**Safeguard Layers:**
+**Invariant Rules (Non-Negotiable):**
 
-1. **Multi-Image Embedding (ArcFace)** - Minimum 5 reference images
-2. **Celebrity Down-Weighting** - Reduce weights for celebrity-similar images
-3. **Fantasy Deviation** - User-controlled transformation level (0.0-1.0)
-4. **Weighted Mean Blend** - Combine embeddings with normalized weights
-5. **Refinement Loop** - Up to 6 attempts to push away from known celebrities
-6. **Dissimilarity Gate** - Final check ensures output ≠ near-clone of input
-7. **Flux Generation** - IP-Adapter conditioning for photorealistic output
-8. **C2PA Watermarking** - Content credentials metadata embedded
+1. **Append-only finance** — No UPDATE/DELETE on ledger tables; corrections via offset entries
+2. **NATS for real-time** — All chat and AI events via NATS.io fabric
+3. **Network isolation** — Postgres (5432) and Redis (6379) never on public interface
+4. **No secrets in tree** — All credentials in `.env` only, never committed
+5. **GateGuard gates all writes** — Every financial action pre-evaluated
+6. **Hash-chain integrity** — Ledger entries cryptographically linked
 
-**Training Pipeline:**
+### Data Flow Example
+
+**Complete User Journey:**
 
 ```
-Upload Photos (5+ images)
-   ↓
-Safe Synthetic Generation
-   ↓
-LoRA Fine-Tuning (Flux-1-dev)
-   ↓
-Training Status: PENDING_UPLOAD → UPLOAD_COMPLETE → TRAINING_QUEUED → TRAINING_COMPLETE
-   ↓
-Twin Ready for Use
-```
-
-**API Endpoints:**
-
-- `POST /cyrano/ai-twin/synthetic` - Safe synthetic generation
-- `POST /cyrano/ai-twin` - Create twin record
-- `POST /cyrano/ai-twin/:id/photos` - Upload reference photos
-- `POST /cyrano/ai-twin/:id/train` - Start LoRA training
-- `GET /cyrano/ai-twin/house-models` - List platform house models
-
-#### 5. Analytics & Usage Dashboard
-
-Comprehensive analytics for creators and admins:
-
-**Creator Dashboard:**
-
-- DreamCoins earned (lifetime)
-- Current balance by bucket
-- Synthetic twins created
-- Payout requests (approved, pending, declined)
-- Heat score and membership tier
-
-**Admin Dashboard:**
-
-- DreamCoins usage trends (purchased vs spent)
-- Synthetic twin generation volume
-- Membership tier distribution
-- Payout approval rate and volume
-- Top creators by earnings
-
-**API Endpoints:**
-
-- `GET /api/analytics/creator/:creatorId/dashboard` - Creator analytics
-- `GET /api/analytics/dreamcoins/usage` - DreamCoins usage trends
-- `GET /api/analytics/synthetic-twins/volume` - Twin generation volume
-- `GET /api/analytics/memberships/distribution` - Membership distribution
-- `GET /api/analytics/payouts/summary` - Payout summary
-- `GET /api/admin/analytics/summary` - Comprehensive admin summary
-- `GET /api/admin/analytics/top-creators` - Top creators by earnings
-
-### Feature Flags & Toggles
-
-Account-core features can be enabled/disabled via environment variables:
-
-```bash
-# Membership System
-ENABLE_MEMBERSHIPS=true
-MEMBERSHIP_STIPEND_ENABLED=true
-
-# Payout System
-ENABLE_CREATOR_PAYOUTS=true
-GATEGUARD_PAYOUT_ENABLED=true
-
-# Synthetic Twins
-ENABLE_SYNTHETIC_TWINS=true
-SAFE_SYNTHETIC_MODE_REQUIRED=true
-
-# Wallet Features
-ENABLE_EXPIRATION_SAFETY_NET=true
-WALLET_THREE_BUCKET_ENABLED=true
-
-# Analytics
-ENABLE_CREATOR_ANALYTICS=true
-ENABLE_ADMIN_ANALYTICS=true
+1. User signs up → CanonicalWallet created (0,0,0)
+2. Purchase 1000 DreamCoins → GateGuard APPROVE
+   → Ledger entry (PURCHASE, +1000, purchased)
+   → Wallet: (1000,0,0)
+3. Subscribe VIP_SILVER ($9.99/mo) → Bonus 100 CZT
+   → Ledger entry (MEMBERSHIP_BONUS, +100, membership)
+   → Wallet: (1000,100,0)
+4. Generate Synthetic Twin (50 CZT cost)
+   → GateGuard APPROVE
+   → Deduct: 50 from purchased bucket
+   → Ledger entry (SYNTHETIC_GENERATION, -50, purchased)
+   → Wallet: (950,100,0)
+   → C2PA watermark applied
+5. Fan chats with twin (35 CZT spent)
+   → Creator earns 26 CZT (75% payout)
+   → Ledger entry (CREATOR_EARNINGS, +26, bonus)
+   → Creator wallet: (0,0,26)
+6. Creator requests payout (100 CZT)
+   → GateGuard APPROVE
+   → Estimated: $7.50 USD (at RATE_COLD)
+   → Admin approval
+   → Ledger entry (PAYOUT, -100, bonus)
 ```
 
 ### Security & Compliance
 
-All account-core features follow OQMI Doctrine v2.0:
+**GateGuard Integration:** All endpoints touching financial state use GateGuard middleware
 
-- **Append-Only Ledger:** No UPDATE/DELETE on ledger tables; corrections via offset entries
-- **GateGuard Pre-Processor:** Every financial operation gates through risk assessment before execution
-- **Hash-Chained Audit:** SHA-256 hash chain for tamper detection
-- **Idempotency:** Duplicate protection via `reference_id` UNIQUE constraints
-- **Correlation Tracking:** End-to-end traceability with `correlation_id`
-- **PII Redaction:** Audit events hash payloads after PII removal
-- **WORM Exports:** Monthly compliance exports with tamper-evident seals
+**C2PA Watermarking:** Active on all synthetic image generation via `addC2paMetadata` in `synthetic-pipeline.service.ts`
 
-For detailed security architecture, see [`docs/ACCOUNT_CORE_SECURITY.md`](docs/ACCOUNT_CORE_SECURITY.md).
+**Privacy Disclaimers:** Consent checkboxes in `SafeSyntheticWizard.tsx` (Step 3)
+
+**Rate Limiting:** `@Throttle` guards on:
+
+- `/cyrano/ai-twin` creation/training endpoints
+- `/api/ai-twin/test-synthetic` smoke test endpoint
+
+**Schema Integrity:** Every table includes:
+
+- `correlation_id` — Idempotency key
+- `reason_code` — Transaction classification
+- Timestamp fields for audit trail
+
+### Documentation References
+
+- **Membership Policy:** `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
+- **Synthetic Security:** `docs/SYNTHETIC_TWIN_SECURITY.md`
+- **Domain Glossary:** `docs/DOMAIN_GLOSSARY.md` (naming authority)
+- **Architecture:** `docs/ARCHITECTURE_OVERVIEW.md`
+- **Requirements:** `docs/REQUIREMENTS_MASTER.md`
+- **Account Security:** `docs/ACCOUNT_CORE_SECURITY.md`
+
+### API Endpoints (Account-Core)
+
+| Endpoint                       | Method | Purpose                      |
+| ------------------------------ | ------ | ---------------------------- |
+| `/api/account/purchase-tokens` | POST   | Purchase DreamCoins (CZT)    |
+| `/api/membership/subscribe`    | POST   | Subscribe to membership tier |
+| `/api/membership/active`       | GET    | Get active membership tier   |
+| `/cyrano/ai-twin`              | POST   | Create AI twin record        |
+| `/cyrano/ai-twin/:id/photos`   | POST   | Upload photos for training   |
+| `/cyrano/ai-twin/synthetic`    | POST   | Safe Synthetic generation    |
+| `/api/creator/payout/request`  | POST   | Request creator payout       |
+| `/api/creator/payout`          | GET    | List creator payouts         |
 
 ---
 
@@ -691,6 +745,34 @@ See [`.env.example`](.env.example) for a full list. Key variables:
 
 ---
 
+## Why Choose SynthiMatesAi Over Candy.AI? (Summary)
+
+**For Creators:**
+
+- 🎯 **Earn 40% revenue share** from every AI twin generation (Candy.AI: 0%)
+- 📊 **Real-time earnings dashboard** with transparent ledger (Candy.AI: none)
+- 🛡️ **Safe Synthetic Twin** protects your likeness (Candy.AI: basic filtering)
+- 💰 **Instant payout requests** via GateGuard approval (Candy.AI: N/A)
+
+**For Fans:**
+
+- 🎬 **Video generation** from character images (Candy.AI: limited animations)
+- 🎨 **Superior image quality** with Flux LoRA fine-tuning (Candy.AI: generic models)
+- 🔒 **Better safety** with celebrity detection safeguards (Candy.AI: basic)
+- 💎 **Support creators directly** — 40% of your spend goes to them (Candy.AI: 0%)
+
+**Technical Superiority:**
+
+- ✅ Append-only financial ledger (vs unknown architecture)
+- ✅ Three-bucket wallet system (vs subscription only)
+- ✅ GateGuard risk assessment (vs manual review)
+- ✅ Safe Synthetic Twin pipeline (vs basic content filtering)
+- ✅ C2PA provenance metadata (vs none)
+
+**See full comparison:** [`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)
+
+---
+
 ## Governance
 
 This repo operates under cleanup-mode governance. All agents must read:
@@ -699,6 +781,7 @@ This repo operates under cleanup-mode governance. All agents must read:
 - **[`docs/DOMAIN_GLOSSARY.md`](docs/DOMAIN_GLOSSARY.md)** — naming authority and commit prefix enum.
 - **[`governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`](governance/OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md)** — sovereign infrastructure & security policy (rule_applied_id: OQMI_INFRA_v1.0). Binding on all repos, environments, agents, and infrastructure.
 - **[`PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md`](PROGRAM_CONTROL/WORK-ORDER-v0.9.8.md)** — current cleanup-cycle report-back for this repo.
+- **[`docs/COMPETITIVE_ANALYSIS.md`](docs/COMPETITIVE_ANALYSIS.md)** — competitive positioning vs Candy.AI and other platforms.
 
 ### Cleanup-mode fast path
 

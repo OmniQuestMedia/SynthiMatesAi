@@ -105,7 +105,7 @@ export class HybridVideoService {
 
     // Step 2: Check cache — SHA-based dedup
     const promptHash = await this.hashPrompt(prompt, duration_seconds, resolution);
-    const cached = await this.prisma.videoCache.findFirst({
+    const cached = await this.prisma.videoCacheVidu.findFirst({
       where: {
         twin_id,
         prompt_hash: promptHash,
@@ -119,12 +119,12 @@ export class HybridVideoService {
       return {
         video_cache_id: cached.video_cache_id,
         twin_id: cached.twin_id,
-        storage_url: cached.storage_url,
+        storage_url: cached.storage_url ?? '',
         thumbnail_url: cached.thumbnail_url ?? undefined,
-        prompt_used: cached.prompt_used,
+        prompt_used: cached.prompt_used ?? prompt,
         duration_seconds: cached.duration_seconds,
-        resolution: cached.resolution,
-        model: cached.model,
+        resolution: cached.resolution ?? '1080p',
+        model: cached.model ?? 'vidu-1.0',
         vidu_tier: cached.vidu_tier as 'premium' | 'enterprise',
         tokens_charged: tokenCost,
         generated_at_utc: cached.generated_at.toISOString(),
@@ -202,13 +202,14 @@ export class HybridVideoService {
     }
 
     // Step 6: Persist to cache
-    const record = await this.prisma.videoCache.create({
+    const record = await this.prisma.videoCacheVidu.create({
       data: {
         twin_id,
         creator_id,
         user_id,
         prompt_hash: promptHash,
         prompt_used: prompt,
+        provider: 'vidu',
         model: 'vidu-1.0',
         storage_url: videoUrl,
         thumbnail_url: thumbnailUrl ?? null,

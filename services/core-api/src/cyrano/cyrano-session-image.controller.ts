@@ -24,6 +24,9 @@ class GenerateImageDto {
 // Reuse same cost as Safe Synthetic Twin generation
 const IMAGE_GENERATION_COST = 50; // 50 DreamCoins per generation
 
+// PHASE 6 ITEM 1: Creator revenue share from in-chat image generations
+const CREATOR_REVENUE_SHARE_PERCENT = 40; // 40% of tokens go to creator (30-50% range)
+
 @Controller('cyrano/session')
 export class CyranoSessionImageController {
   private readonly logger = new Logger(CyranoSessionImageController.name);
@@ -152,6 +155,68 @@ export class CyranoSessionImageController {
       deductions,
       new_balance: totalTokens - IMAGE_GENERATION_COST,
       correlation_id: correlationId,
+    });
+
+    // PHASE 6 ITEM 1: Credit creator with revenue share
+    const creatorShareTokens = Math.floor(
+      IMAGE_GENERATION_COST * (CREATOR_REVENUE_SHARE_PERCENT / 100),
+    );
+
+    // Find or create creator wallet
+    let creatorWallet = await this.prisma.canonicalWallet.findUnique({
+      where: { user_id: body.creatorId },
+    });
+
+    if (!creatorWallet) {
+      // Create wallet if it doesn't exist
+      creatorWallet = await this.prisma.canonicalWallet.create({
+        data: {
+          user_id: body.creatorId,
+          user_type: 'creator',
+          organization_id: 'OQMInc',
+          tenant_id: 'default',
+          purchased_tokens: 0,
+          membership_tokens: 0,
+          bonus_tokens: 0,
+        },
+      });
+    }
+
+    // Credit creator's bonus bucket with earnings
+    await this.prisma.canonicalWallet.update({
+      where: { id: creatorWallet.id },
+      data: {
+        bonus_tokens: { increment: creatorShareTokens },
+      },
+    });
+
+    // Create ledger entry for creator revenue share
+    const creatorCorrelationId = `creator-earnings-${correlationId}`;
+    await this.prisma.canonicalLedgerEntry.create({
+      data: {
+        wallet_id: creatorWallet.id,
+        correlation_id: creatorCorrelationId,
+        reason_code: 'CREATOR_EARNINGS_IMAGE',
+        amount: creatorShareTokens, // positive = credit
+        bucket: 'bonus',
+        token_type: 'CZT',
+        hash_prev: null,
+        hash_current: `hash-${creatorCorrelationId}`,
+        metadata: {
+          source_user_id: body.userId,
+          session_id: sessionId,
+          total_cost: IMAGE_GENERATION_COST,
+          revenue_share_percent: CREATOR_REVENUE_SHARE_PERCENT,
+          transaction_type: 'in_chat_image_generation',
+        },
+      },
+    });
+
+    this.logger.log(`Credited ${creatorShareTokens} DreamCoins to creator ${body.creatorId}`, {
+      creatorId: body.creatorId,
+      revenue_share_percent: CREATOR_REVENUE_SHARE_PERCENT,
+      tokens_earned: creatorShareTokens,
+      correlation_id: creatorCorrelationId,
     });
 
     // Generate image using synthetic pipeline
