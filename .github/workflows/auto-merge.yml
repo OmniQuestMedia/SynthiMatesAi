@@ -39,7 +39,7 @@ jobs:
   enable-auto-merge-standard:
     name: Enable Auto Merge (Standard)
     runs-on: ubuntu-latest
-    if: !startsWith(github.head_ref , 'copilot/') && !startsWith(github.head_ref, 'grok/') && !startsWith(github.head_ref, 'agent/')
+    if: "!startsWith(github.head_ref, 'copilot/') && !startsWith(github.head_ref, 'grok/') && !startsWith(github.head_ref, 'agent/')"
 
     steps:
       - name: Enable auto-merge for PR
