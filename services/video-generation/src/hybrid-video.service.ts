@@ -17,11 +17,10 @@ import { SyntheticPipelineService } from '../../ai-twin/src/synthetic-pipeline.s
 const NATS_VIDEO_GENERATED = 'cyrano.video.generated';
 const NATS_VIDEO_FAILED = 'cyrano.video.failed';
 
-// Token costs for video generation (DreamCoins)
-// 8s video: 40-80 tokens depending on tier/features
-// 16s video: 100-150 tokens depending on tier/features
+// Token costs for video generation (DreamCoins / CZT)
+// 8s: 40-80 tokens (using 60 mid-range), 16s: 100-150 tokens (using 125 mid-range)
 const VIDEO_COST_8S = 60; // 60 DreamCoins for 8s video
-const VIDEO_COST_16S = 120; // 120 DreamCoins for 16s video
+const VIDEO_COST_16S = 125; // 125 DreamCoins for 16s video
 
 export interface GenerateHybridVideoRequest {
   twin_id: string;
