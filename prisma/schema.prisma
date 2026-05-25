@@ -2714,7 +2714,7 @@ model CelebrityEmbedding {
 /// Creator payout requests submitted by creators and processed by admins
 model PayoutRequest {
   id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  creator_id       String    @db.Uuid
+  creator_id       String
   amount_czt       Int // Amount in DreamCoins (CZT) to be paid out
   amount_usd       Decimal   @db.Decimal(10, 2) // USD equivalent at request time
   status           String    @default("PENDING") @db.VarChar(20) // PENDING | APPROVED | REJECTED | PAID
