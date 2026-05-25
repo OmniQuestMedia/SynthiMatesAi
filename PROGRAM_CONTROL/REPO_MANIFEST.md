@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/fix-issues-103-to-113`
-**Commit:** `f2a52c7b4a115e0b117346611cd71346a3eb4904`
-**Generated:** 2026-05-25T00:44:58Z
+**Branch:** `claude/implement-heygen-phase-testing`
+**Commit:** `3972c945fd82bfe0fbf7011f8c7a479f233fe27b`
+**Generated:** 2026-05-25T00:55:39Z
 
 ## All Files
 
@@ -533,6 +533,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/cyrano/cyrano-auth.types.ts`
 - `services/core-api/src/cyrano/cyrano-memory.controller.ts`
 - `services/core-api/src/cyrano/cyrano-session-image.controller.ts`
+- `services/core-api/src/cyrano/video-generation.controller.ts`
 - `services/core-api/src/db.ts`
 - `services/core-api/src/dfsp/account-recovery-hold.service.ts`
 - `services/core-api/src/dfsp/checkout-confirmation.service.ts`
@@ -764,6 +765,10 @@ Auto-generated on every push. Do not edit manually.
 - `services/studio-affiliation/src/affiliation-number.generator.ts`
 - `services/studio-affiliation/src/studio-affiliation.module.ts`
 - `services/studio-affiliation/src/studio.service.ts`
+- `services/video-generation/src/heygen.service.ts`
+- `services/video-generation/src/heygen.types.ts`
+- `services/video-generation/src/video.module.ts`
+- `services/video-generation/src/video.service.ts`
 - `services/voice-cloning/src/voice.controller.ts`
 - `services/voice-cloning/src/voice.module.ts`
 - `services/voice-cloning/src/voice.service.ts`
