@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/final-webhook-integration-polish`
-**Commit:** `d1496e0ef233440f3d6a3f6a9b4ff3d69c25102d`
-**Generated:** 2026-05-25T03:48:55Z
+**Branch:** `feature/phase-8-cyrano-webhook-consumption`
+**Commit:** `6ca2c08f9be0f328d9c104c82dacbcafe96aade1`
+**Generated:** 2026-05-25T09:13:49Z
 
 ## All Files
 
@@ -48,6 +48,7 @@ Auto-generated on every push. Do not edit manually.
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
 - `PHASE7_COMPLETION_SUMMARY.md`
+- `PHASE8_COMPLETION_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
