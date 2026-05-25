@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/hygiene-sweep-stale-branches`
-**Commit:** `d526daec2c7897a19b519d5912d905c7cdbebf18`
-**Generated:** 2026-05-25T10:50:58Z
+**Branch:** `claude/update-pr-status-homestretch-gate`
+**Commit:** `9568385c4042df69399a72609fbf7099af7553b3`
+**Generated:** 2026-05-25T11:25:08Z
 
 ## All Files
 
@@ -45,6 +45,7 @@ Auto-generated on every push. Do not edit manually.
 - `CONTRIBUTING.md`
 - `DECISIONS.md`
 - `HANDOFF.md`
+- `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
