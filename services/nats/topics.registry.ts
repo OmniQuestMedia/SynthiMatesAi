@@ -367,6 +367,10 @@ export const NATS_TOPICS = {
   ACCOUNT_CORE_SYNTHETIC_GENERATION: 'account_core.synthetic.generation',
   ACCOUNT_CORE_LOOKUP: 'account_core.lookup',
   ACCOUNT_CORE_METRICS_SUMMARY: 'account_core.metrics.summary',
+
+  // ── Video Generation (Hybrid Vidu Reference-to-Video) ────────────────────
+  VIDEO_GENERATED: 'cyrano.video.generated',
+  VIDEO_FAILED: 'cyrano.video.failed',
 } as const;
 
 export type NatsTopic = (typeof NATS_TOPICS)[keyof typeof NATS_TOPICS];

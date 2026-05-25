@@ -1,5 +1,6 @@
 // apps/cyrano-standalone/components/AITwinCreator/SafeSyntheticWizard.tsx
 // Safe Synthetic Twin creation wizard (4 steps: upload → settings → generating → complete).
+// Enhanced with video generation capability (HeyGen Phase)
 
 'use client';
 
@@ -16,6 +17,14 @@ interface SyntheticResult {
   };
 }
 
+interface VideoResult {
+  url: string;
+  cacheId: string;
+  syntheticImageUrl: string;
+  durationSeconds: number;
+  captureId: string;
+}
+
 export function SafeSyntheticWizard() {
   const [step, setStep] = useState<WizardStep>('upload');
   const [files, setFiles] = useState<File[]>([]);
@@ -23,6 +32,14 @@ export function SafeSyntheticWizard() {
   const [consentGiven, setConsentGiven] = useState(false);
   const [result, setResult] = useState<SyntheticResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Video generation state
+  const [showVideoOptions, setShowVideoOptions] = useState(false);
+  const [videoPrompt, setVideoPrompt] = useState('');
+  const [videoDuration, setVideoDuration] = useState<8 | 16>(8);
+  const [generatingVideo, setGeneratingVideo] = useState(false);
+  const [videoResult, setVideoResult] = useState<VideoResult | null>(null);
+  const [videoError, setVideoError] = useState<string | null>(null);
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files ?? []);
@@ -68,7 +85,62 @@ export function SafeSyntheticWizard() {
     }
   }, [files, fantasyLevel, consentGiven]);
 
+  const handleGenerateVideo = useCallback(async () => {
+    if (!videoPrompt.trim()) {
+      setVideoError('Please enter a prompt for the talking video.');
+      return;
+    }
+
+    setVideoError(null);
+    setGeneratingVideo(true);
+
+    try {
+      const form = new FormData();
+
+      // Re-use the same images from synthetic twin generation
+      files.forEach((f) => form.append('images', f));
+
+      // Add video-specific parameters
+      form.append('userId', 'demo-user-id'); // TODO: Get from auth context
+      form.append('twinId', 'demo-twin-id'); // TODO: Get from twin context
+      form.append('creatorId', 'demo-creator-id'); // TODO: Get from creator context
+      form.append('prompt', videoPrompt);
+      form.append('durationSeconds', String(videoDuration));
+      form.append('fantasyLevel', String(fantasyLevel));
+
+      const res = await fetch('/api/cyrano/ai-twin/video', {
+        method: 'POST',
+        body: form,
+      });
+
+      if (!res.ok) {
+        const body = (await res.json().catch(() => ({}))) as {
+          message?: string;
+        };
+        throw new Error(body.message ?? `Server error ${res.status}`);
+      }
+
+      const data = (await res.json()) as {
+        success: boolean;
+        video: VideoResult;
+        cost: {
+          dreamCoins: number;
+          remainingBalance: { total: number };
+        };
+      };
+
+      setVideoResult(data.video);
+      setShowVideoOptions(false);
+    } catch (err) {
+      setVideoError(err instanceof Error ? err.message : 'An unknown error occurred.');
+    } finally {
+      setGeneratingVideo(false);
+    }
+  }, [files, fantasyLevel, videoPrompt, videoDuration]);
+
   const STEPS: WizardStep[] = ['upload', 'settings', 'generating', 'complete'];
+
+  const videoCost = videoDuration === 8 ? '40-80' : '100-150';
 
   return (
     <div
@@ -154,6 +226,151 @@ export function SafeSyntheticWizard() {
           <pre style={{ background: '#f5f5f5', padding: 12, borderRadius: 6, overflowX: 'auto' }}>
             {JSON.stringify(result.metadata, null, 2)}
           </pre>
+
+          {/* Video Generation Section */}
+          <div style={{ marginTop: 24, borderTop: '2px solid #eee', paddingTop: 24 }}>
+            <h3>🎬 Generate Talking Video (HeyGen)</h3>
+            <p style={{ color: '#666', fontSize: 14 }}>
+              Create a lip-synced talking-head video using your synthetic twin image.
+            </p>
+
+            {!showVideoOptions && !videoResult && (
+              <button
+                type="button"
+                onClick={() => setShowVideoOptions(true)}
+                style={{
+                  padding: '12px 24px',
+                  background: '#1a1a2e',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 6,
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                }}
+              >
+                Generate Video
+              </button>
+            )}
+
+            {showVideoOptions && !videoResult && (
+              <div style={{ display: 'grid', gap: 12, marginTop: 16 }}>
+                <label>
+                  <div style={{ fontWeight: 600, marginBottom: 4 }}>Video Prompt</div>
+                  <textarea
+                    value={videoPrompt}
+                    onChange={(e) => setVideoPrompt(e.target.value)}
+                    placeholder="Enter the text for your twin to speak..."
+                    rows={3}
+                    style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+                  />
+                </label>
+
+                <label>
+                  <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                    Duration: {videoDuration} seconds ({videoCost} DreamCoins)
+                  </div>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <input
+                        type="radio"
+                        checked={videoDuration === 8}
+                        onChange={() => setVideoDuration(8)}
+                      />
+                      8 seconds (40-80 DreamCoins)
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <input
+                        type="radio"
+                        checked={videoDuration === 16}
+                        onChange={() => setVideoDuration(16)}
+                      />
+                      16 seconds Premium (100-150 DreamCoins)
+                    </label>
+                  </div>
+                </label>
+
+                {videoError && (
+                  <div
+                    style={{
+                      border: '1px solid #c00',
+                      background: '#fee',
+                      color: '#900',
+                      padding: 12,
+                      borderRadius: 6,
+                    }}
+                  >
+                    {videoError}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    type="button"
+                    onClick={handleGenerateVideo}
+                    disabled={generatingVideo || !videoPrompt.trim()}
+                    style={{
+                      padding: '12px 24px',
+                      background: generatingVideo ? '#ccc' : '#1a1a2e',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: 6,
+                      cursor: generatingVideo ? 'not-allowed' : 'pointer',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {generatingVideo ? 'Generating...' : `Generate Video (${videoCost} DreamCoins)`}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowVideoOptions(false)}
+                    disabled={generatingVideo}
+                    style={{
+                      padding: '12px 24px',
+                      background: '#fff',
+                      color: '#1a1a2e',
+                      border: '1px solid #ccc',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {videoResult && (
+              <div style={{ marginTop: 16, background: '#f8f8f8', padding: 16, borderRadius: 8 }}>
+                <h4 style={{ marginTop: 0 }}>✅ Video Generated Successfully!</h4>
+                <video src={videoResult.url} controls style={{ maxWidth: '100%', borderRadius: 8 }}>
+                  Your browser does not support the video tag.
+                </video>
+                <div style={{ marginTop: 12, fontSize: 14, color: '#666' }}>
+                  <div>Duration: {videoResult.durationSeconds} seconds</div>
+                  <div>Capture ID: {videoResult.captureId} (saved for training)</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setVideoResult(null);
+                    setShowVideoOptions(true);
+                    setVideoPrompt('');
+                  }}
+                  style={{
+                    marginTop: 12,
+                    padding: '8px 16px',
+                    background: '#fff',
+                    color: '#1a1a2e',
+                    border: '1px solid #ccc',
+                    borderRadius: 6,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Generate Another Video
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
