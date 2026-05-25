@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/hygiene-sweep-stale-branches`
-**Commit:** `d526daec2c7897a19b519d5912d905c7cdbebf18`
-**Generated:** 2026-05-25T10:50:58Z
+**Branch:** `claude/issue-implement-cyrano-layer-1-whisper`
+**Commit:** `1788aa02a115eba251924b12f23fd9dc1ddf814f`
+**Generated:** 2026-05-25T11:14:13Z
 
 ## All Files
 
@@ -671,6 +671,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/cyrano-engines-client/src/index.ts`
 - `services/cyrano/ASSUMPTIONS.md`
 - `services/cyrano/FLAGS.md`
+- `services/cyrano/LAYER1_IMPLEMENTATION_VERIFICATION.md`
 - `services/cyrano/README.md`
 - `services/cyrano/src/cyrano-beta-analytics.service.ts`
 - `services/cyrano/src/cyrano-beta-registry.service.ts`
