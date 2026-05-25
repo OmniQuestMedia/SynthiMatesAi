@@ -1,58 +1,50 @@
 // services/video-generation/src/video.service.ts
-// PHASE 6 ITEM 2: Video Generation Service — Vidu Reference-to-Video
+// CYR: Hybrid Video Service — Safe Synthetic Twin → HeyGen Pipeline
 //
 // Responsibilities:
-//   1. Accept reference image (from Safe Synthetic Twin)
-//   2. Call Vidu API or Banana.dev video generation
-//   3. Cache generated videos in VideoCache table
-//   4. Emit NATS events for video generation lifecycle
-//   5. Track creator revenue share (50-80 DreamCoins per video)
+//   1. Chain Safe Synthetic Twin generation → HeyGen talking video
+//   2. Automatically capture training data via VideoCapture model
+//   3. Manage DreamCoins wallet deduction (three-bucket system)
+//   4. Emit NATS events for video lifecycle
+//   5. Enforce all existing safety layers from Safe Synthetic Twin
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../../core-api/src/prisma.service';
 import { NatsService } from '../../core-api/src/nats/nats.service';
-import { HttpClient } from '../../core-api/src/common/http-client';
-import { getCircuitBreaker } from '../../core-api/src/common/circuit-breaker';
+import { SyntheticPipelineService } from '../../ai-twin/src/synthetic-pipeline.service';
+import { HeyGenService } from './heygen.service';
+import { VideoDuration, VIDEO_COSTS } from './heygen.types';
+import type { ReasonCode } from '../../ledger/types';
 
-const NATS_VIDEO_GENERATED = 'cyrano.video.generated';
-const NATS_VIDEO_FAILED = 'cyrano.video.failed';
-
-// Video generation configuration
-const VIDU_API_KEY = process.env.VIDU_API_KEY ?? '';
-const VIDU_API_ENDPOINT = process.env.VIDU_API_ENDPOINT ?? 'https://api.vidu.ai/v1';
-
-// Fallback to Banana.dev if Vidu is not configured
-const BANANA_API_KEY = process.env.BANANA_API_KEY ?? '';
-const BANANA_VIDEO_MODEL_KEY = process.env.BANANA_VIDEO_MODEL_KEY ?? '';
+const NATS_VIDEO_PIPELINE_COMPLETE = 'cyrano.video.pipeline.complete';
+const NATS_VIDEO_PIPELINE_FAILED = 'cyrano.video.pipeline.failed';
 
 export interface GenerateVideoRequest {
-  twin_id: string;
-  creator_id: string;
-  user_id: string;
-  reference_image_url: string;
-  prompt?: string;
-  duration_seconds?: number; // 2-10 seconds
-  correlation_id: string;
+  userId: string;
+  twinId: string;
+  creatorId: string;
+  images: Buffer[]; // 5+ images for Safe Synthetic Twin
+  fantasyLevel?: number; // 0.0-1.0, defaults to 0.25
+  prompt: string; // Text for talking video
+  durationSeconds: VideoDuration; // 8 or 16
+  idempotencyKey: string;
 }
 
-export interface GenerateVideoResult {
-  video_cache_id: string;
-  twin_id: string;
-  storage_url: string;
-  duration_seconds: number;
-  generated_at_utc: string;
-  from_cache: boolean;
+export interface GenerateVideoResponse {
+  success: boolean;
+  videoUrl: string;
+  videoCacheId: string;
+  syntheticImageUrl: string;
+  durationSeconds: VideoDuration;
+  tokensCharged: number;
+  captureId: string; // VideoCapture ID for training data
+  newBalance: {
+    purchased: number;
+    membership: number;
+    bonus: number;
+    total: number;
+  };
 }
-
-// Response shape from Vidu API (mock for now)
-interface ViduVideoResponse {
-  video_url?: string;
-  video_id?: string;
-  duration?: number;
-}
-
-const videoHttpClient = new HttpClient({ provider: 'vidu', timeoutMs: 120_000 }); // 2 min timeout for video
-const videoCircuitBreaker = getCircuitBreaker('vidu');
 
 @Injectable()
 export class VideoService {
@@ -61,163 +53,274 @@ export class VideoService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly nats: NatsService,
+    private readonly syntheticPipeline: SyntheticPipelineService,
+    private readonly heygen: HeyGenService,
   ) {}
 
   /**
-   * Generate a video from a reference image.
-   * Uses Vidu API or falls back to Banana.dev video model.
+   * Full hybrid pipeline:
+   * 1. Generate Safe Synthetic Twin image (enforces all safety layers)
+   * 2. Use that image + prompt to generate HeyGen talking video
+   * 3. Deduct DreamCoins from wallet
+   * 4. Automatically capture data for training
    */
-  async generate(req: GenerateVideoRequest): Promise<GenerateVideoResult> {
-    this.logger.log(`Video generation request for twin ${req.twin_id}`, {
-      reference_image: req.reference_image_url,
-      duration: req.duration_seconds || 5,
-    });
+  async generateVideo(request: GenerateVideoRequest): Promise<GenerateVideoResponse> {
+    const {
+      userId,
+      twinId,
+      creatorId,
+      images,
+      fantasyLevel,
+      prompt,
+      durationSeconds,
+      idempotencyKey,
+    } = request;
 
-    // Check cache - same reference image + twin in last 24 hours
-    const imageHash = await this.hashImage(req.reference_image_url);
-    const cached = await this.prisma.videoCache.findFirst({
-      where: {
-        twin_id: req.twin_id,
-        reference_image_hash: imageHash,
-        generated_at: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-      },
-    });
-
-    if (cached) {
-      this.logger.log(`Cache hit for twin ${req.twin_id}, hash ${imageHash}`);
-      return {
-        video_cache_id: cached.video_cache_id,
-        twin_id: cached.twin_id,
-        storage_url: cached.storage_url,
-        duration_seconds: cached.duration_seconds,
-        generated_at_utc: cached.generated_at.toISOString(),
-        from_cache: true,
-      };
+    // Validate inputs
+    if (images.length < 5) {
+      throw new BadRequestException('Safe Synthetic Twin requires at least 5 images');
     }
 
-    // Generate video
-    const duration = req.duration_seconds ?? 5; // Default 5 seconds
-    let storageUrl: string;
+    if (!prompt || prompt.trim().length === 0) {
+      throw new BadRequestException('Prompt cannot be empty');
+    }
 
+    const tokenCost = VIDEO_COSTS[durationSeconds];
+    const correlationId = `video-gen-${Date.now()}-${userId.slice(0, 8)}`;
+
+    // 1. Check wallet balance FIRST
+    let wallet = await this.prisma.canonicalWallet.findUnique({
+      where: { user_id: userId },
+    });
+
+    if (!wallet) {
+      wallet = await this.prisma.canonicalWallet.create({
+        data: {
+          user_id: userId,
+          user_type: 'guest',
+          organization_id: 'default',
+          tenant_id: 'default',
+          purchased_tokens: 0,
+          membership_tokens: 0,
+          bonus_tokens: 0,
+        },
+      });
+    }
+
+    const totalBalance = wallet.purchased_tokens + wallet.membership_tokens + wallet.bonus_tokens;
+
+    if (totalBalance < tokenCost) {
+      throw new ForbiddenException(
+        `Insufficient DreamCoins. Required: ${tokenCost}, Available: ${totalBalance}`,
+      );
+    }
+
+    // 2. Generate Safe Synthetic Twin image (all safety layers intact)
+    let syntheticImageUrl: string;
     try {
-      if (VIDU_API_KEY) {
-        storageUrl = await this.callViduApi(req, duration);
-      } else if (BANANA_API_KEY && BANANA_VIDEO_MODEL_KEY) {
-        storageUrl = await this.callBananaVideoModel(req, duration);
-      } else {
-        // Mock generation for development
-        this.logger.warn('No video API configured - using mock video URL');
-        storageUrl = `https://mock-videos.example.com/video-${req.correlation_id}.mp4`;
-      }
+      const syntheticResult = await this.syntheticPipeline.createSyntheticModel(
+        images,
+        fantasyLevel ?? 0.25,
+      );
+      syntheticImageUrl = syntheticResult.imageUrl;
     } catch (err) {
-      await this.nats.publish(NATS_VIDEO_FAILED, {
-        twin_id: req.twin_id,
-        creator_id: req.creator_id,
-        correlation_id: req.correlation_id,
+      this.logger.error(`Safe Synthetic Twin generation failed: ${err}`);
+      await this.nats.publish(NATS_VIDEO_PIPELINE_FAILED, {
+        twin_id: twinId,
+        user_id: userId,
+        correlation_id: correlationId,
+        stage: 'synthetic_twin',
         error: err instanceof Error ? err.message : String(err),
       });
       throw err;
     }
 
-    // Persist to cache
-    const record = await this.prisma.videoCache.create({
+    // 3. Generate HeyGen talking video from synthetic image
+    let videoUrl: string;
+    let videoCacheId: string;
+    try {
+      // Fetch the synthetic image to get buffer (or pass URL directly if HeyGen supports it)
+      const videoResult = await this.heygen.generateTalkingVideo({
+        imageUrl: syntheticImageUrl, // Pass URL directly
+        imageBuffer: Buffer.from(''), // Empty buffer since we're using URL
+        prompt,
+        durationSeconds,
+        twinId,
+        userId,
+        creatorId,
+        correlationId,
+      });
+
+      videoUrl = videoResult.videoUrl;
+      videoCacheId = videoResult.videoCacheId;
+    } catch (err) {
+      this.logger.error(`HeyGen video generation failed: ${err}`);
+      await this.nats.publish(NATS_VIDEO_PIPELINE_FAILED, {
+        twin_id: twinId,
+        user_id: userId,
+        correlation_id: correlationId,
+        stage: 'heygen',
+        error: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
+
+    // 4. Deduct tokens from wallet (three-bucket priority: purchased → membership → bonus)
+    const deductions = await this.deductTokens(wallet, tokenCost, correlationId, idempotencyKey);
+
+    // 5. Capture data for training
+    const captureRecord = await this.prisma.videoCapture.create({
       data: {
-        twin_id: req.twin_id,
-        creator_id: req.creator_id,
-        user_id: req.user_id,
-        reference_image_url: req.reference_image_url,
-        reference_image_hash: imageHash,
-        storage_url: storageUrl,
-        duration_seconds: duration,
-        correlation_id: req.correlation_id,
-        reason_code: 'VIDEO_GEN',
+        video_cache_id: videoCacheId,
+        twin_id: twinId,
+        creator_id: creatorId,
+        user_id: userId,
+        input_image_url: syntheticImageUrl,
+        prompt,
+        video_url: videoUrl,
+        duration_seconds: durationSeconds,
+        tokens_spent: tokenCost,
+        provider: 'heygen',
+        tier: process.env.VIDEO_TIER ?? 'business',
+        captured_for_training: true,
+        correlation_id: `${correlationId}-capture`,
+        reason_code: 'VIDEO_CAPTURE_LEARNING',
       },
     });
 
-    await this.nats.publish(NATS_VIDEO_GENERATED, {
-      video_cache_id: record.video_cache_id,
-      twin_id: req.twin_id,
-      creator_id: req.creator_id,
+    // 6. Emit completion event
+    await this.nats.publish(NATS_VIDEO_PIPELINE_COMPLETE, {
+      video_cache_id: videoCacheId,
+      capture_id: captureRecord.capture_id,
+      twin_id: twinId,
+      user_id: userId,
+      duration_seconds: durationSeconds,
+      tokens_charged: tokenCost,
     });
 
     return {
-      video_cache_id: record.video_cache_id,
-      twin_id: req.twin_id,
-      storage_url: storageUrl,
-      duration_seconds: duration,
-      generated_at_utc: record.generated_at.toISOString(),
-      from_cache: false,
+      success: true,
+      videoUrl,
+      videoCacheId,
+      syntheticImageUrl,
+      durationSeconds,
+      tokensCharged: tokenCost,
+      captureId: captureRecord.capture_id,
+      newBalance: {
+        purchased: deductions.newWallet.purchased_tokens,
+        membership: deductions.newWallet.membership_tokens,
+        bonus: deductions.newWallet.bonus_tokens,
+        total:
+          deductions.newWallet.purchased_tokens +
+          deductions.newWallet.membership_tokens +
+          deductions.newWallet.bonus_tokens,
+      },
     };
   }
 
   // ─── Private helpers ──────────────────────────────────────────────────────
 
-  private async callViduApi(req: GenerateVideoRequest, duration: number): Promise<string> {
-    this.logger.log('Calling Vidu API for video generation');
+  private async deductTokens(
+    wallet: {
+      id: string;
+      purchased_tokens: number;
+      membership_tokens: number;
+      bonus_tokens: number;
+    },
+    amount: number,
+    correlationId: string,
+    _idempotencyKey: string,
+  ) {
+    let remainingToDeduct = amount;
+    const deductionDetails = {
+      purchased: 0,
+      membership: 0,
+      bonus: 0,
+    };
 
-    const { data } = await videoCircuitBreaker.execute(() =>
-      videoHttpClient.request<ViduVideoResponse>(
-        `${VIDU_API_ENDPOINT}/reference-to-video`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${VIDU_API_KEY}`,
-          },
-          body: JSON.stringify({
-            reference_image: req.reference_image_url,
-            prompt: req.prompt || 'Bring this character to life with natural movement',
-            duration_seconds: duration,
-            quality: 'high',
-          }),
-        },
-        req.correlation_id,
-      ),
-    );
-
-    if (!data.video_url) {
-      throw new Error('Vidu API returned no video URL');
+    // Deduct from purchased tokens first
+    if (wallet.purchased_tokens > 0) {
+      const fromPurchased = Math.min(wallet.purchased_tokens, remainingToDeduct);
+      deductionDetails.purchased = fromPurchased;
+      remainingToDeduct -= fromPurchased;
     }
 
-    return data.video_url;
-  }
-
-  private async callBananaVideoModel(req: GenerateVideoRequest, duration: number): Promise<string> {
-    this.logger.log('Calling Banana.dev video model');
-
-    const bananaHttpClient = new HttpClient({ provider: 'banana', timeoutMs: 120_000 });
-    const { data } = await videoCircuitBreaker.execute(() =>
-      bananaHttpClient.request<{ modelOutputs?: Array<{ video_url?: string }> }>(
-        'https://api.banana.dev/start/v4/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${BANANA_API_KEY}`,
-          },
-          body: JSON.stringify({
-            model_key: BANANA_VIDEO_MODEL_KEY,
-            pipeline_input: {
-              reference_image: req.reference_image_url,
-              prompt: req.prompt || 'Natural character movement',
-              duration_seconds: duration,
-            },
-          }),
-        },
-        req.correlation_id,
-      ),
-    );
-
-    const output = data.modelOutputs?.[0];
-    if (!output?.video_url) {
-      throw new Error('Banana.dev returned no video output');
+    // Then from membership tokens
+    if (remainingToDeduct > 0 && wallet.membership_tokens > 0) {
+      const fromMembership = Math.min(wallet.membership_tokens, remainingToDeduct);
+      deductionDetails.membership = fromMembership;
+      remainingToDeduct -= fromMembership;
     }
 
-    return output.video_url;
-  }
+    // Finally from bonus tokens
+    if (remainingToDeduct > 0 && wallet.bonus_tokens > 0) {
+      const fromBonus = Math.min(wallet.bonus_tokens, remainingToDeduct);
+      deductionDetails.bonus = fromBonus;
+      remainingToDeduct -= fromBonus;
+    }
 
-  private async hashImage(imageUrl: string): Promise<string> {
-    const { createHash } = await import('node:crypto');
-    return createHash('sha256').update(imageUrl).digest('hex').slice(0, 64);
+    // Update wallet atomically
+    const updatedWallet = await this.prisma.canonicalWallet.update({
+      where: { id: wallet.id },
+      data: {
+        purchased_tokens: { decrement: deductionDetails.purchased },
+        membership_tokens: { decrement: deductionDetails.membership },
+        bonus_tokens: { decrement: deductionDetails.bonus },
+      },
+    });
+
+    // Create ledger entries for each bucket deduction (execute sequentially to avoid conflicts)
+    if (deductionDetails.purchased > 0) {
+      await this.prisma.canonicalLedgerEntry.create({
+        data: {
+          wallet_id: wallet.id,
+          correlation_id: `${correlationId}-purch`,
+          reason_code: 'SPEND' as ReasonCode,
+          amount: -deductionDetails.purchased,
+          bucket: 'purchased',
+          token_type: 'CZT',
+          hash_prev: null,
+          hash_current: `hash-${correlationId}-purch`,
+          metadata: { duration_seconds: amount },
+        },
+      });
+    }
+
+    if (deductionDetails.membership > 0) {
+      await this.prisma.canonicalLedgerEntry.create({
+        data: {
+          wallet_id: wallet.id,
+          correlation_id: `${correlationId}-member`,
+          reason_code: 'SPEND' as ReasonCode,
+          amount: -deductionDetails.membership,
+          bucket: 'membership',
+          token_type: 'CZT',
+          hash_prev: null,
+          hash_current: `hash-${correlationId}-member`,
+          metadata: { duration_seconds: amount },
+        },
+      });
+    }
+
+    if (deductionDetails.bonus > 0) {
+      await this.prisma.canonicalLedgerEntry.create({
+        data: {
+          wallet_id: wallet.id,
+          correlation_id: `${correlationId}-bonus`,
+          reason_code: 'SPEND' as ReasonCode,
+          amount: -deductionDetails.bonus,
+          bucket: 'bonus',
+          token_type: 'CZT',
+          hash_prev: null,
+          hash_current: `hash-${correlationId}-bonus`,
+          metadata: { duration_seconds: amount },
+        },
+      });
+    }
+
+    return {
+      deductionDetails,
+      newWallet: updatedWallet,
+    };
   }
 }

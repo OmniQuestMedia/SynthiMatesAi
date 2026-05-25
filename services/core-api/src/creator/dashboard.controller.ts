@@ -1,78 +1,80 @@
-// PHASE 6 ITEM 3: Enhanced Creator Dashboard with real-time earnings
 // WO: WO-INIT-001
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+// CHORE: Enhanced with Account-Core analytics (Phase 5 Item 2)
+import { Injectable, Controller, Get, Query, Req, Logger } from '@nestjs/common';
+import { Request } from 'express';
+import {
+  AccountCoreAnalyticsService,
+  CreatorAnalytics,
+} from '../analytics/account-core-analytics.service';
 
 export interface DashboardSummary {
   creatorId: string;
-  totalEarningsCents: number;
-  totalEarningsTokens: number; // PHASE 6 ITEM 1: Track token earnings
-  pendingPayoutCents: number;
-  activeContracts: number;
-  recentTipCount: number;
-  activeTwins: number; // PHASE 6 ITEM 3: Count of active AI twins
-  syntheticGenerations: number; // PHASE 6 ITEM 3: Total synthetic generations
-  imageGenerations: number; // PHASE 6 ITEM 3: Total in-chat image generations
+  totalEarningsCents: bigint;
+  pendingPayoutCents: bigint;
+  syntheticTwinCount: number;
+  recentGenerations: number;
+  analytics?: CreatorAnalytics;
 }
 
 @Injectable()
+@Controller('creator/dashboard')
 export class DashboardController {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(DashboardController.name);
 
-  async getSummary(creatorId: string): Promise<DashboardSummary> {
-    // PHASE 6 ITEM 1 & 3: Aggregate real earnings from ledger
+  constructor(private readonly analyticsService: AccountCoreAnalyticsService) {}
 
-    // Get creator wallet
-    const wallet = await this.prisma.canonicalWallet.findFirst({
-      where: { user_id: creatorId, user_type: 'creator' },
-    });
+  /**
+   * Get creator dashboard summary with analytics
+   */
+  @Get('summary')
+  async getSummary(
+    @Req() req: Request & { user?: { id: string } },
+    @Query('days') days: string = '30',
+  ): Promise<DashboardSummary> {
+    const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
+    const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
+    const daysNum = parseInt(days, 10) || 30;
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysNum);
 
-    // Count active AI twins
-    const activeTwins = await this.prisma.aiTwin.count({
-      where: {
-        creator_id: creatorId,
-        training_status: 'TRAINING_COMPLETE',
-      },
-    });
+    this.logger.log(`Fetching dashboard summary for creator ${creatorId}`);
 
-    // Get creator earnings from ledger
-    const earningsEntries = await this.prisma.canonicalLedgerEntry.findMany({
-      where: {
-        wallet_id: wallet?.id || '',
-        reason_code: {
-          in: ['CREATOR_EARNINGS_SYNTHETIC', 'CREATOR_EARNINGS_IMAGE', 'CREATOR_EARNINGS_VIDEO'],
-        },
-      },
-    });
-
-    // Sum up earnings (amounts are in tokens)
-    const totalEarningsTokens = earningsEntries.reduce((sum, entry) => sum + entry.amount, 0);
-
-    // Convert tokens to cents (approximate: 1 token ≈ $0.075)
-    const totalEarningsCents = Math.floor(totalEarningsTokens * 7.5);
-
-    // Count generations by type
-    const syntheticGenerations = earningsEntries.filter(
-      (e) => e.reason_code === 'CREATOR_EARNINGS_SYNTHETIC',
-    ).length;
-
-    const imageGenerations = earningsEntries.filter(
-      (e) => e.reason_code === 'CREATOR_EARNINGS_IMAGE',
-    ).length;
-
-    // Get available balance for payout
-    const pendingPayoutCents = wallet ? Math.floor(wallet.bonus_tokens * 7.5) : 0;
+    const analytics = await this.analyticsService.getCreatorAnalytics(
+      creatorId,
+      startDate,
+      endDate,
+    );
 
     return {
       creatorId,
-      totalEarningsCents,
-      totalEarningsTokens,
-      pendingPayoutCents,
-      activeContracts: 0, // Legacy field - not used in Cyrano context
-      recentTipCount: 0, // Legacy field - not used in Cyrano context
-      activeTwins,
-      syntheticGenerations,
-      imageGenerations,
+      totalEarningsCents: analytics.totalEarningsCents,
+      pendingPayoutCents: BigInt(analytics.payoutSummary.totalAmountCents),
+      syntheticTwinCount: analytics.syntheticTwinUsage.length,
+      recentGenerations: analytics.syntheticTwinUsage.reduce(
+        (sum, twin) => sum + twin.generationCount,
+        0,
+      ),
+      analytics,
     };
+  }
+
+  /**
+   * Get detailed analytics for date range
+   */
+  @Get('analytics')
+  async getAnalytics(
+    @Req() req: Request & { user?: { id: string } },
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<CreatorAnalytics> {
+    const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
+    const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
+
+    this.logger.log(`Fetching detailed analytics for creator ${creatorId}`);
+
+    return this.analyticsService.getCreatorAnalytics(creatorId, start, end);
   }
 }

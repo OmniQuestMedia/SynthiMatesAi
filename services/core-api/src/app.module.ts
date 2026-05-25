@@ -40,6 +40,7 @@ import { BenefitsMiddleware } from './middleware/benefits.middleware';
 import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate-limit.middleware';
 import { AccountModule } from './account/account.module';
 import { VoiceChatModule } from './voice-chat/voice-chat.module';
+import { VideoModule } from '../../video-generation/src/video.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { VoiceChatModule } from './voice-chat/voice-chat.module';
     //  wires against /purchase, /spend, /payout below.
     AccountModule, // PHASE1-ITEM5A: Account management endpoints
     VoiceChatModule, // PHASE4-ITEM1: Voice chat with DreamCoins integration
+    VideoModule, // Enterprise-ready hybrid Vidu Reference-to-Video integration
     CreatorModule,
     SafetyModule,
     GrowthModule,
