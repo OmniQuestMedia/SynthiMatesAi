@@ -261,6 +261,32 @@ async function seedPromoCodes() {
 async function seedSynthiMatesFacets() {
   console.log('Starting SynthiMates facet seed...');
 
+  const ensureFacetValue = async (
+    dimensionId: string,
+    value: string,
+    description: string,
+    isExplicit: boolean,
+  ) => {
+    const existing = await prisma.facetValue.findFirst({
+      where: {
+        dimension_id: dimensionId,
+        value,
+      },
+      select: { id: true },
+    });
+
+    if (existing) return;
+
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: dimensionId,
+        value,
+        description,
+        is_explicit: isExplicit,
+      },
+    });
+  };
+
   // Cultural Aesthetics (non-explicit dimension)
   const culturalAesthetics = await prisma.facetDimension.upsert({
     where: { id: '00000000-0000-0000-0000-100000000001' },
@@ -282,14 +308,7 @@ async function seedSynthiMatesFacets() {
   ];
 
   for (const val of culturalValues) {
-    await prisma.facetValue.create({
-      data: {
-        dimension_id: culturalAesthetics.id,
-        value: val.value,
-        description: val.description,
-        is_explicit: false,
-      },
-    });
+    await ensureFacetValue(culturalAesthetics.id, val.value, val.description, false);
   }
 
   console.log(`Seeded Cultural Aesthetics dimension with ${culturalValues.length} values`);
@@ -314,14 +333,7 @@ async function seedSynthiMatesFacets() {
   ];
 
   for (const val of lifeStageValues) {
-    await prisma.facetValue.create({
-      data: {
-        dimension_id: lifeStage.id,
-        value: val.value,
-        description: val.description,
-        is_explicit: false,
-      },
-    });
+    await ensureFacetValue(lifeStage.id, val.value, val.description, false);
   }
 
   console.log(`Seeded Life Stage dimension with ${lifeStageValues.length} values`);
@@ -347,14 +359,7 @@ async function seedSynthiMatesFacets() {
   ];
 
   for (const val of personalityValues) {
-    await prisma.facetValue.create({
-      data: {
-        dimension_id: personalityVibe.id,
-        value: val.value,
-        description: val.description,
-        is_explicit: false,
-      },
-    });
+    await ensureFacetValue(personalityVibe.id, val.value, val.description, false);
   }
 
   console.log(`Seeded Personality Vibe dimension with ${personalityValues.length} values`);
@@ -380,14 +385,7 @@ async function seedSynthiMatesFacets() {
   ];
 
   for (const val of bodyStyleValues) {
-    await prisma.facetValue.create({
-      data: {
-        dimension_id: bodyStyle.id,
-        value: val.value,
-        description: val.description,
-        is_explicit: false,
-      },
-    });
+    await ensureFacetValue(bodyStyle.id, val.value, val.description, false);
   }
 
   console.log(`Seeded Body Style dimension with ${bodyStyleValues.length} values`);
@@ -411,14 +409,7 @@ async function seedSynthiMatesFacets() {
   ];
 
   for (const val of explicitValues) {
-    await prisma.facetValue.create({
-      data: {
-        dimension_id: explicitPreferences.id,
-        value: val.value,
-        description: val.description,
-        is_explicit: true,
-      },
-    });
+    await ensureFacetValue(explicitPreferences.id, val.value, val.description, true);
   }
 
   console.log(`Seeded Explicit Content Preferences dimension with ${explicitValues.length} values`);
