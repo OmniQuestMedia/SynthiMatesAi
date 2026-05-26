@@ -53,8 +53,10 @@ export class SyntheticPipelineService {
       );
 
       if (context.characterId) {
-        await this.zkpConsentService.assertGenerationConsent(context.characterId);
-        await this.antiLookalikeGuard.assertLookalikeCheckConsent(context.characterId);
+        await Promise.all([
+          this.zkpConsentService.assertGenerationConsent(context.characterId),
+          this.antiLookalikeGuard.assertLookalikeCheckConsent(context.characterId),
+        ]);
       }
 
       // Step 1: Embed each image + compute celebrity similarity weights

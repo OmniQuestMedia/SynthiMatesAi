@@ -1,4 +1,4 @@
--- Phase 2.7 pre-requisite: character consent ledger for motion extractor and guardrails.
+-- Phase 2.7 prerequisite: character consent ledger for motion extractor and guardrails.
 -- Creates character_consents with immutable grant rows tracked by scope.
 
 CREATE TABLE IF NOT EXISTS "character_consents" (
