@@ -2813,3 +2813,110 @@ model PayoutRequest {
   @@index([status, requested_at])
   @@map("payout_requests")
 }
+
+// ─── SYNTHIMATES-001: Facet-Based Character Generation ────────────────────────
+// Phase 2.1: Project Setup & Database Foundation
+// Facet dimensions define the categories (Cultural Aesthetics, Life Stage, etc.)
+// Facet values are the specific options within each dimension
+// Characters are built from a combination of facet values
+// Explicit content is tracked separately via isExplicit flags
+
+model FacetDimension {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String       @db.VarChar(100)
+  description         String?      @db.Text
+  is_explicit_category Boolean     @default(false) // True if this dimension contains explicit content
+  created_at          DateTime     @default(now()) @db.Timestamptz
+
+  values              FacetValue[]
+
+  @@map("facet_dimensions")
+}
+
+model FacetValue {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  dimension_id String   @db.Uuid
+  value       String   @db.VarChar(200)
+  description String?  @db.Text
+  is_explicit Boolean  @default(false) // True if this specific value is explicit
+  created_at  DateTime @default(now()) @db.Timestamptz
+
+  dimension             FacetDimension           @relation(fields: [dimension_id], references: [id])
+  characterFacets       CharacterFacet[]
+  characterExplicitFacets CharacterExplicitFacet[]
+
+  @@index([dimension_id])
+  @@map("facet_values")
+}
+
+model Character {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  display_name String    @db.VarChar(200)
+  bio          String?   @db.Text
+  is_explicit  Boolean   @default(false) // True if character has any explicit facets
+  created_at   DateTime  @default(now()) @db.Timestamptz
+  updated_at   DateTime  @default(now()) @db.Timestamptz
+
+  facets           CharacterFacet[]
+  explicitFacets   CharacterExplicitFacet[]
+  engagementEvents EngagementEvent[]
+  popularityState  PopularityWorkerState?
+
+  @@map("characters")
+}
+
+model CharacterFacet {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  character_id   String   @db.Uuid
+  facet_value_id String   @db.Uuid
+  created_at     DateTime @default(now()) @db.Timestamptz
+
+  character  Character  @relation(fields: [character_id], references: [id])
+  facetValue FacetValue @relation(fields: [facet_value_id], references: [id])
+
+  @@index([character_id])
+  @@index([facet_value_id])
+  @@map("character_facets")
+}
+
+model CharacterExplicitFacet {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  character_id   String   @db.Uuid
+  facet_value_id String   @db.Uuid
+  created_at     DateTime @default(now()) @db.Timestamptz
+
+  character  Character  @relation(fields: [character_id], references: [id])
+  facetValue FacetValue @relation(fields: [facet_value_id], references: [id])
+
+  @@index([character_id])
+  @@index([facet_value_id])
+  @@map("character_explicit_facets")
+}
+
+model EngagementEvent {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  character_id String   @db.Uuid
+  user_id      String   @db.Uuid
+  event_type   String   @db.VarChar(50) // VIEW, LIKE, CHAT, etc.
+  metadata     Json?
+  created_at   DateTime @default(now()) @db.Timestamptz
+
+  character Character @relation(fields: [character_id], references: [id])
+
+  @@index([character_id, created_at])
+  @@index([user_id, created_at])
+  @@map("engagement_events")
+}
+
+model PopularityWorkerState {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  character_id      String   @unique @db.Uuid
+  popularity_score  Int      @default(0)
+  last_processed_at DateTime @default(now()) @db.Timestamptz
+  updated_at        DateTime @default(now()) @db.Timestamptz
+
+  character Character @relation(fields: [character_id], references: [id])
+
+  @@index([popularity_score])
+  @@map("popularity_worker_state")
+}

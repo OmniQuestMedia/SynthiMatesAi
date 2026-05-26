@@ -8,6 +8,8 @@
 // value" (§6.b), we seed six distinct users under a single test org+tenant triple.
 // This is enum-coverage validation, not realistic user data.
 
+/* eslint-disable no-console */
+
 import { PrismaClient, MembershipTier, TransitionTrigger } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -252,6 +254,178 @@ async function seedPromoCodes() {
   console.log('Promo code seed complete — LAUNCH70 seeded.');
 }
 
+// ── SynthiMates Facets ─────────────────────────────────────────────────────────
+// SYNTHIMATES-001: Seed initial facet dimensions and values
+// Cultural Aesthetics, Life Stage, Personality Vibe, Body Style + explicit categories
+
+async function seedSynthiMatesFacets() {
+  console.log('Starting SynthiMates facet seed...');
+
+  // Cultural Aesthetics (non-explicit dimension)
+  const culturalAesthetics = await prisma.facetDimension.upsert({
+    where: { id: '00000000-0000-0000-0000-100000000001' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-100000000001',
+      name: 'Cultural Aesthetics',
+      description: 'Visual and cultural style preferences',
+      is_explicit_category: false,
+    },
+  });
+
+  const culturalValues = [
+    { value: 'Kawaii', description: 'Cute Japanese aesthetic' },
+    { value: 'Gothic', description: 'Dark, dramatic style' },
+    { value: 'Punk', description: 'Rebellious, edgy look' },
+    { value: 'Elegant', description: 'Refined, sophisticated style' },
+    { value: 'Casual', description: 'Relaxed, everyday vibe' },
+  ];
+
+  for (const val of culturalValues) {
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: culturalAesthetics.id,
+        value: val.value,
+        description: val.description,
+        is_explicit: false,
+      },
+    });
+  }
+
+  console.log(`Seeded Cultural Aesthetics dimension with ${culturalValues.length} values`);
+
+  // Life Stage (non-explicit dimension)
+  const lifeStage = await prisma.facetDimension.upsert({
+    where: { id: '00000000-0000-0000-0000-100000000002' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-100000000002',
+      name: 'Life Stage',
+      description: 'Age bracket and life experience level',
+      is_explicit_category: false,
+    },
+  });
+
+  const lifeStageValues = [
+    { value: 'Young Adult', description: '18-25 years old' },
+    { value: 'Mature', description: '26-35 years old' },
+    { value: 'Experienced', description: '36-45 years old' },
+    { value: 'Distinguished', description: '46+ years old' },
+  ];
+
+  for (const val of lifeStageValues) {
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: lifeStage.id,
+        value: val.value,
+        description: val.description,
+        is_explicit: false,
+      },
+    });
+  }
+
+  console.log(`Seeded Life Stage dimension with ${lifeStageValues.length} values`);
+
+  // Personality Vibe (non-explicit dimension)
+  const personalityVibe = await prisma.facetDimension.upsert({
+    where: { id: '00000000-0000-0000-0000-100000000003' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-100000000003',
+      name: 'Personality Vibe',
+      description: 'Character temperament and energy',
+      is_explicit_category: false,
+    },
+  });
+
+  const personalityValues = [
+    { value: 'Playful', description: 'Fun-loving and lighthearted' },
+    { value: 'Mysterious', description: 'Enigmatic and intriguing' },
+    { value: 'Confident', description: 'Self-assured and bold' },
+    { value: 'Sweet', description: 'Kind and gentle' },
+    { value: 'Intense', description: 'Passionate and focused' },
+  ];
+
+  for (const val of personalityValues) {
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: personalityVibe.id,
+        value: val.value,
+        description: val.description,
+        is_explicit: false,
+      },
+    });
+  }
+
+  console.log(`Seeded Personality Vibe dimension with ${personalityValues.length} values`);
+
+  // Body Style (non-explicit dimension)
+  const bodyStyle = await prisma.facetDimension.upsert({
+    where: { id: '00000000-0000-0000-0000-100000000004' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-100000000004',
+      name: 'Body Style',
+      description: 'Physical build and appearance',
+      is_explicit_category: false,
+    },
+  });
+
+  const bodyStyleValues = [
+    { value: 'Athletic', description: 'Fit and toned physique' },
+    { value: 'Curvy', description: 'Voluptuous figure' },
+    { value: 'Slender', description: 'Lean and slim build' },
+    { value: 'Average', description: 'Balanced proportions' },
+    { value: 'Petite', description: 'Compact and delicate frame' },
+  ];
+
+  for (const val of bodyStyleValues) {
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: bodyStyle.id,
+        value: val.value,
+        description: val.description,
+        is_explicit: false,
+      },
+    });
+  }
+
+  console.log(`Seeded Body Style dimension with ${bodyStyleValues.length} values`);
+
+  // Explicit Content Preferences (explicit dimension)
+  const explicitPreferences = await prisma.facetDimension.upsert({
+    where: { id: '00000000-0000-0000-0000-100000000005' },
+    update: {},
+    create: {
+      id: '00000000-0000-0000-0000-100000000005',
+      name: 'Explicit Content Preferences',
+      description: 'Adult content categories (18+ only)',
+      is_explicit_category: true,
+    },
+  });
+
+  const explicitValues = [
+    { value: 'Softcore', description: 'Suggestive, non-graphic content' },
+    { value: 'Hardcore', description: 'Explicit adult content' },
+    { value: 'Fetish', description: 'Specialized interests and kinks' },
+  ];
+
+  for (const val of explicitValues) {
+    await prisma.facetValue.create({
+      data: {
+        dimension_id: explicitPreferences.id,
+        value: val.value,
+        description: val.description,
+        is_explicit: true,
+      },
+    });
+  }
+
+  console.log(`Seeded Explicit Content Preferences dimension with ${explicitValues.length} values`);
+
+  console.log('SynthiMates facet seed complete — 5 dimensions, 22 total facet values seeded.');
+}
+
 async function runAll() {
   try {
     await main();
@@ -271,6 +445,13 @@ async function runAll() {
     await seedPromoCodes();
   } catch (e) {
     console.error('Promo code seed failed:', e);
+    throw e;
+  }
+
+  try {
+    await seedSynthiMatesFacets();
+  } catch (e) {
+    console.error('SynthiMates facet seed failed:', e);
     throw e;
   }
 }

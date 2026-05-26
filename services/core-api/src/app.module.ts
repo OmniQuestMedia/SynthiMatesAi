@@ -41,6 +41,7 @@ import { SyntheticRateLimitMiddleware } from './common/middleware/synthetic-rate
 import { AccountModule } from './account/account.module';
 import { VoiceChatModule } from './voice-chat/voice-chat.module';
 import { VideoModule } from '../../video-generation/src/video.module';
+import { SynthiMatesModule } from './synthimates/synthimates.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { VideoModule } from '../../video-generation/src/video.module';
     AccountModule, // PHASE1-ITEM5A: Account management endpoints
     VoiceChatModule, // PHASE4-ITEM1: Voice chat with DreamCoins integration
     VideoModule, // Enterprise-ready hybrid Vidu Reference-to-Video integration
+    SynthiMatesModule, // SYNTHIMATES-001: Facet-based character generation
     CreatorModule,
     SafetyModule,
     GrowthModule,
