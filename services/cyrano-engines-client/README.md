@@ -79,10 +79,16 @@ const voiceResponse = await this.cyranoClient.generateVoice({
   text: 'Hello! How are you doing today?',
   voice_id: 'voice-123',
   user_id: 'user-456',
+  personality_preset: 'STORYTELLER',
+  personality_sliders: { warmth: 0.8, expressiveness: 0.9, playfulness: 0.7 },
+  fantasy_language_mode: { enabled: true, preserve_accent: true, base_locale: 'en-GB' },
+  caption_translation: { enabled: true, target_locale: 'fr-FR' },
+  target_locale: 'fr-FR',
 });
 
 console.log(voiceResponse.audio_url);
 console.log(voiceResponse.duration_seconds);
+console.log(voiceResponse.caption_translation?.translated_caption);
 ```
 
 ### Video Generation
@@ -119,8 +125,8 @@ console.log(narrativeResponse.memories_retrieved);
 ```typescript
 const health = await this.cyranoClient.healthCheck();
 
-console.log(health.available);          // true if circuit is closed
-console.log(health.circuit_state);      // CLOSED, OPEN, or HALF_OPEN
+console.log(health.available); // true if circuit is closed
+console.log(health.circuit_state); // CLOSED, OPEN, or HALF_OPEN
 console.log(health.using_local_fallback); // true if no CyranoEngines URL configured
 ```
 

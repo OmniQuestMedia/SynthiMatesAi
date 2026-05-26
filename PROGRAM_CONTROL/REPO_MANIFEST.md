@@ -5,6 +5,9 @@ Auto-generated on every push. Do not edit manually.
 **Branch:** `claude/add-voice-and-translation-features`
 **Commit:** `f076e7f4fa448dc486c85938a8a3482c44374e0c`
 **Generated:** 2026-05-26T16:41:13Z
+**Branch:** `claude/phase-2-1-project-setup`
+**Commit:** `8b6f43df6d615ad7277445c2b622efdb30cfbb3d`
+**Generated:** 2026-05-26T19:39:23Z
 
 ## All Files
 
@@ -48,9 +51,11 @@ Auto-generated on every push. Do not edit manually.
 - `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
 - `MASTER_PROJECT_FOLDER.md`
+- `MAXZONEGPT-POINTER.md`
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
 - `PHASE7_COMPLETION_SUMMARY.md`
+- `PHASE_2_1_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
@@ -376,6 +381,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/themes/index.ts`
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
+- `circuits/consent_verification.circom`
 - `docker-compose.yml`
 - `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
@@ -458,6 +464,7 @@ Auto-generated on every push. Do not edit manually.
 - `governance/pre-ship-audit.service.ts`
 - `infra/postgres/init-ledger.sql`
 - `jest.config.js`
+- `migrations/20260526_add_consent_and_motion_tables.sql`
 - `package.json`
 - `prisma/migrations/20260409000000_legal_hold_db_migration/migration.sql`
 - `prisma/migrations/20260412000000_gz_scheduling_module/migration.sql`
@@ -479,6 +486,9 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
+- `prisma/migrations/20260526000000_synthimates_foundation/migration.sql`
+- `prisma/migrations/20260526163000_phase_2_1_project_setup_database_foundation/migration.sql`
+- `prisma/migrations/20260526191500_add_character_consents/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
@@ -498,10 +508,13 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/anti-lookalike.guard.ts`
+- `services/ai-twin/src/character-reference.service.ts`
 - `services/ai-twin/src/curator.service.spec.ts`
 - `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
+- `services/ai-twin/src/zkp-consent.service.ts`
 - `services/core-api/src/account/account-purchase.service.ts`
 - `services/core-api/src/account/account.controller.ts`
 - `services/core-api/src/account/account.module.ts`
@@ -660,6 +673,11 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/subscription/subscription.module.ts`
 - `services/core-api/src/subscription/subscription.service.ts`
 - `services/core-api/src/subscription/subscription.types.ts`
+- `services/core-api/src/synthimates/README.md`
+- `services/core-api/src/synthimates/synthimates.controller.ts`
+- `services/core-api/src/synthimates/synthimates.module.ts`
+- `services/core-api/src/synthimates/synthimates.service.ts`
+- `services/core-api/src/synthimates/synthimates.types.ts`
 - `services/core-api/src/test/helpers/setTestEnv.ts`
 - `services/core-api/src/voice-chat/voice-chat.controller.ts`
 - `services/core-api/src/voice-chat/voice-chat.module.ts`
@@ -680,6 +698,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/creator-onboarding/src/email-domain.policy.spec.ts`
 - `services/creator-onboarding/src/email-domain.policy.ts`
 - `services/cyrano-engines-client/README.md`
+- `services/cyrano-engines-client/src/cyrano-engines.client.spec.ts`
 - `services/cyrano-engines-client/src/cyrano-engines.client.ts`
 - `services/cyrano-engines-client/src/cyrano-engines.module.ts`
 - `services/cyrano-engines-client/src/index.ts`
@@ -860,6 +879,8 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/nats-circuit-breaker.spec.ts`
 - `tests/integration/nats-sharding.spec.ts`
 - `tests/integration/notification-engine.spec.ts`
+- `tests/integration/phase-2-1-database-foundation.spec.ts`
+- `tests/integration/phase-2-7-character-consents.spec.ts`
 - `tests/integration/pinned-memory.service.spec.ts`
 - `tests/integration/points-purchase-bundles.spec.ts`
 - `tests/integration/purchase-hours-gate.spec.ts`

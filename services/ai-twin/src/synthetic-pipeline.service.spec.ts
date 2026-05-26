@@ -5,6 +5,12 @@ describe('SyntheticPipelineService', () => {
   const prisma = {
     $queryRaw: jest.fn().mockResolvedValue([]),
   } as never;
+  const antiLookalikeGuard = {
+    assertLookalikeCheckConsent: jest.fn().mockResolvedValue(undefined),
+  } as never;
+  const zkpConsentService = {
+    assertGenerationConsent: jest.fn().mockResolvedValue(undefined),
+  } as never;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -13,7 +19,7 @@ describe('SyntheticPipelineService', () => {
 
   it('returns a C2PA-watermarked URL and exposes the safeguard in metadata', async () => {
     const logSpy = jest.spyOn(Logger.prototype, 'log').mockImplementation();
-    const service = new SyntheticPipelineService(prisma);
+    const service = new SyntheticPipelineService(prisma, antiLookalikeGuard, zkpConsentService);
     const buffers = [1, 2, 3, 4, 5].map((value) => Buffer.from([value]));
 
     const result = await service.createSyntheticModel(buffers, 0.25);
