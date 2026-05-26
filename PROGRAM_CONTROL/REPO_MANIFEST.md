@@ -5,6 +5,9 @@ Auto-generated on every push. Do not edit manually.
 **Branch:** `copilot/update-character-consents-table`
 **Commit:** `5f4437962d7c224a5ccd971b94e1320c2887d35e`
 **Generated:** 2026-05-26T19:20:43Z
+**Branch:** `copilot/create-consent-circuit-files`
+**Commit:** `45d8cbd8f26240f34fa046a44976a13d59ad4498`
+**Generated:** 2026-05-26T19:12:44Z
 
 ## All Files
 
