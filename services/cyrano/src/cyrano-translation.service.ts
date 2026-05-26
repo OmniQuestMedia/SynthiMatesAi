@@ -65,6 +65,17 @@ export interface TranslateInput {
   target_locale: Locale;
   /** Caller correlation id — threaded through every event. */
   correlation_id: string;
+  /**
+   * Fantasy Language Mode: When true, preserves source accent/dialect
+   * while translating. This creates "fantasy" versions of languages
+   * (e.g., English with French accent, Spanish with Japanese accent).
+   */
+  preserve_accent?: boolean;
+  /**
+   * Source accent to preserve (if different from canonical en-US).
+   * Used in Fantasy Language Mode to maintain accent characteristics.
+   */
+  source_accent_locale?: Locale;
 }
 
 @Injectable()
@@ -119,7 +130,12 @@ export class CyranoTranslationService {
       emitted_at_utc: new Date().toISOString(),
     });
 
-    const translated_copy = this._translateText(source_copy, target_locale);
+    const translated_copy = this._translateText(
+      source_copy,
+      target_locale,
+      input.preserve_accent,
+      input.source_accent_locale,
+    );
 
     this.nats.publish(NATS_TOPICS.CYRANO_TRANSLATION_COMPLETED, {
       tenant_id,
@@ -185,10 +201,28 @@ export class CyranoTranslationService {
    * Phase 1 contract: replace this method body with an async/await call to
    * the chosen MT provider (Google Cloud Translation / DeepL / AWS Translate).
    * The return type and call signature must remain identical.
+   *
+   * Phase 2.5: Added support for accent preservation (Fantasy Language Mode).
+   * When preserve_accent is true, the translation includes markers to guide
+   * voice synthesis to maintain the source accent while speaking the target language.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected _translateText(sourceCopy: string, _targetLocale: Locale): string {
+  protected _translateText(
+    sourceCopy: string,
+    _targetLocale: Locale,
+    preserveAccent: boolean = false,
+    sourceAccentLocale?: Locale,
+  ): string {
     // Deterministic stub — prefix signals Phase 0 to downstream callers.
-    return `[${_targetLocale}] ${sourceCopy}`;
+    const translatedText = `[${_targetLocale}] ${sourceCopy}`;
+
+    if (preserveAccent) {
+      const accentMarker = sourceAccentLocale || CYRANO_SOURCE_LOCALE;
+      // Fantasy Language Mode: Include accent preservation marker
+      // Format: [TARGET_LOCALE|ACCENT:SOURCE_LOCALE] text
+      // Example: [es-MX|ACCENT:fr-FR] Bonjour -> Spanish with French accent
+      return `[${_targetLocale}|ACCENT:${accentMarker}] ${sourceCopy}`;
+    }
+
+    return translatedText;
   }
 }

@@ -21,7 +21,7 @@
 // 7. Circuit breaker pattern for sustained failures
 
 import { Injectable, Logger } from '@nestjs/common';
-import { HttpClient, HttpResponse } from '../../core-api/src/common/http-client';
+import { HttpClient } from '../../core-api/src/common/http-client';
 import { v4 as uuid } from 'uuid';
 
 // ── Configuration ──────────────────────────────────────────────────────────
@@ -71,6 +71,22 @@ export interface CyranoVoiceRequest {
   text: string;
   voice_id: string;
   user_id: string;
+  /** Predefined personality preset (neutral, warm, professional, etc.) */
+  personality_preset?: string;
+  /** Custom voice sliders - stability, similarity_boost, style, clarity, energy */
+  voice_sliders?: {
+    stability?: number;
+    similarity_boost?: number;
+    style?: number;
+    clarity?: number;
+    energy?: number;
+  };
+  /** Fantasy Language Mode: preserve accent while translating */
+  preserve_accent?: boolean;
+  /** Source accent locale for Fantasy Language Mode */
+  source_accent_locale?: string;
+  /** Target locale for translation */
+  target_locale?: string;
   correlation_id?: string;
 }
 
