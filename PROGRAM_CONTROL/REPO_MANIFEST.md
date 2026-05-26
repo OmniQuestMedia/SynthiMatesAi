@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `780ec2dd976e953b074bb35273c48b35ea945ce4`
-**Generated:** 2026-05-26T19:12:05Z
+**Branch:** `copilot/update-character-consents-table`
+**Commit:** `5f4437962d7c224a5ccd971b94e1320c2887d35e`
+**Generated:** 2026-05-26T19:20:43Z
 
 ## All Files
 
@@ -481,6 +481,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
 - `prisma/migrations/20260526163000_phase_2_1_project_setup_database_foundation/migration.sql`
+- `prisma/migrations/20260526191500_add_character_consents/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
@@ -500,10 +501,13 @@ Auto-generated on every push. Do not edit manually.
 - `services/ai-twin/src/ai-twin.module.ts`
 - `services/ai-twin/src/ai-twin.service.ts`
 - `services/ai-twin/src/ai-twin.types.ts`
+- `services/ai-twin/src/anti-lookalike.guard.ts`
+- `services/ai-twin/src/character-reference.service.ts`
 - `services/ai-twin/src/curator.service.spec.ts`
 - `services/ai-twin/src/curator.service.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.spec.ts`
 - `services/ai-twin/src/synthetic-pipeline.service.ts`
+- `services/ai-twin/src/zkp-consent.service.ts`
 - `services/core-api/src/account/account-purchase.service.ts`
 - `services/core-api/src/account/account.controller.ts`
 - `services/core-api/src/account/account.module.ts`
@@ -862,6 +866,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/nats-sharding.spec.ts`
 - `tests/integration/notification-engine.spec.ts`
 - `tests/integration/phase-2-1-database-foundation.spec.ts`
+- `tests/integration/phase-2-7-character-consents.spec.ts`
 - `tests/integration/pinned-memory.service.spec.ts`
 - `tests/integration/points-purchase-bundles.spec.ts`
 - `tests/integration/purchase-hours-gate.spec.ts`
