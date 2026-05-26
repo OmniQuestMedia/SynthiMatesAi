@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/issue-implement-cyrano-layer-1-whisper`
-**Commit:** `7ea6483d6dea551fca5bc9dcb3349fcd1201961b`
-**Generated:** 2026-05-25T11:38:55Z
+**Branch:** `copilot/setup-project-database-foundation`
+**Commit:** `c042faccaa805db9ea63245c0f4bceabd48f172e`
+**Generated:** 2026-05-26T16:31:07Z
 
 ## All Files
 
@@ -478,6 +478,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
+- `prisma/migrations/20260526163000_phase_2_1_project_setup_database_foundation/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
@@ -857,6 +858,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/nats-circuit-breaker.spec.ts`
 - `tests/integration/nats-sharding.spec.ts`
 - `tests/integration/notification-engine.spec.ts`
+- `tests/integration/phase-2-1-database-foundation.spec.ts`
 - `tests/integration/pinned-memory.service.spec.ts`
 - `tests/integration/points-purchase-bundles.spec.ts`
 - `tests/integration/purchase-hours-gate.spec.ts`
