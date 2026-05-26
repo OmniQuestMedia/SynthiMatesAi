@@ -73,10 +73,7 @@ export class MemoryPerformanceMetricsService {
    * Get platform-wide memory system performance metrics.
    * Used for admin analytics and system optimization.
    */
-  async getPlatformMetrics(
-    startDate: Date,
-    endDate: Date,
-  ): Promise<MemoryPerformanceMetrics> {
+  async getPlatformMetrics(startDate: Date, endDate: Date): Promise<MemoryPerformanceMetrics> {
     // Total memories created in period
     const totalMemories = await this.prisma.memoryBank.count({
       where: {
@@ -111,7 +108,7 @@ export class MemoryPerformanceMetricsService {
     // Layer utilization (simplified calculation)
     const shortTermUsagePct = 0.55; // Placeholder - would track actual usage
     const mediumTermUsagePct = summaryCount > 0 ? 0.25 : 0;
-    const longTermUsagePct = pinnedCount > 0 ? 0.20 : 0;
+    const longTermUsagePct = pinnedCount > 0 ? 0.2 : 0;
 
     // User engagement (actual counts)
     const totalPins = pinnedCount;
