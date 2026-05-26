@@ -37,4 +37,47 @@
 - Any remaining cross-repo notifications must go through NATS topics and/or this webhook contract.
 - No direct cross-repo imports are allowed.
 
+## CyranoEngines outbound voice webhook (SynthiMatesAi → CyranoEngines)
+
+**Transport:** HTTPS webhook  
+**Webhook URL env:** `CYRANO_ENGINES_BASE_URL` + `/api/v1/webhooks/voice/generate`  
+**Auth header:** `x-api-key` from `CYRANO_ENGINES_API_KEY`
+
+### Event: `cyrano.voice.generate.v1`
+
+- Fired by `services/cyrano-engines-client/src/cyrano-engines.client.ts` in `generateVoice()`.
+- Includes personality preset/sliders, fantasy language mode (accent preservation), and caption translation hints.
+
+#### Payload schema
+
+```json
+{
+  "event_name": "cyrano.voice.generate.v1",
+  "event_version": "v1",
+  "correlation_id": "string",
+  "payload": {
+    "text": "string",
+    "voice_id": "string",
+    "user_id": "string",
+    "personality_preset": "BALANCED|INTIMATE|GUIDE|STORYTELLER",
+    "personality_sliders": {
+      "warmth": 0,
+      "expressiveness": 0,
+      "playfulness": 0
+    },
+    "fantasy_language_mode": {
+      "enabled": true,
+      "preserve_accent": true,
+      "base_locale": "string"
+    },
+    "caption_translation": {
+      "enabled": true,
+      "target_locale": "string"
+    },
+    "target_locale": "string",
+    "correlation_id": "string"
+  }
+}
+```
+
 _[rule_applied_id: GOVERNANCE-EQ-v1]_

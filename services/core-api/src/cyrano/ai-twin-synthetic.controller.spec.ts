@@ -44,7 +44,9 @@ describe('AiTwinSyntheticController', () => {
       { fantasyLevel: '0.5', userId: 'user_test' },
     );
 
-    expect(createSyntheticModel).toHaveBeenCalledWith(expect.any(Array), 0.5);
+    expect(createSyntheticModel).toHaveBeenCalledWith(expect.any(Array), 0.5, {
+      characterId: undefined,
+    });
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining('SyntheticController analytics:'));
     logSpy.mockRestore();
   });
