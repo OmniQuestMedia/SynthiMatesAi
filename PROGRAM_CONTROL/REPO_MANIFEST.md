@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/phase-2-5-voice-translation-features`
-**Commit:** `350cd79c5dfcfc3e23b535c44a42ed1b1672b54b`
-**Generated:** 2026-05-26T16:35:02Z
+**Branch:** `main`
+**Commit:** `56dd2e44118fe858ca60ffd4246f89a8d5e1269d`
+**Generated:** 2026-05-26T16:37:07Z
 
 ## All Files
 
@@ -478,6 +478,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
+- `prisma/migrations/20260526163000_phase_2_1_project_setup_database_foundation/migration.sql`
 - `prisma/migrations/migration_lock.toml`
 - `prisma/schema.prisma`
 - `prisma/seed.test.ts`
@@ -858,6 +859,7 @@ Auto-generated on every push. Do not edit manually.
 - `tests/integration/nats-circuit-breaker.spec.ts`
 - `tests/integration/nats-sharding.spec.ts`
 - `tests/integration/notification-engine.spec.ts`
+- `tests/integration/phase-2-1-database-foundation.spec.ts`
 - `tests/integration/pinned-memory.service.spec.ts`
 - `tests/integration/points-purchase-bundles.spec.ts`
 - `tests/integration/purchase-hours-gate.spec.ts`
