@@ -1,4 +1,5 @@
 // prisma/seed.ts
+/* eslint-disable no-console */
 // MEMB-001: Membership schema foundation seed data
 // Seeds a test organization + tenant + six users (one per MembershipTier enum value),
 // each with one Membership row and a matching MembershipTierTransition ledger entry.
@@ -14,6 +15,32 @@ const prisma = new PrismaClient();
 
 const TEST_ORG_ID = '00000000-0000-0000-0000-000000000001';
 const TEST_TENANT_ID = '00000000-0000-0000-0000-000000000002';
+
+const FACET_DIMENSIONS = [
+  'Cultural Aesthetics',
+  'Life Stage',
+  'Personality Vibe',
+  'Body Style',
+  'Explicit Category',
+] as const;
+
+const FACET_VALUE_FIXTURES: ReadonlyArray<{
+  dimension: (typeof FACET_DIMENSIONS)[number];
+  value: string;
+  isExplicit: boolean;
+}> = [
+  { dimension: 'Cultural Aesthetics', value: 'Alt/Goth', isExplicit: false },
+  { dimension: 'Cultural Aesthetics', value: 'Glam', isExplicit: false },
+  { dimension: 'Life Stage', value: 'College', isExplicit: false },
+  { dimension: 'Life Stage', value: 'Professional', isExplicit: false },
+  { dimension: 'Personality Vibe', value: 'Playful', isExplicit: false },
+  { dimension: 'Personality Vibe', value: 'Dominant', isExplicit: false },
+  { dimension: 'Body Style', value: 'Athletic', isExplicit: false },
+  { dimension: 'Body Style', value: 'Curvy', isExplicit: false },
+  { dimension: 'Explicit Category', value: 'BDSM', isExplicit: true },
+  { dimension: 'Explicit Category', value: 'Roleplay', isExplicit: true },
+  { dimension: 'Explicit Category', value: 'Fetish', isExplicit: true },
+];
 
 // Deterministic per-tier user IDs so the seed is idempotent across runs.
 const TIER_FIXTURES: ReadonlyArray<{
@@ -106,6 +133,44 @@ async function main() {
   }
 
   console.log('MEMB-001 seed complete — 6 users, 6 memberships, 6 transitions.');
+}
+
+async function seedFacetFoundation() {
+  console.log('Starting facet foundation seed...');
+
+  for (const [index, name] of FACET_DIMENSIONS.entries()) {
+    await prisma.$executeRaw`
+      INSERT INTO "facetdimensions" ("name", "correlation_id", "reason_code")
+      VALUES (${name}, ${`PHASE2_1_DIMENSION_${index + 1}`}, 'FACET_DIMENSION_SEED')
+      ON CONFLICT ("name") DO NOTHING
+    `;
+  }
+
+  for (const [index, fixture] of FACET_VALUE_FIXTURES.entries()) {
+    await prisma.$executeRaw`
+      INSERT INTO "facetvalues" (
+        "facetdimension_id",
+        "value",
+        "isexplicit",
+        "correlation_id",
+        "reason_code"
+      )
+      SELECT
+        fd."id",
+        ${fixture.value},
+        ${fixture.isExplicit},
+        ${`PHASE2_1_VALUE_${index + 1}`},
+        'FACET_VALUE_SEED'
+      FROM "facetdimensions" fd
+      WHERE fd."name" = ${fixture.dimension}
+      ON CONFLICT ("facetdimension_id", "value") DO UPDATE
+      SET "isexplicit" = EXCLUDED."isexplicit"
+    `;
+  }
+
+  console.log(
+    `Facet foundation seed complete — ${FACET_DIMENSIONS.length} dimensions, ${FACET_VALUE_FIXTURES.length} values.`,
+  );
 }
 
 // ── House Models ─────────────────────────────────────────────────────────────
@@ -253,6 +318,20 @@ async function seedPromoCodes() {
 }
 
 async function runAll() {
+  const seedOnlyPhase21Facets = process.env.SEED_ONLY_PHASE_2_1_FACETS === 'true';
+
+  try {
+    await seedFacetFoundation();
+  } catch (e) {
+    console.error('Facet foundation seed failed:', e);
+    throw e;
+  }
+
+  if (seedOnlyPhase21Facets) {
+    console.log('SEED_ONLY_PHASE_2_1_FACETS=true — skipping other seed domains.');
+    return;
+  }
+
   try {
     await main();
   } catch (e) {
