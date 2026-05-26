@@ -71,8 +71,8 @@ export interface CyranoVoiceRequest {
   text: string;
   voice_id: string;
   user_id: string;
-  /** Predefined personality preset (neutral, warm, professional, etc.) */
-  personality_preset?: string;
+  /** Predefined personality preset */
+  personality_preset?: 'BALANCED' | 'INTIMATE' | 'GUIDE' | 'STORYTELLER';
   /** Custom voice sliders - stability, similarity_boost, style, clarity, energy */
   voice_sliders?: {
     stability?: number;
@@ -81,12 +81,6 @@ export interface CyranoVoiceRequest {
     clarity?: number;
     energy?: number;
   };
-  /** Fantasy Language Mode: preserve accent while translating */
-  preserve_accent?: boolean;
-  /** Source accent locale for Fantasy Language Mode */
-  source_accent_locale?: string;
-  /** Target locale for translation */
-  personality_preset?: 'BALANCED' | 'INTIMATE' | 'GUIDE' | 'STORYTELLER';
   personality_sliders?: {
     warmth?: number;
     expressiveness?: number;
