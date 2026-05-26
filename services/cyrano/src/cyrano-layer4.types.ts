@@ -90,7 +90,15 @@ export interface CyranoLayer4PromptRequest {
    */
   content_mode?: CyranoLayer4ContentMode;
   /** Optional voice request — see voice bridge. */
-  voice?: { enabled: boolean; voice_id?: string; locale?: string };
+  voice?: {
+    enabled: boolean;
+    voice_id?: string;
+    locale?: string;
+    personality_preset?: CyranoVoicePersonalityPreset;
+    personality_sliders?: Partial<CyranoVoicePersonalitySliders>;
+    fantasy_language_mode?: CyranoFantasyLanguageModeRequest;
+    caption_translation?: { enabled: boolean; target_locale?: string };
+  };
   /** Caller-provided correlation_id; generated if absent. */
   correlation_id?: string;
   /** Caller-provided consent receipt id (HIPAA / GDPR). */
@@ -143,9 +151,33 @@ export interface CyranoLayer4VoiceEnvelope {
   locale: string;
   /** URI of the synthesised audio object — empty when synthesis was skipped. */
   voice_uri: string;
+  personality_preset?: CyranoVoicePersonalityPreset;
+  personality_sliders?: CyranoVoicePersonalitySliders;
+  fantasy_language_mode?: CyranoFantasyLanguageModeResult;
+  caption_translation?: CyranoLayer4TranslationEnvelope | null;
   /** Reason synthesis was skipped, when applicable. */
   skipped_reason_code?: CyranoLayer4ReasonCode;
   rule_applied_id: string;
+}
+
+export type CyranoVoicePersonalityPreset = 'BALANCED' | 'INTIMATE' | 'GUIDE' | 'STORYTELLER';
+
+export interface CyranoVoicePersonalitySliders {
+  warmth: number;
+  expressiveness: number;
+  playfulness: number;
+}
+
+export interface CyranoFantasyLanguageModeRequest {
+  enabled: boolean;
+  preserve_accent?: boolean;
+  base_locale?: string;
+}
+
+export interface CyranoFantasyLanguageModeResult {
+  enabled: boolean;
+  accent_preserved: boolean;
+  base_locale: string;
 }
 
 /** Reason codes for translation skips (Issue #15). */

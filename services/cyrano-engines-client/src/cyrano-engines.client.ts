@@ -21,7 +21,7 @@
 // 7. Circuit breaker pattern for sustained failures
 
 import { Injectable, Logger } from '@nestjs/common';
-import { HttpClient, HttpResponse } from '../../core-api/src/common/http-client';
+import { HttpClient } from '../../core-api/src/common/http-client';
 import { v4 as uuid } from 'uuid';
 
 // ── Configuration ──────────────────────────────────────────────────────────
@@ -71,6 +71,22 @@ export interface CyranoVoiceRequest {
   text: string;
   voice_id: string;
   user_id: string;
+  personality_preset?: 'BALANCED' | 'INTIMATE' | 'GUIDE' | 'STORYTELLER';
+  personality_sliders?: {
+    warmth?: number;
+    expressiveness?: number;
+    playfulness?: number;
+  };
+  fantasy_language_mode?: {
+    enabled: boolean;
+    preserve_accent?: boolean;
+    base_locale?: string;
+  };
+  caption_translation?: {
+    enabled: boolean;
+    target_locale?: string;
+  };
+  target_locale?: string;
   correlation_id?: string;
 }
 
@@ -79,6 +95,11 @@ export interface CyranoVoiceResponse {
   generation_id: string;
   cost_tokens: number;
   duration_seconds: number;
+  locale?: string;
+  caption_translation?: {
+    target_locale: string;
+    translated_caption: string;
+  } | null;
   correlation_id: string;
 }
 
@@ -146,6 +167,8 @@ export class CyranoEnginesClient {
   private readonly config: Required<CyranoEnginesConfig>;
   private readonly httpClient: HttpClient;
   private circuitBreaker: CircuitBreakerState;
+  private static readonly VOICE_WEBHOOK_ENDPOINT = '/api/v1/webhooks/voice/generate';
+  private static readonly VOICE_WEBHOOK_EVENT = 'cyrano.voice.generate.v1';
 
   constructor(config?: Partial<CyranoEnginesConfig>) {
     // Load from environment with defaults
@@ -244,11 +267,16 @@ export class CyranoEnginesClient {
 
     try {
       const response = await this.httpClient.request<CyranoVoiceResponse>(
-        `${this.config.baseUrl}/api/v1/voice/generate`,
+        `${this.config.baseUrl}${CyranoEnginesClient.VOICE_WEBHOOK_ENDPOINT}`,
         {
           method: 'POST',
           headers: this.buildHeaders(correlationId),
-          body: JSON.stringify({ ...request, correlation_id: correlationId }),
+          body: JSON.stringify({
+            event_name: CyranoEnginesClient.VOICE_WEBHOOK_EVENT,
+            event_version: 'v1',
+            payload: { ...request, correlation_id: correlationId },
+            correlation_id: correlationId,
+          }),
         },
         correlationId,
       );
@@ -451,6 +479,14 @@ export class CyranoEnginesClient {
       generation_id: `local-${correlationId}`,
       cost_tokens: 30,
       duration_seconds: 5,
+      locale: request.target_locale,
+      caption_translation:
+        request.caption_translation?.enabled && request.caption_translation.target_locale
+          ? {
+              target_locale: request.caption_translation.target_locale,
+              translated_caption: `[${request.caption_translation.target_locale}] ${request.text}`,
+            }
+          : null,
       correlation_id: correlationId,
     };
   }
