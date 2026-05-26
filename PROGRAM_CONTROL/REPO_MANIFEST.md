@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/phase-2-3-hybrid-category-system`
-**Commit:** `feec849e00eac47dd55ea4c9df4c02a04ac69b86`
-**Generated:** 2026-05-26T20:08:26Z
+**Branch:** `claude/testing-cleanup-pass-synthimatesai`
+**Commit:** `2fa1d8ddc16afaf3a59dd73d71832838aab44392`
+**Generated:** 2026-05-26T21:00:11Z
 
 ## All Files
 
@@ -203,6 +203,7 @@ Auto-generated on every push. Do not edit manually.
 - `PROGRAM_CONTROL/REPORT_BACK/ROSTER-GATEWAY-DUP-2026-04-26.md`
 - `PROGRAM_CONTROL/REPORT_BACK/SHOWZONE-001-ROOM-SESSION-SERVICE.md`
 - `PROGRAM_CONTROL/REPORT_BACK/STUDIO-AFF-001-IMPL.md`
+- `PROGRAM_CONTROL/REPORT_BACK/TESTING-CLEANUP-PASS-2026-05-26.md`
 - `PROGRAM_CONTROL/REPORT_BACK/THREAD 13 HANDOFF`
 - `PROGRAM_CONTROL/REPORT_BACK/THREAD-12-CLEANUP-REPORT-BACK.md`
 - `PROGRAM_CONTROL/REPORT_BACK/THREAD14-SCHEMA-INTEGRITY-AUDIT.md`
@@ -527,7 +528,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/analytics/analytics.module.ts`
 - `services/core-api/src/analytics/ffs-score.service.ts`
 - `services/core-api/src/analytics/memory-performance-metrics.service.ts`
-- `services/core-api/src/analytics/studio-tokens-analytics.service.ts`
+- `services/core-api/src/analytics/studio-tokens-analytics.service.ts.disabled`
 - `services/core-api/src/app.module.ts`
 - `services/core-api/src/audit/audit-bridge.service.ts`
 - `services/core-api/src/audit/audit-dashboard.controller.ts`
