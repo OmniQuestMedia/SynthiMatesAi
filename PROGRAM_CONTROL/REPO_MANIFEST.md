@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `148c2da4d17cfa2949ffdc34145807ccd31259a4`
-**Generated:** 2026-05-26T18:14:20Z
+**Branch:** `copilot/create-zkp-consent-circuit`
+**Commit:** `3165e1ddfbcd1a674e8349085685e9ad653cc4b6`
+**Generated:** 2026-05-26T19:11:50Z
 
 ## All Files
 
@@ -377,6 +377,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/themes/index.ts`
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
+- `circuits/consent_verification.circom`
 - `docker-compose.yml`
 - `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
