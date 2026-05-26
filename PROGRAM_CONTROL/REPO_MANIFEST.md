@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/testing-cleanup-pass-synthimatesai`
-**Commit:** `2fa1d8ddc16afaf3a59dd73d71832838aab44392`
-**Generated:** 2026-05-26T21:00:11Z
+**Branch:** `claude/cleanup-linter-code-quality-pass`
+**Commit:** `dc6315ab0137b9e5d8833f0c334dfed2d2c16291`
+**Generated:** 2026-05-26T21:38:58Z
 
 ## All Files
 
@@ -47,6 +47,7 @@ Auto-generated on every push. Do not edit manually.
 - `HANDOFF.md`
 - `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
+- `LINT_CLEANUP_SUMMARY.md`
 - `MASTER_PROJECT_FOLDER.md`
 - `MAXZONEGPT-POINTER.md`
 - `OQMI_SYSTEM_STATE.md`
