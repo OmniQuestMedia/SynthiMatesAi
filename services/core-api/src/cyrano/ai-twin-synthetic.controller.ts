@@ -249,7 +249,9 @@ export class AiTwinSyntheticController {
         }
         return f.buffer;
       });
-      const result = await this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel);
+      const result = await this.syntheticPipeline.createSyntheticModel(buffers, fantasyLevel, {
+        characterId: body.twinId,
+      });
       analyticsOutcome = 'success';
 
       // PHASE 2 ITEM 4: Include cost and balance info in response

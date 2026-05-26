@@ -42,6 +42,26 @@ const FACET_VALUE_FIXTURES: ReadonlyArray<{
   { dimension: 'Explicit Category', value: 'Fetish', isExplicit: true },
 ];
 
+const PHASE_2_7_CHARACTER_ID = '00000000-0000-0000-0000-000000000201';
+const PHASE_2_7_CHARACTER_NAME = 'Phase2.7 Seed Character';
+const CHARACTER_CONSENT_FIXTURES: ReadonlyArray<{
+  scope: 'CHARACTER_REFERENCE' | 'ANTI_LOOKALIKE' | 'ZKP_CONSENT';
+  correlationId: string;
+}> = [
+  {
+    scope: 'CHARACTER_REFERENCE',
+    correlationId: 'PHASE2_7_CHARACTER_CONSENT_REFERENCE',
+  },
+  {
+    scope: 'ANTI_LOOKALIKE',
+    correlationId: 'PHASE2_7_CHARACTER_CONSENT_ANTI_LOOKALIKE',
+  },
+  {
+    scope: 'ZKP_CONSENT',
+    correlationId: 'PHASE2_7_CHARACTER_CONSENT_ZKP',
+  },
+];
+
 // Deterministic per-tier user IDs so the seed is idempotent across runs.
 const TIER_FIXTURES: ReadonlyArray<{
   userId: string;
@@ -170,6 +190,54 @@ async function seedFacetFoundation() {
 
   console.log(
     `Facet foundation seed complete — ${FACET_DIMENSIONS.length} dimensions, ${FACET_VALUE_FIXTURES.length} values.`,
+  );
+}
+
+async function seedCharacterConsents() {
+  console.log('Starting character consent seed...');
+
+  await prisma.$executeRaw`
+    INSERT INTO "characters" ("id", "name", "correlation_id", "reason_code")
+    VALUES (
+      ${PHASE_2_7_CHARACTER_ID}::uuid,
+      ${PHASE_2_7_CHARACTER_NAME},
+      'PHASE2_7_CHARACTER_SEED',
+      'CHARACTER_SEED'
+    )
+    ON CONFLICT ("id") DO UPDATE
+    SET
+      "name" = EXCLUDED."name",
+      "reason_code" = EXCLUDED."reason_code"
+  `;
+
+  for (const [index, fixture] of CHARACTER_CONSENT_FIXTURES.entries()) {
+    await prisma.$executeRaw`
+      INSERT INTO "character_consents" (
+        "character_id",
+        "consent_scope",
+        "granted_at",
+        "proof_ref",
+        "correlation_id",
+        "reason_code"
+      )
+      VALUES (
+        ${PHASE_2_7_CHARACTER_ID}::uuid,
+        ${fixture.scope},
+        CURRENT_TIMESTAMP,
+        ${`PHASE2_7_PROOF_${index + 1}`},
+        ${fixture.correlationId},
+        'CHARACTER_CONSENT_SEED'
+      )
+      ON CONFLICT ("character_id", "consent_scope") DO UPDATE
+      SET
+        "granted_at" = EXCLUDED."granted_at",
+        "revoked_at" = NULL,
+        "proof_ref" = EXCLUDED."proof_ref"
+    `;
+  }
+
+  console.log(
+    `Character consent seed complete — ${CHARACTER_CONSENT_FIXTURES.length} consent scopes.`,
   );
 }
 
@@ -324,6 +392,13 @@ async function runAll() {
     await seedFacetFoundation();
   } catch (e) {
     console.error('Facet foundation seed failed:', e);
+    throw e;
+  }
+
+  try {
+    await seedCharacterConsents();
+  } catch (e) {
+    console.error('Character consent seed failed:', e);
     throw e;
   }
 
