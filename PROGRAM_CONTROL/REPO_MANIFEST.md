@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/issue-implement-cyrano-layer-1-whisper`
-**Commit:** `7ea6483d6dea551fca5bc9dcb3349fcd1201961b`
-**Generated:** 2026-05-25T11:38:55Z
+**Branch:** `claude/add-voice-and-translation-features`
+**Commit:** `f076e7f4fa448dc486c85938a8a3482c44374e0c`
+**Generated:** 2026-05-26T16:41:13Z
 
 ## All Files
 
@@ -387,6 +387,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/DOMAIN_GLOSSARY.md`
 - `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
 - `docs/PHASE5_VALIDATION_REPORT.md`
+- `docs/PHASE_2.5_VOICE_TRANSLATION_IMPLEMENTATION.md`
 - `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
 - `docs/PRODUCTS/SythiMateWhisper-Spec.md`
@@ -709,6 +710,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/cyrano/src/memory-retrieval.service.ts`
 - `services/cyrano/src/persona.manager.ts`
 - `services/cyrano/src/session-memory.store.ts`
+- `services/cyrano/src/voice-translation.service.ts`
 - `services/cyrano/src/whisper-auto-advance.service.ts`
 - `services/cyrano/src/whisper-prompt.service.ts`
 - `services/diamond-concierge/src/diamond-concierge.module.ts`
@@ -812,6 +814,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/video-generation/src/video.service.ts`
 - `services/video-generation/src/video.types.ts`
 - `services/video-generation/src/vidu.service.ts`
+- `services/voice-cloning/src/personality-presets.config.ts`
 - `services/voice-cloning/src/voice.controller.ts`
 - `services/voice-cloning/src/voice.module.ts`
 - `services/voice-cloning/src/voice.service.ts`
