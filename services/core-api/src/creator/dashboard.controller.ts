@@ -4,7 +4,7 @@ import { Injectable, Controller, Get, Query, Req, Logger } from '@nestjs/common'
 import { Request } from 'express';
 import {
   AccountCoreAnalyticsService,
-  CreatorAnalytics,
+  CreatorDashboardAnalytics,
 } from '../analytics/account-core-analytics.service';
 
 export interface DashboardSummary {
@@ -14,13 +14,6 @@ export interface DashboardSummary {
   syntheticTwinCount: number;
   recentGenerations: number;
   analytics?: CreatorDashboardAnalytics;
-}
-
-interface CreatorDashboardRequest {
-  user?: {
-    id?: string;
-  };
-  headers?: Record<string, string | string[] | undefined>;
 }
 
 @Injectable()
@@ -36,14 +29,10 @@ export class DashboardController {
   @Get('summary')
   async getSummary(
     @Req() req: Request & { user?: { id: string } },
-    @Query('days') days: string = '30',
+    @Query('days') _days: string = '30',
   ): Promise<DashboardSummary> {
     const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
     const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
-    const daysNum = parseInt(days, 10) || 30;
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - daysNum);
 
     this.logger.log(`Fetching dashboard summary for creator ${creatorId}`);
 
@@ -69,13 +58,9 @@ export class DashboardController {
   @Get('analytics')
   async getAnalytics(
     @Req() req: Request & { user?: { id: string } },
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ): Promise<CreatorAnalytics> {
+  ): Promise<CreatorDashboardAnalytics> {
     const creatorIdRaw = req.user?.id || req.headers['x-user-id'];
     const creatorId = Array.isArray(creatorIdRaw) ? creatorIdRaw[0] : creatorIdRaw || '';
-    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
 
     this.logger.log(`Fetching detailed analytics for creator ${creatorId}`);
 

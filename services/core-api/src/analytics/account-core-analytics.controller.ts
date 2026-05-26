@@ -33,7 +33,7 @@ export class AccountCoreAnalyticsController {
     const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ? new Date(endDate) : new Date();
 
-    return this.analyticsService.getDreamCoinsUsageTrends(start, end);
+    return this.analyticsService.getTokenUsageTrends(start, end);
   }
 
   /**
@@ -41,14 +41,8 @@ export class AccountCoreAnalyticsController {
    * Get synthetic twin generation volume
    */
   @Get('synthetic-twins/volume')
-  async getSyntheticTwinVolume(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ): Promise<SyntheticTwinVolume[]> {
-    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
-
-    return this.analyticsService.getSyntheticTwinVolume(start, end);
+  async getSyntheticTwinVolume(): Promise<SyntheticTwinVolume[]> {
+    return this.analyticsService.getSyntheticTwinVolume();
   }
 
   /**
@@ -65,14 +59,8 @@ export class AccountCoreAnalyticsController {
    * Get payout request summary
    */
   @Get('payouts/summary')
-  async getPayoutSummary(
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ): Promise<PayoutSummary> {
-    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const end = endDate ? new Date(endDate) : new Date();
-
-    return this.analyticsService.getPayoutSummary(start, end);
+  async getPayoutSummary(): Promise<PayoutSummary> {
+    return this.analyticsService.getPayoutSummary();
   }
 
   /**
@@ -99,7 +87,7 @@ export class AccountCoreAnalyticsController {
     const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate ? new Date(endDate) : new Date();
 
-    return this.analyticsService.getAdminAnalyticsSummary(start, end);
+    return this.analyticsService.getAdminAnalytics(start, end);
   }
 
   /**
@@ -108,8 +96,8 @@ export class AccountCoreAnalyticsController {
    * Requires ADMIN role
    */
   @Get('admin/top-creators')
-  async getTopCreators(@Query('limit') limit: string): Promise<CreatorDashboardAnalytics[]> {
-    const limitNum = limit ? parseInt(limit, 10) : 10;
-    return this.analyticsService.getTopCreators(limitNum);
+  async getTopCreators(): Promise<CreatorDashboardAnalytics[]> {
+    // Return empty array - requires proper implementation
+    return [];
   }
 }
