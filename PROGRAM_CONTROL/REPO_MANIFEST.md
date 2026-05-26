@@ -3,8 +3,8 @@
 Auto-generated on every push. Do not edit manually.
 
 **Branch:** `main`
-**Commit:** `148c2da4d17cfa2949ffdc34145807ccd31259a4`
-**Generated:** 2026-05-26T18:14:20Z
+**Commit:** `780ec2dd976e953b074bb35273c48b35ea945ce4`
+**Generated:** 2026-05-26T19:12:05Z
 
 ## All Files
 
@@ -377,6 +377,7 @@ Auto-generated on every push. Do not edit manually.
 - `apps/shared-ui/themes/index.ts`
 - `apps/shared-ui/utils/index.ts`
 - `archive/README.md`
+- `circuits/consent_verification.circom`
 - `docker-compose.yml`
 - `docs/ACCOUNT_CORE_SECURITY.md`
 - `docs/ARCHITECTURE_OVERVIEW.md`
