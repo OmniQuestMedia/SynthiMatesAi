@@ -2855,7 +2855,7 @@ model Character {
   bio          String?   @db.Text
   is_explicit  Boolean   @default(false) // True if character has any explicit facets
   created_at   DateTime  @default(now()) @db.Timestamptz
-  updated_at   DateTime  @default(now()) @db.Timestamptz
+  updated_at   DateTime  @updatedAt @db.Timestamptz
 
   facets           CharacterFacet[]
   explicitFacets   CharacterExplicitFacet[]
@@ -2913,7 +2913,7 @@ model PopularityWorkerState {
   character_id      String   @unique @db.Uuid
   popularity_score  Int      @default(0)
   last_processed_at DateTime @default(now()) @db.Timestamptz
-  updated_at        DateTime @default(now()) @db.Timestamptz
+  updated_at        DateTime @updatedAt @db.Timestamptz
 
   character Character @relation(fields: [character_id], references: [id])
 

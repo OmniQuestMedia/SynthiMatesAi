@@ -1,7 +1,7 @@
 // services/core-api/src/synthimates/synthimates.controller.ts
 // SYNTHIMATES-001: REST endpoints for SynthiMates character browsing and facet queries
 
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, NotFoundException } from '@nestjs/common';
 import { SynthiMatesService } from './synthimates.service';
 
 @Controller('synthimates')
@@ -15,7 +15,11 @@ export class SynthiMatesController {
 
   @Get('facets/dimensions/:id')
   async getFacetDimensionById(@Param('id') id: string) {
-    return this.synthimatesService.getFacetDimensionById(id);
+    const dimension = await this.synthimatesService.getFacetDimensionById(id);
+    if (!dimension) {
+      throw new NotFoundException(`Facet dimension with ID ${id} not found`);
+    }
+    return dimension;
   }
 
   @Get('facets/dimensions/:dimensionId/values')
