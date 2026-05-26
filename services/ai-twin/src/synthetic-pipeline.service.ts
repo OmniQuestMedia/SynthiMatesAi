@@ -6,6 +6,8 @@
 
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../core-api/src/prisma.service';
+import { AntiLookalikeGuard } from './anti-lookalike.guard';
+import { ZKPConsentService } from './zkp-consent.service';
 
 export interface SyntheticModelResult {
   imageUrl: string;
@@ -16,16 +18,25 @@ export interface SyntheticModelResult {
   };
 }
 
+export interface SyntheticGenerationContext {
+  characterId?: string;
+}
+
 @Injectable()
 export class SyntheticPipelineService {
   private readonly logger = new Logger(SyntheticPipelineService.name);
   private readonly generationEndpoint = process.env.SYNTHETIC_GENERATION_ENDPOINT ?? '';
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly antiLookalikeGuard: AntiLookalikeGuard,
+    private readonly zkpConsentService: ZKPConsentService,
+  ) {}
 
   async createSyntheticModel(
     imageBuffers: Buffer[],
     fantasyLevel = 0.25,
+    context: SyntheticGenerationContext = {},
   ): Promise<SyntheticModelResult> {
     const startedAtMs = Date.now();
     let analyticsOutcome: 'success' | 'failure' = 'failure';
@@ -40,6 +51,11 @@ export class SyntheticPipelineService {
       this.logger.log(
         `SyntheticPipeline: processing ${imageBuffers.length} images, fantasyLevel=${fantasyLevel}`,
       );
+
+      if (context.characterId) {
+        await this.zkpConsentService.assertGenerationConsent(context.characterId);
+        await this.antiLookalikeGuard.assertLookalikeCheckConsent(context.characterId);
+      }
 
       // Step 1: Embed each image + compute celebrity similarity weights
       const embeddings: number[][] = [];
