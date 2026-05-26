@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `main`
-**Commit:** `780ec2dd976e953b074bb35273c48b35ea945ce4`
-**Generated:** 2026-05-26T19:12:05Z
+**Branch:** `copilot/update-database-schema-phase-2-7`
+**Commit:** `cd01f70316cecae3b031b7989ea965b890435bcb`
+**Generated:** 2026-05-26T19:13:35Z
 
 ## All Files
 
@@ -459,6 +459,7 @@ Auto-generated on every push. Do not edit manually.
 - `governance/pre-ship-audit.service.ts`
 - `infra/postgres/init-ledger.sql`
 - `jest.config.js`
+- `migrations/20260526_add_consent_and_motion_tables.sql`
 - `package.json`
 - `prisma/migrations/20260409000000_legal_hold_db_migration/migration.sql`
 - `prisma/migrations/20260412000000_gz_scheduling_module/migration.sql`
