@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `copilot/update-database-schema-phase-2-7`
-**Commit:** `1a172972df3e123d13d7aca7ff78f2d2f25d775f`
-**Generated:** 2026-05-26T19:26:13Z
+**Branch:** `claude/phase-2-1-project-setup`
+**Commit:** `8b6f43df6d615ad7277445c2b622efdb30cfbb3d`
+**Generated:** 2026-05-26T19:39:23Z
 
 ## All Files
 
@@ -52,6 +52,7 @@ Auto-generated on every push. Do not edit manually.
 - `OQMI_SYSTEM_STATE.md`
 - `PHASE6_COMPLETION_SUMMARY.md`
 - `PHASE7_COMPLETION_SUMMARY.md`
+- `PHASE_2_1_SUMMARY.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-001.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-002.md`
 - `PROGRAM_CONTROL/DIRECTIVES/DONE/AUDIT-NOTE-2026-04-10.md`
@@ -481,6 +482,7 @@ Auto-generated on every push. Do not edit manually.
 - `prisma/migrations/20260511100000_layer2_narrative_memory/migration.sql`
 - `prisma/migrations/20260524202000_safe_synthetic_celebrity_embeddings/migration.sql`
 - `prisma/migrations/20260525000000_add_memory_summary_and_message_seq/migration.sql`
+- `prisma/migrations/20260526000000_synthimates_foundation/migration.sql`
 - `prisma/migrations/20260526163000_phase_2_1_project_setup_database_foundation/migration.sql`
 - `prisma/migrations/20260526191500_add_character_consents/migration.sql`
 - `prisma/migrations/migration_lock.toml`
@@ -667,6 +669,11 @@ Auto-generated on every push. Do not edit manually.
 - `services/core-api/src/subscription/subscription.module.ts`
 - `services/core-api/src/subscription/subscription.service.ts`
 - `services/core-api/src/subscription/subscription.types.ts`
+- `services/core-api/src/synthimates/README.md`
+- `services/core-api/src/synthimates/synthimates.controller.ts`
+- `services/core-api/src/synthimates/synthimates.module.ts`
+- `services/core-api/src/synthimates/synthimates.service.ts`
+- `services/core-api/src/synthimates/synthimates.types.ts`
 - `services/core-api/src/test/helpers/setTestEnv.ts`
 - `services/core-api/src/voice-chat/voice-chat.controller.ts`
 - `services/core-api/src/voice-chat/voice-chat.module.ts`
