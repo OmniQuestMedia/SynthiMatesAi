@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/issue-implement-cyrano-layer-1-whisper`
-**Commit:** `7ea6483d6dea551fca5bc9dcb3349fcd1201961b`
-**Generated:** 2026-05-25T11:38:55Z
+**Branch:** `copilot/phase-2-5-voice-translation-features`
+**Commit:** `350cd79c5dfcfc3e23b535c44a42ed1b1672b54b`
+**Generated:** 2026-05-26T16:35:02Z
 
 ## All Files
 
@@ -679,6 +679,7 @@ Auto-generated on every push. Do not edit manually.
 - `services/creator-onboarding/src/email-domain.policy.spec.ts`
 - `services/creator-onboarding/src/email-domain.policy.ts`
 - `services/cyrano-engines-client/README.md`
+- `services/cyrano-engines-client/src/cyrano-engines.client.spec.ts`
 - `services/cyrano-engines-client/src/cyrano-engines.client.ts`
 - `services/cyrano-engines-client/src/cyrano-engines.module.ts`
 - `services/cyrano-engines-client/src/index.ts`

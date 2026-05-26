@@ -349,6 +349,62 @@ describe('CyranoLayer4EnterpriseService', () => {
       expect(res.voice?.voice_uri).toBe('');
       expect(res.voice?.skipped_reason_code).toBe('VOICE_NOT_PERMITTED');
     });
+
+    it('applies personality preset + slider overrides', () => {
+      const { service, tenants } = buildHarness();
+      tenants.upsertTenant({
+        tenant_id: 'v-3',
+        display_name: 'V3',
+        domain: 'COACHING',
+        country_code: 'CA',
+        voice_enabled: true,
+      });
+      const res = service.resolvePrompt({
+        tenant_id: 'v-3',
+        session_id: 's',
+        category: 'CAT_SESSION_OPEN',
+        tier: 'COLD',
+        voice: {
+          enabled: true,
+          personality_preset: 'STORYTELLER',
+          personality_sliders: { warmth: 1.2, expressiveness: 0.6 },
+        },
+      });
+      expect(res.voice?.personality_preset).toBe('STORYTELLER');
+      expect(res.voice?.personality_sliders).toEqual({
+        warmth: 1,
+        expressiveness: 0.6,
+        playfulness: 0.8,
+      });
+    });
+
+    it('preserves accent in fantasy language mode', () => {
+      const { service, tenants } = buildHarness();
+      tenants.upsertTenant({
+        tenant_id: 'v-4',
+        display_name: 'V4',
+        domain: 'COACHING',
+        country_code: 'CA',
+        voice_enabled: true,
+      });
+      const res = service.resolvePrompt({
+        tenant_id: 'v-4',
+        session_id: 's',
+        category: 'CAT_SESSION_OPEN',
+        tier: 'COLD',
+        voice: {
+          enabled: true,
+          locale: 'es-MX',
+          fantasy_language_mode: { enabled: true, preserve_accent: true, base_locale: 'en-GB' },
+        },
+      });
+      expect(res.voice?.locale).toBe('en-GB');
+      expect(res.voice?.fantasy_language_mode).toEqual({
+        enabled: true,
+        accent_preserved: true,
+        base_locale: 'en-GB',
+      });
+    });
   });
 
   describe('non-adult overlay extension point', () => {
@@ -433,6 +489,32 @@ describe('CyranoLayer4EnterpriseService', () => {
       });
       expect(res.translation?.translated_copy).toBe('');
       expect(res.translation?.skipped_reason_code).toBe('TRANSLATION_LOCALE_SAME_AS_SOURCE');
+    });
+
+    it('wires voice + caption translation end-to-end', () => {
+      const { service, tenants } = buildHarness();
+      tenants.upsertTenant({
+        tenant_id: 'tr-4',
+        display_name: 'Trans Voice',
+        domain: 'COACHING',
+        country_code: 'CA',
+        voice_enabled: true,
+      });
+      const res = service.resolvePrompt({
+        tenant_id: 'tr-4',
+        session_id: 's',
+        category: 'CAT_SESSION_OPEN',
+        tier: 'COLD',
+        target_locale: 'es-ES',
+        voice: {
+          enabled: true,
+          caption_translation: { enabled: true, target_locale: 'es-ES' },
+        },
+      });
+      expect(res.translation?.target_locale).toBe('es-ES');
+      expect(res.voice?.locale).toBe('es-ES');
+      expect(res.voice?.caption_translation?.target_locale).toBe('es-ES');
+      expect(res.voice?.caption_translation?.translated_copy).toContain('[es-ES]');
     });
   });
 });

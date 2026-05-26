@@ -118,21 +118,6 @@ export class CyranoLayer4EnterpriseService {
 
     const copy = template({ tone: req.tone ?? 'enterprise_neutral', tier: req.tier });
 
-    // Optional voice synthesis. Tenant must have voice_enabled, and the
-    // request must opt-in via voice.enabled. Otherwise we explicitly emit
-    // a skip envelope so downstream callers can render UI accordingly.
-    let voice_envelope: CyranoLayer4VoiceEnvelope | null = null;
-    if (req.voice?.enabled) {
-      voice_envelope = this.voice.synthesise({
-        tenant,
-        copy,
-        voice_id: req.voice.voice_id,
-        locale: req.voice.locale,
-        correlation_id,
-        consent_receipt_id: req.consent_receipt_id ?? null,
-      });
-    }
-
     // Optional real-time text translation (Issue #15 — Phase 4).
     // When target_locale is provided the translation service is called
     // and the envelope is attached to the response alongside the original copy.
@@ -143,6 +128,53 @@ export class CyranoLayer4EnterpriseService {
         source_copy: copy,
         target_locale: req.target_locale,
         correlation_id,
+      });
+    }
+
+    // Optional voice synthesis. Tenant must have voice_enabled, and the
+    // request must opt-in via voice.enabled. Otherwise we explicitly emit
+    // a skip envelope so downstream callers can render UI accordingly.
+    let voice_envelope: CyranoLayer4VoiceEnvelope | null = null;
+    if (req.voice?.enabled) {
+      const spokenCopy =
+        translation_envelope && translation_envelope.translated_copy
+          ? translation_envelope.translated_copy
+          : copy;
+      const spokenLocale =
+        translation_envelope && translation_envelope.translated_copy
+          ? translation_envelope.target_locale
+          : req.voice.locale;
+
+      let captionTranslation: CyranoLayer4TranslationEnvelope | null = null;
+      if (req.voice.caption_translation?.enabled) {
+        const captionLocale =
+          req.voice.caption_translation.target_locale ??
+          req.target_locale ??
+          spokenLocale ??
+          'en-US';
+        if (translation_envelope && translation_envelope.target_locale === captionLocale) {
+          captionTranslation = translation_envelope;
+        } else {
+          captionTranslation = this.translation.translate({
+            tenant_id: tenant.tenant_id,
+            source_copy: copy,
+            target_locale: captionLocale,
+            correlation_id,
+          });
+        }
+      }
+
+      voice_envelope = this.voice.synthesise({
+        tenant,
+        copy: spokenCopy,
+        voice_id: req.voice.voice_id,
+        locale: spokenLocale,
+        personality_preset: req.voice.personality_preset,
+        personality_sliders: req.voice.personality_sliders,
+        fantasy_language_mode: req.voice.fantasy_language_mode,
+        caption_translation: captionTranslation,
+        correlation_id,
+        consent_receipt_id: req.consent_receipt_id ?? null,
       });
     }
 
@@ -177,6 +209,9 @@ export class CyranoLayer4EnterpriseService {
         domain: tenant.domain,
         voice_requested: Boolean(req.voice?.enabled),
         voice_emitted: Boolean(voice_envelope?.voice_uri),
+        voice_personality_preset: req.voice?.personality_preset ?? null,
+        fantasy_language_mode: Boolean(req.voice?.fantasy_language_mode?.enabled),
+        caption_translation_requested: Boolean(req.voice?.caption_translation?.enabled),
         translation_requested: Boolean(req.target_locale),
         target_locale: req.target_locale ?? null,
       },
