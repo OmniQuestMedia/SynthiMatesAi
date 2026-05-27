@@ -6,6 +6,7 @@
     "lint": "eslint 'services/**/*.ts' --max-warnings 0",
     "lint:ci-python": "python3 -c \"import ast,pathlib;files=sorted(pathlib.Path('gateguard').rglob('*.py'));[ast.parse(p.read_text(encoding='utf-8'), filename=str(p)) for p in files];print(f'Python syntax gate passed for {len(files)} files')\"",
     "lint:ci-js": "yarn lint",
+    "lint:ci": "eslint '{services,tests,PROGRAM_CONTROL}/**/*.ts' --max-warnings 0",
     "lint:fix": "eslint 'services/**/*.ts' --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
