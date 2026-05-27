@@ -13,7 +13,6 @@
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit --project tsconfig.json",
     "typecheck:api": "tsc --noEmit --project services/core-api/tsconfig.json",
-    "prepare": "husky",
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push --skip-generate",
