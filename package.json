@@ -13,7 +13,6 @@
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --noEmit --project tsconfig.json",
     "typecheck:api": "tsc --noEmit --project services/core-api/tsconfig.json",
-    "prepare": "husky",
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push --skip-generate",
@@ -21,8 +20,7 @@
     "ship-gate": "npx tsx PROGRAM_CONTROL/ship-gate-verifier.ts",
     "dev:cyrano": "cd apps/cyrano-standalone && yarn dev",
     "build:cyrano": "cd apps/cyrano-standalone && yarn build",
-    "deploy:all": "docker-compose up --build -d",
-    "prepare": "husky"
+    "deploy:all": "docker-compose up --build -d"
   },
   "engines": {
     "node": ">=20 <23",
