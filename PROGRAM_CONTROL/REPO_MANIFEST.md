@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/cleanup-linter-and-code-quality-pass`
-**Commit:** `c7e126c15c2a2a90eb6f9e8202a85a2a87889ab0`
-**Generated:** 2026-05-27T00:56:08Z
+**Branch:** `claude/final-cleanup-verification-pass`
+**Commit:** `8bbdbbfe661c3cbdd725288e077304b610fb0b29`
+**Generated:** 2026-05-27T01:40:13Z
 
 ## All Files
 
