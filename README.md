@@ -1,4 +1,4 @@
-# SythiMatesAi — Creator-First AI Companions
+# SynthiMatesAi — Creator-First AI Companions
 
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
 > **Creators earn from their AI twins. Fans get safer, higher-quality experiences.**

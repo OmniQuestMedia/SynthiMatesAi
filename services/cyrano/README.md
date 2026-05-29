@@ -8,6 +8,8 @@
 **Domain:** Creator coaching / AI suggestion layer  
 **Path:** `services/cyrano/`
 
+> **Brand note:** The `Cyrano` brand surfaces externally in the **enterprise portal** (`CyranoWhisper` — mainstream/non-adult, Layer 4 tenants). Consumer-facing adult portals are branded **Synthimate** (e.g., `SynthimateWhisper™`). The internal engine name `cyrano` is unchanged across all layers.
+
 ## Purpose
 
 Cyrano is the invisible whisper copilot for ChatNow.Zone creators. It

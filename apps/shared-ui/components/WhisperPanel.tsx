@@ -1,5 +1,5 @@
 // apps/shared-ui/components/WhisperPanel.tsx
-// Shared Whisper UI component — 95%+ code reuse between SythiMateWhisper™ and CyranoWhisper
+// Shared Whisper UI component — 95%+ code reuse between SynthimateWhisper™ and CyranoWhisper
 import { useState } from 'react';
 
 export interface WhisperSuggestion {

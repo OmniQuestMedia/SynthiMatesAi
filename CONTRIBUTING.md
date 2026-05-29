@@ -1,4 +1,4 @@
-# Contributing — SythiMatesAi Cleanup Mode
+# Contributing — SynthiMatesAi
 
 **Company:** OmniQuest Media Inc. (OQMInc™)
 **Governance authority:** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
@@ -27,8 +27,8 @@ before opening a PR.
 
 ```bash
 # Clone the repo (Yarn is required)
-git clone https://github.com/OmniQuestMediaInc/SythiMatesAi.git
-cd SythiMatesAi
+git clone https://github.com/OmniQuestMediaInc/SynthiMatesAi.git
+cd SynthiMatesAi
 
 # Install dependencies
 yarn install
@@ -247,7 +247,7 @@ agent's first task.
 
 **OmniQuest Media Inc. (OQMInc™)**
 Ontario Corporation — Canada
-CEO: Kevin B. Hartley
+CEO: OmniQuest Media Inc.
 Platforms: Cyrano™ Standalone · ChatNow.Zone™
 Cloud region: `ca-central-1` (Canada)
 

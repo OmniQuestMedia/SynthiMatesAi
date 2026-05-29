@@ -395,7 +395,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/PHASE_2.5_VOICE_TRANSLATION_IMPLEMENTATION.md`
 - `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
-- `docs/PRODUCTS/SythiMateWhisper-Spec.md`
+- `docs/PRODUCTS/SynthimateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
 - `docs/ROADMAP.md`
 - `docs/ROADMAP_MANIFEST.md`

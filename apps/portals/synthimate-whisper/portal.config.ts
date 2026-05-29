@@ -1,10 +1,10 @@
-// Portal: SYNTHIMATE_WHISPER — SythiMateWhisper™ (Adult flagship)
-// Per docs/PRODUCTS/SythiMateWhisper-Spec.md — Adult content creators, live broadcast
+// Portal: SYNTHIMATE_WHISPER — SynthimateWhisper™ (Adult flagship)
+// Per docs/PRODUCTS/SynthimateWhisper-Spec.md — Adult content creators, live broadcast
 import type { PortalConfig } from '../portal.types';
 
 export const portalConfig: PortalConfig = {
   id: 'SYNTHIMATE_WHISPER',
-  name: 'SythiMateWhisper™',
+  name: 'SynthimateWhisper™',
   tagline: 'Your Whisper Companion for Adult Broadcasting — AI-Powered Confidence',
   defaultCharacterPacks: [
     { name: 'Scarlett Flame', persona: 'flirtatious_confident' },
