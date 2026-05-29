@@ -1,6 +1,6 @@
 # DOMAIN GLOSSARY — ChatNow.Zone
 
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 **Source:** Tech Debt Delta 2026-04-16 + OQMI Coding Doctrine v2.0
 **Repo:** OmniQuestMediaInc/ChatNowZone--BUILD
 **Last updated:** 2026-04-23
@@ -187,6 +187,8 @@ distinct from tiers and must never be added to the `MembershipTier` enum.
 | Cyrano L2 | Consumer Audio Platform                                      | CyranoConsumerAudio                                |
 | Cyrano L3 | HCZ Whisper Intelligence                                     | CyranoHCZWhisper                                   |
 | Cyrano L4 | Enterprise B2B Whisper API (deferred, Year 3+)               | CyranoEnterpriseAPI                                |
+
+> **Brand note:** The "Cyrano" brand name surfaces externally only in the **enterprise portal** (`CyranoWhisper` — mainstream/non-adult, Layer 4 tenants). Consumer-facing adult portals are branded **Synthimate** (e.g., `SynthimateWhisper™`). Internally, the Cyrano engine powers all four layers; this distinction is branding-only and does not affect code identifiers.
 
 ---
 

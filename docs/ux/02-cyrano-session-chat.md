@@ -3,7 +3,7 @@
 **Role:** VIP Member (VIP and above)
 **Purpose:** Persistent narrative/voice session with an AI twin persona
 **Status:** Alpha Frozen
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 
 ---
 

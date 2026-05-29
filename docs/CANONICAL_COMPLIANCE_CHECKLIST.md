@@ -1,11 +1,11 @@
 # Canonical Compliance Checklist — L0 Ship-Gate
 
 **Document:** `docs/CANONICAL_COMPLIANCE_CHECKLIST.md`
-**Owner:** OmniQuest Media Inc. — Kevin B. Hartley, CEO
+**Owner:** OmniQuest Media Inc.
 **Governing Documents:**
 
 - `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`
-- Canonical Corpus v10 (Chapter 7 — Compliance & Governance)
+- Canonical Corpus v11 (Chapter 7 — Compliance & Governance)
 - REDBOOK §5 — Recovery & Refund Doctrine
 - Business Plan B.5 — GateGuard Sentinel Pre-Processor
 - `docs/AUDIT_CERTIFICATION_V1.md`

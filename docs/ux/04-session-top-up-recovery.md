@@ -3,7 +3,7 @@
 **Role:** VIP Member (VIP and above)
 **Purpose:** Recover an expired or low-time Cyrano session by purchasing additional minutes
 **Status:** Alpha Frozen
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 
 ---
 

@@ -3,7 +3,7 @@
 **Role:** Creator / VIP (read-only twin preview for VIP+)
 **Purpose:** Train and manage a photorealistic AI twin
 **Status:** Alpha Frozen
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 
 > **Safe Synthetic Mode (default for photo-based twins):**
 > Creator flows must prefer Safe Synthetic Mode before any direct-style generation path.

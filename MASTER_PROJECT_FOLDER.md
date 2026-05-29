@@ -1,6 +1,6 @@
 # MASTER PROJECT FOLDER — SynthiMatesAi / Cyrano™ Standalone
 
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 **Repo:** `OmniQuestMedia/SynthiMatesAi`
 **Business Plan:** v3.1 (May 2026)
 **Canonical Corpus:** v11
@@ -129,11 +129,11 @@ Hardening pass for the Layer 1 engine:
 
 ### Priority 3 — Whisper Product Portals
 
-**Scope:** SythiMateWhisper™ and CyranoWhisper portals per TechSpec Section 4
+**Scope:** SynthimateWhisper™ and CyranoWhisper portals per TechSpec Section 4
 
 Per TechSpec v1.0 §4, two customer-facing Whisper portals are required:
 
-- **SythiMateWhisper™** — Creator-facing panel integrated into ChatNow.Zone creator dashboard
+- **SynthimateWhisper™** — Creator-facing panel integrated into ChatNow.Zone creator dashboard
 - **CyranoWhisper** — Enterprise portal for Layer 4 tenants (teaching, coaching, first-responder, medical)
 
 **Directive required:** Author `CYR-PORTAL-005-CONSISTENCY.md` expansion for portal implementation.
@@ -171,7 +171,7 @@ Pre-ship safety hardening:
 | -------------------- | ------------------------------------------------------------------ |
 | Business Plan        | v3.1 (May 2026)                                                    |
 | Canonical Corpus     | v11                                                                |
-| Tech Spec            | TechSpec v1.0 (`services/cyrano/` — SythiMateWhisper-Spec.md v1.0) |
+| Tech Spec            | TechSpec v1.0 (`services/cyrano/` — SynthimateWhisper-Spec.md v1.0) |
 | Governance           | `PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md`              |
 | Requirements Master  | `docs/REQUIREMENTS_MASTER.md`                                      |
 | Domain Glossary      | `docs/DOMAIN_GLOSSARY.md`                                          |

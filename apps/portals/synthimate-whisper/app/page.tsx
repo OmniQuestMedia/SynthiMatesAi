@@ -1,5 +1,5 @@
 // apps/portals/synthimate-whisper/app/page.tsx
-// SythiMateWhisper™ Portal — Adult flagship whisper companion
+// SynthimateWhisper™ Portal — Adult flagship whisper companion
 import type { Metadata } from 'next';
 import { getTheme, getPortalDescription, getPortalKeywords } from '@cyrano/shared-ui';
 
