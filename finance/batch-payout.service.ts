@@ -3,11 +3,18 @@ import { createHash } from 'crypto';
 import { CommissionSplitEntry } from './schema';
 import { NotificationGateway } from './notification-gateway.service';
 
+export interface StudioBatch {
+  batchId: string;
+  totalPayoutCents: bigint;
+  batchChecksum: string;
+  processedAt: string;
+}
+
 export class BatchPayoutService {
   public static async generateStudioBatch(
     studioId: string,
     entries: CommissionSplitEntry[],
-  ): Promise<any> {
+  ): Promise<StudioBatch> {
     const validEntries = entries.filter(
       (e) =>
         e.studioId === studioId && e.modelNetCents + e.studioAgencyHoldbackCents === e.grossCents,

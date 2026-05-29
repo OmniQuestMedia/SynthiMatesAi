@@ -72,6 +72,7 @@ export class ContainmentHoldService {
 
     // Emit Audit_Event via structured output so the calling layer can
     // persist a corresponding audit_events INSERT for durable audit trail.
+    // eslint-disable-next-line no-console
     console.log('[Audit_Event]', JSON.stringify(auditEvent));
 
     return {

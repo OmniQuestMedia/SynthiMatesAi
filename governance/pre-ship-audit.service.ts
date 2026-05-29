@@ -69,26 +69,31 @@ function checkAiAdvisoryBoundary(): { pass: boolean; evidence: string } {
 export class PreShipAuditService {
   public static runFinalCertification(data: unknown[]): boolean {
     const stateHash = ForensicHasher.generateStateHash(data);
+    // eslint-disable-next-line no-console
     console.log(`[OQMI_CERT]: System State Hash: ${stateHash}`);
 
     // OQMI_INFRA_v1.0 invariant checks
     const canadaCheck = checkCanadaResidency();
+    // eslint-disable-next-line no-console
     console.log(
       `[OQMI_INFRA_v1.0][INFRA-1] Canada residency: ${canadaCheck.pass ? 'PASS' : 'FAIL'} — ${canadaCheck.evidence}`,
     );
 
     const backupCheck = checkImmutableBackupPolicy();
+    // eslint-disable-next-line no-console
     console.log(
       `[OQMI_INFRA_v1.0][INFRA-2] Immutable backup policy: ${backupCheck.pass ? 'PASS' : 'FAIL'} — ${backupCheck.evidence}`,
     );
 
     const aiCheck = checkAiAdvisoryBoundary();
+    // eslint-disable-next-line no-console
     console.log(
       `[OQMI_INFRA_v1.0][INFRA-3] AI advisory boundary: ${aiCheck.pass ? 'PASS' : 'FAIL'} — ${aiCheck.evidence}`,
     );
 
     const infraPass = canadaCheck.pass && backupCheck.pass && aiCheck.pass;
     if (!infraPass) {
+      // eslint-disable-next-line no-console
       console.error(
         '[OQMI_CERT]: INFRA_SECURITY_VIOLATION — one or more OQMI_INFRA_v1.0 invariants failed',
       );
