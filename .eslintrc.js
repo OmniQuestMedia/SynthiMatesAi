@@ -31,6 +31,7 @@ module.exports = {
     'no-console': 'warn',
     semi: ['error', 'always'],
   },
+  ignorePatterns: ['dist/', 'node_modules/', '.next/', 'LEGACY_CONFIGS/'],
   overrides: [
     {
       files: ['*.js', '**/*.js'],
@@ -38,9 +39,6 @@ module.exports = {
         '@typescript-eslint/no-var-requires': 'off',
       },
     },
-  ],
-  ignorePatterns: ['dist/', 'node_modules/', '.next/', 'LEGACY_CONFIGS/'],
-  overrides: [
     {
       // Test files: relax no-explicit-any — mocks and stubs legitimately need `any`
       files: ['tests/**/*.ts', '**/*.spec.ts', '**/*.test.ts'],

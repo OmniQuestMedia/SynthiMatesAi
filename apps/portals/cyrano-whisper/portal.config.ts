@@ -1,5 +1,5 @@
 // Portal: CYRANO_WHISPER — CyranoWhisper (Mainstream/non-adult)
-// Per docs/PRODUCTS/SythiMateWhisper-Spec.md — Dates, acting, public speaking, language coaching
+// Per docs/PRODUCTS/SynthimateWhisper-Spec.md — Dates, acting, public speaking, language coaching
 import type { PortalConfig } from '../portal.types';
 
 export const portalConfig: PortalConfig = {

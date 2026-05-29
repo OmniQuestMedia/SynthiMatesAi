@@ -1,7 +1,7 @@
 # CNZ Membership Lifecycle Policy
 
 **Status:** v1.0 — CEO-approved working draft
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 **Adopted:** 2026-04-17
 **Repo path:** `docs/MEMBERSHIP_LIFECYCLE_POLICY.md`
 **Supersedes:** Any prior tier definitions in `docs/REQUIREMENTS_MASTER.md`, `docs/DOMAIN_GLOSSARY.md`, handoff docs, governance configuration, or service code. On conflict, **this document wins**; diverging code is the bug.

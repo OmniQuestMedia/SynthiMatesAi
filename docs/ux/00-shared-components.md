@@ -3,8 +3,8 @@
 **Role:** All  
 **Purpose:** Reusable primitives for consistency across RRR, Cyrano, and ChatNow.Zone.  
 **Status:** reviewed  
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.  
-**Applies to repos:** OmniQuestMediaInc/RRR · OmniQuestMediaInc/SythiMatesAi · OmniQuestMediaInc/ChatNowZone--BUILD
+**Authority:** OmniQuest Media Inc.  
+**Applies to repos:** OmniQuestMediaInc/RRR · OmniQuestMediaInc/SynthiMatesAi · OmniQuestMediaInc/ChatNowZone--BUILD
 
 ---
 

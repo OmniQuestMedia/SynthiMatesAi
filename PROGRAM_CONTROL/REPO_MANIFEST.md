@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/testing-cleanup-pass-synthimatesai`
-**Commit:** `2fa1d8ddc16afaf3a59dd73d71832838aab44392`
-**Generated:** 2026-05-26T21:00:11Z
+**Branch:** `claude/final-cleanup-pass`
+**Commit:** `051cd50d7f88b9044e31085f04ae6663f7a7896c`
+**Generated:** 2026-05-29T01:59:14Z
 
 ## All Files
 
@@ -47,6 +47,7 @@ Auto-generated on every push. Do not edit manually.
 - `HANDOFF.md`
 - `HOMESTRETCH_GATE_STATUS.md`
 - `HYGIENE_SWEEP_REPORT.md`
+- `LINT_CLEANUP_SUMMARY.md`
 - `MASTER_PROJECT_FOLDER.md`
 - `MAXZONEGPT-POINTER.md`
 - `OQMI_SYSTEM_STATE.md`
@@ -394,7 +395,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/PHASE_2.5_VOICE_TRANSLATION_IMPLEMENTATION.md`
 - `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
-- `docs/PRODUCTS/SythiMateWhisper-Spec.md`
+- `docs/PRODUCTS/SynthimateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
 - `docs/ROADMAP.md`
 - `docs/ROADMAP_MANIFEST.md`

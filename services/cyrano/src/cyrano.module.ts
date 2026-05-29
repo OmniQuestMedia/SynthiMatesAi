@@ -46,7 +46,7 @@ import { WhisperPromptService } from './whisper-prompt.service';
     // Phase 4 — Beta Analytics (Issue #16)
     CyranoBetaRegistryService,
     CyranoBetaAnalyticsService,
-    // Whisper services (SythiMateWhisper™ + CyranoWhisper)
+    // Whisper services (SynthimateWhisper™ + CyranoWhisper)
     WhisperAutoAdvanceService,
     WhisperPromptService,
   ],

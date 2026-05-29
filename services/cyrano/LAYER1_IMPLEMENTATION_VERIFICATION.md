@@ -5,7 +5,7 @@
 **Status:** ✅ COMPLETE — All TechSpec v1.0 requirements met
 **Business Plan:** v3.1 (May 2026)
 **Canonical Corpus:** v11
-**Tech Spec:** SythiMateWhisper-Spec.md v1.0
+**Tech Spec:** SynthimateWhisper-Spec.md v1.0
 
 ---
 
@@ -210,7 +210,7 @@ import type { CyranoInputFrame, CyranoSuggestion } from '../../services/cyrano/s
 **v3.1 Alignment:** ✅ Verified
 **OmniSync Integration:** ✅ Active
 
-**Next Steps:** Layer 2 (LLM-backed refinement) and Whisper product portals (SythiMateWhisper™ / CyranoWhisper per TechSpec Section 4).
+**Next Steps:** Layer 2 (LLM-backed refinement) and Whisper product portals (SynthimateWhisper™ / CyranoWhisper per TechSpec Section 4).
 
 ---
 

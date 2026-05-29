@@ -15,7 +15,7 @@ Refresh) authored against the Cyrano™ Standalone codebase. It supersedes the
 
 **Snapshot date:** 2026-05-06 (Phase 1 — Hygiene + State Refresh)
 **Branch of record:** `claude/phase-1-hygiene-refresh-EAURk`
-**Authority:** OmniQuest Media Inc. — OQMI_GOVERNANCE.md (Canonical Corpus v10)
+**Authority:** OmniQuest Media Inc. — OQMI_GOVERNANCE.md (Canonical Corpus v11)
 **Launch posture:** **Cyrano™ Standalone — Alpha scaffolds complete; Beta
 hardening in progress (Phases 2–4)**
 
@@ -38,7 +38,7 @@ hardening in progress (Phases 2–4)**
 | CEO / CD / LD        | Kevin B. Hartley                                                          |
 | Platform (primary)   | Cyrano™ Standalone — photoreal AI Character Companions                    |
 | Secondary platform   | ChatNow.Zone (merge target post-Cyrano stabilization)                     |
-| Repo                 | `OmniQuestMediaInc/SythiMatesAi`                                          |
+| Repo                 | `OmniQuestMediaInc/SynthiMatesAi`                                          |
 | Hard launch deadline | 2026-10-01 (CNZ); Cyrano alpha → beta during Q3 2026                      |
 | Governance ban (§12) | Banned entity (name [REDACTED]) — never referenced in any OQMInc material |
 
@@ -480,7 +480,7 @@ without CEO-signed clearance in `PROGRAM_CONTROL/CLEARANCES/`.
 ## 11. Phase 0.5 — Ecosystem Lint Parity (2026-05-11)
 
 **Branch of record:** `copilot/phase-0-5-ecosystem-lint-parity`
-**Scope:** Lint infrastructure parity for SythiMatesAi — ESLint config fix,
+**Scope:** Lint infrastructure parity for SynthiMatesAi — ESLint config fix,
 devDependency audit, Husky + lint-staged, `lint:ci` script, ship-gate
 LINT-1 invariant.
 
@@ -488,7 +488,7 @@ LINT-1 invariant.
 
 | Repo         | Command        | Result  | Notes                                      |
 | ------------ | -------------- | ------- | ------------------------------------------ |
-| SythiMatesAi | `yarn lint:ci` | ✅ PASS | 0 errors, 0 warnings — see §11.3 for fixes |
+| SynthiMatesAi | `yarn lint:ci` | ✅ PASS | 0 errors, 0 warnings — see §11.3 for fixes |
 
 Cross-repo matrix (ChatNowZone--BUILD, Marketplace-Build, eCommsZone)
 to be executed against their respective branches; results to be filed in
