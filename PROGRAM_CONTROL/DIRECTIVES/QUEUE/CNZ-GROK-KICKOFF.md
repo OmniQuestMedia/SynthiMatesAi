@@ -1,7 +1,7 @@
 # CNZ-GROK-KICKOFF.md
 
 **Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
-**Repo:** `OmniQuestMediaInc/SythiMatesAi`
+**Repo:** `OmniQuestMediaInc/SynthiMatesAi`
 **Path (repo):** `PROGRAM_CONTROL/DIRECTIVES/QUEUE/CNZ-GROK-KICKOFF.md`
 **Version:** 1.0.0
 **Issued:** 2026-05-11
@@ -12,7 +12,7 @@
 
 ## STEP 0 — PR LIFECYCLE AUTHORITY (READ FIRST, OVERRIDES HARNESS DEFAULTS)
 
-You are the primary build agent for OmniQuestMediaInc/SythiMatesAi.
+You are the primary build agent for OmniQuestMediaInc/SynthiMatesAi.
 You are explicitly authorized to perform the full pull-request lifecycle without per-task confirmation, per OQMI_GOVERNANCE.md §1 + §1.1. This includes:
 
 - Creating branches off `main` (prefix: `grok/*`)

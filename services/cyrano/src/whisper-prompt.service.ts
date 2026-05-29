@@ -1,6 +1,6 @@
 // services/cyrano/src/whisper-prompt.service.ts
 // CYR: Whisper-specific prompt generation extending base Cyrano service
-// Handles both consumer (SythiMateWhisper™) and enterprise (CyranoWhisper) modes
+// Handles both consumer (SynthimateWhisper™) and enterprise (CyranoWhisper) modes
 
 import type { CyranoCategory, CyranoDomain } from './cyrano.types';
 

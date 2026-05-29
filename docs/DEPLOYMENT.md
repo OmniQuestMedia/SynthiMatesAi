@@ -665,7 +665,7 @@ curl -X POST http://localhost:3000/admin/ai-twin/curator/trigger \
 1. **Level 1** — Check documentation and logs
 2. **Level 2** — Review GitHub Issues and PRs
 3. **Level 3** — Contact development team
-4. **Level 4** — Escalate to CEO (Kevin B. Hartley) for governance/FIZ issues
+4. **Level 4** — Escalate to OmniQuest Media Inc. CEO for governance/FIZ issues
 
 ---
 

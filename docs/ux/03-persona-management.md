@@ -3,7 +3,7 @@
 **Role:** Creator (authoring) / VIP Member (selection + customisation)
 **Purpose:** Create, manage, and personalise AI twin personas across global, template, and custom scopes
 **Status:** Alpha Frozen
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 
 ---
 

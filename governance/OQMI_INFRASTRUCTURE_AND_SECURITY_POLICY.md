@@ -1,7 +1,7 @@
 # OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md
 
 **Sovereign Corporate Policy** — Effective 2026-05-06
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 **Status:** Binding on all OQMInc™ / OQTech™ repos, environments, agents, and infrastructure.
 **Precedence:** Extends and prevails over any prior infra docs in conflict.
 **See also:** [PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md](../PROGRAM_CONTROL/DIRECTIVES/QUEUE/OQMI_GOVERNANCE.md)
@@ -14,7 +14,7 @@
 **Version:** v1.0
 **Effective Date:** 2026-05-06
 **Platform Time Standard:** America/Toronto
-**Authority of Record:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority of Record:** OmniQuest Media Inc.
 
 ---
 
@@ -195,5 +195,5 @@ Follow Human-Review Category process in `OQMI_GOVERNANCE.md §2.2`. PR modifying
 
 This policy is effective immediately. All existing and future infrastructure must conform.
 
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
+**Authority:** OmniQuest Media Inc.
 **Effective:** 2026-05-06

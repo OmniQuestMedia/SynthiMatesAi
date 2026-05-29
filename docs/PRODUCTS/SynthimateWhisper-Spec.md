@@ -1,14 +1,14 @@
-# SythiMateWhisper™ & CyranoWhisper Technical Specification
+# SynthimateWhisper™ & CyranoWhisper Technical Specification
 
 **Version**: 1.0
 **Date**: May 2026
-**Owner**: Kevin B (Product)
+**Owner**: OmniQuest Media Inc.
 
 ## 1. Product Overview
 
-Two branded portals built on the shared Synthemates core + AI Twin framework:
+Two branded portals built on the shared SynthiMates core + AI Twin framework:
 
-- **SythiMateWhisper™** (Adult flagship)
+- **SynthimateWhisper™** (Adult flagship)
 - **CyranoWhisper** (Mainstream / non-adult)
 
 Both use identical engine. Differentiation via onboarding, default templates, feature flags, and rating enforcement.
@@ -28,7 +28,7 @@ Both use identical engine. Differentiation via onboarding, default templates, fe
 
 ## 3. Product Differentiation
 
-| Feature           | SythiMateWhisper™                      | CyranoWhisper                                     |
+| Feature           | SynthimateWhisper™                      | CyranoWhisper                                     |
 | ----------------- | -------------------------------------- | ------------------------------------------------- |
 | Default Rating    | 18+/XXX                                | G/14+                                             |
 | G/14+ Mode        | Paid add-on                            | Included                                          |

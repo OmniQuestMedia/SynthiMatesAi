@@ -1,6 +1,6 @@
 # UX Integration Brief — ChatNow.Zone (CNZ) + Cyrano
 
-**Authority:** OmniQuest Media Inc. — Canonical Corpus v10
+**Authority:** OmniQuest Media Inc. — Canonical Corpus v11
 **Branch of record:** `claude/alpha-testing-ux-brief-N8M57`
 **Status:** `@alpha-frozen` — binding target for Grok wireframe handoff
 **Companion docs:** `docs/ux/STATE_MACHINES.md`, `docs/ux/ERROR_REASON_CODES.md`,
@@ -381,7 +381,7 @@ glossary, types, comments, and migrations as scoped per row.
 
 ```text
 # OQMI CROSS-STACK VOCABULARY RECONCILIATION — 2026-05-02
-# Authority: CEO (Kevin B. Hartley) — directive issued via UX_INTEGRATION_BRIEF
+# Authority: OmniQuest Media Inc. — directive issued via UX_INTEGRATION_BRIEF
 # Scope: OmniQuestMediaInc/cyrano + OmniQuestMediaInc/RedRoomRewards
 # Apply order: 1) glossary 2) types/enums 3) comments 4) tests
 # A "code-binding" change requires a versioned migration; a "doc-only"
@@ -495,8 +495,8 @@ ROW 20 | term: Subscription tier (Cyrano standalone) vs MembershipTier (CNZ core
 
 **Version:** 2026-04-28
 **Status:** Draft → Ready for review
-**Authority:** Kevin B. Hartley, CEO — OmniQuest Media Inc.
-**Repo:** OmniQuestMediaInc/SythiMatesAi
+**Authority:** OmniQuest Media Inc.
+**Repo:** OmniQuestMediaInc/SynthiMatesAi
 **Cross-stack vocabulary:** see `docs/UX_CROSS_STACK_ALIGNMENT.md`
 
 ---

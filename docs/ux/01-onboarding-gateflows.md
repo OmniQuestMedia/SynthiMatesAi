@@ -3,7 +3,7 @@
 **Document:** `docs/ux/01-onboarding-gateflows.md`
 **Stack:** Shared / Cross-Stack (all stacks)
 **Status:** draft
-**Authority:** OmniQuest Media Inc. — Kevin B. Hartley, CEO
+**Authority:** OmniQuest Media Inc.
 **Last updated:** 2026-04-28
 
 ---

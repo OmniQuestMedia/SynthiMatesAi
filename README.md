@@ -1,4 +1,4 @@
-# SythiMatesAi — Creator-First AI Companions
+# SynthiMatesAi — Creator-First AI Companions
 
 > **AI Character Companions — photorealistic, persistent-memory, voice-cloned.**
 > **Creators earn from their AI twins. Fans get safer, higher-quality experiences.**
@@ -6,6 +6,7 @@
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
 
 **Package manager:** Yarn (canonical for all OQMInc repos — do not use npm or pnpm).
+**Last Updated:** 2026-05-26 | **Status:** Post-SxF Integration — Clean
 
 ---
 

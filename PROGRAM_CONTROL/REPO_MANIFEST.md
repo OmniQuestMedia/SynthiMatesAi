@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/final-cleanup-verification-pass`
-**Commit:** `8bbdbbfe661c3cbdd725288e077304b610fb0b29`
-**Generated:** 2026-05-27T01:40:13Z
+**Branch:** `copilot/pre-cross-test-maintenance-complete`
+**Commit:** `a6d22b76dc767b979e269138b29f1070e0db5dca`
+**Generated:** 2026-05-29T01:57:18Z
 
 ## All Files
 
@@ -395,7 +395,7 @@ Auto-generated on every push. Do not edit manually.
 - `docs/PHASE_2.5_VOICE_TRANSLATION_IMPLEMENTATION.md`
 - `docs/PHASE_6_IMPLEMENTATION_SUMMARY.md`
 - `docs/PRE_LAUNCH_CHECKLIST.md`
-- `docs/PRODUCTS/SythiMateWhisper-Spec.md`
+- `docs/PRODUCTS/SynthimateWhisper-Spec.md`
 - `docs/REQUIREMENTS_MASTER.md`
 - `docs/ROADMAP.md`
 - `docs/ROADMAP_MANIFEST.md`
