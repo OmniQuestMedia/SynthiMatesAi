@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/cleanup-prompts-for-synthimatesai`
-**Commit:** `0a056eaa83cc0132d8a34329e733d0e2793acacf`
-**Generated:** 2026-05-29T00:50:57Z
+**Branch:** `dependabot/npm_and_yarn/apps/portals/cyrano-whisper/npm_and_yarn-e1357da3f1`
+**Commit:** `5bea342cdcbdd293055860fcda85dcd972ea9812`
+**Generated:** 2026-05-29T01:02:52Z
 
 ## All Files
 
