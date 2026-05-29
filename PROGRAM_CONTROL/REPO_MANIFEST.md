@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `dependabot/npm_and_yarn/apps/portals/cyrano-whisper/npm_and_yarn-e1357da3f1`
-**Commit:** `5bea342cdcbdd293055860fcda85dcd972ea9812`
-**Generated:** 2026-05-29T01:02:52Z
+**Branch:** `copilot/pre-cross-test-maintenance-complete`
+**Commit:** `a6d22b76dc767b979e269138b29f1070e0db5dca`
+**Generated:** 2026-05-29T01:57:18Z
 
 ## All Files
 
