@@ -6,6 +6,7 @@
 > Governed by OmniQuest Media Inc. (OQMInc™) — `OQMI_GOVERNANCE.md` + `OQMI_INFRASTRUCTURE_AND_SECURITY_POLICY.md`.
 
 **Package manager:** Yarn (canonical for all OQMInc repos — do not use npm or pnpm).
+**Last Updated:** 2026-05-26 | **Status:** Post-SxF Integration — Clean
 
 ---
 

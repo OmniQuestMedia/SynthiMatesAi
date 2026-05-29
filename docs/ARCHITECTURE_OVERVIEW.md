@@ -1,9 +1,8 @@
 # Architecture Overview — ChatNow.Zone (Payloads 1 → 8)
 
 **Authority:** OmniQuest Media Inc. — Canonical Corpus v11
-**Status at 2026-04-25:** Functionally complete for internal alpha
-(PAYLOAD 7 frontend polish + PAYLOAD 8 ship-gate verification landed).
-**Branch of record:** `grok/phase-0.2-grok-primary-ship-gate`.
+**Status at 2026-05-26:** Post-SxF Integration — Clean
+**Branch of record:** `main`.
 
 This document is the single, top-level map of the ChatNow.Zone build.
 For per-service detail, follow the links into `services/*/` and
