@@ -2,9 +2,9 @@
 
 Auto-generated on every push. Do not edit manually.
 
-**Branch:** `claude/final-cleanup-verification-pass`
-**Commit:** `8bbdbbfe661c3cbdd725288e077304b610fb0b29`
-**Generated:** 2026-05-27T01:40:13Z
+**Branch:** `dependabot/npm_and_yarn/apps/portals/cyrano-whisper/npm_and_yarn-e1357da3f1`
+**Commit:** `5bea342cdcbdd293055860fcda85dcd972ea9812`
+**Generated:** 2026-05-29T01:02:52Z
 
 ## All Files
 
